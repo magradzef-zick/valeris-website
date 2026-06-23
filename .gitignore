@@ -1,0 +1,6 @@
+.DS_Store
+.playwright-mcp/
+.remember/
+review/
+
+qa*.png

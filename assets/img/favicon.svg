@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Valeris">
+  <rect width="64" height="64" rx="14" fill="#071917"/>
+  <!-- Flared left leg of the V, tapering to a point (matches the Valeris lettermark) -->
+  <path d="M14 17 L24 17 L33 46 L29 46 Z" fill="#F1E4D1"/>
+  <!-- Thin right leg, shorter than the left -->
+  <path d="M40 17 L31 40" stroke="#F1E4D1" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+  <!-- Separate teardrop, cream-on-green, sitting above the right leg -->
+  <path d="M46 6 C51 6 54.5 10 54.5 14.5 C54.5 19 49 25 46 28 C43 25 37.5 19 37.5 14.5 C37.5 10 41 6 46 6 Z" fill="#F1E4D1"/>
+</svg>

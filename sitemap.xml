@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.valeris.com.in/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.com.in/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.com.in/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.com.in/"/>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.valeris.com.in/pharma.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.com.in/pharma.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.com.in/pharma.html?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.com.in/pharma.html"/>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

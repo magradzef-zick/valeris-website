@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title data-i18n="meta.title">Valeris — Access to the Indian Market</title>
+  <meta name="description" data-i18n-attr="content" data-i18n="meta.description"
+        content="Valeris connects European companies with India and Indian companies with Europe — supplier verification, market entry consulting, local representation and business facilitation." />
+
+  <!-- Canonical & language alternates — domain TBD, see assets/js/config.js canonicalBase -->
+  <link rel="canonical" href="https://www.valeris.com.in/" />
+  <link rel="alternate" hreflang="en" href="https://www.valeris.com.in/?lang=en" />
+  <link rel="alternate" hreflang="pl" href="https://www.valeris.com.in/?lang=pl" />
+  <link rel="alternate" hreflang="x-default" href="https://www.valeris.com.in/" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#071917" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Valeris" />
+  <meta property="og:title" content="Valeris — Access to the Indian Market" />
+  <meta property="og:description" content="Valeris gives European companies a local presence in India, and Indian companies a path into Europe — supplier verification, market entry consulting, representation and business facilitation." />
+  <meta property="og:url" content="https://www.valeris.com.in/" />
+  <meta property="og:image" content="https://www.valeris.com.in/assets/img/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:locale:alternate" content="pl_PL" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Valeris — Access to the Indian Market" />
+  <meta name="twitter:description" content="Local presence in India, a path into Europe. Supplier verification, market entry consulting, representation and business facilitation." />
+  <meta name="twitter:image" content="https://www.valeris.com.in/assets/img/og-image.png" />
+
+  <!-- Favicons -->
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/img/favicon.svg" />
+
+  <!-- Organization structured data.
+       NOTE: foundingDate and sameAs (LinkedIn) intentionally omitted — not supplied for Valeris.
+       Registered address / company number intentionally omitted — not supplied for Valeris. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Valeris Group Private Limited",
+    "alternateName": "Valeris",
+    "url": "https://www.valeris.com.in/",
+    "logo": "https://www.valeris.com.in/assets/img/favicon.svg",
+    "image": "https://www.valeris.com.in/assets/img/og-image.png",
+    "description": "Valeris is a Europe–India market access and business development partner — supplier verification, market entry consulting, local representation and business facilitation.",
+    "email": "agata@valeris.com.in",
+    "telephone": "+48697751377",
+    "knowsLanguage": ["en", "pl"],
+    "areaServed": ["Europe", "India"]
+  }
+  </script>
+
+  <style>html,body{background:#071917;margin:0}</style>
+
+  <!-- Self-hosted fonts (no third-party request — GDPR-friendly + faster LCP) -->
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/cormorantgaramond-300-normal-latin.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/cormorantgaramond-400-italic-latin.woff2" crossorigin />
+  <link rel="stylesheet" href="assets/css/fonts.css" />
+
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ─────────────────────────  NAVIGATION  ───────────────────────── -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a href="#hero" class="wordmark" aria-label="Valeris — home">VALERIS</a>
+
+      <nav class="primary-nav" aria-label="Primary">
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#services" data-i18n="nav.services">Services</a></li>
+          <li><a href="#process"  data-i18n="nav.how">How We Work</a></li>
+          <li><a href="pharma.html" data-i18n="nav.pharma">Pharma</a></li>
+          <li><a href="#why"      data-i18n="nav.why">Why Valeris</a></li>
+          <li class="nav-mobile-cta"><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" class="lang-btn is-active" data-lang="en" aria-pressed="true">EN</button>
+          <span class="lang-sep" aria-hidden="true">/</span>
+          <button type="button" class="lang-btn" data-lang="pl" aria-pressed="false">PL</button>
+        </div>
+        <a href="#contact" class="btn btn-primary btn-sm nav-cta" data-i18n="nav.cta">Contact Us</a>
+        <button type="button" class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ─────────────────────────  HERO  ───────────────────────── -->
+    <section id="hero" class="hero">
+      <!-- Photography slot: empty until client supplies real India imagery (city / port / factory).
+           To activate, set a background-image here (inline style or via assets/css/styles.css) —
+           no other markup or layout changes required. See .hero-photo / .hero::before in styles.css. -->
+      <div class="hero-photo" aria-hidden="true"></div>
+      <svg class="hero-motif" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" role="presentation">
+        <g class="motif-grid" stroke="#C9D4E5" stroke-width="1" fill="none" opacity="0.08">
+          <ellipse cx="720" cy="450" rx="640" ry="380"/>
+          <ellipse cx="720" cy="450" rx="460" ry="270"/>
+          <ellipse cx="720" cy="450" rx="280" ry="160"/>
+          <line x1="80" y1="450" x2="1360" y2="450"/>
+          <line x1="720" y1="60" x2="720" y2="840"/>
+        </g>
+        <path class="motif-arc" pathLength="1" d="M 300 300 Q 760 120 1140 560"/>
+        <g class="motif-node"><circle class="node-glow" cx="300" cy="300" r="20"/><circle class="node-dot" cx="300" cy="300" r="4"/></g>
+        <g class="motif-node"><circle class="node-glow" cx="1140" cy="560" r="20"/><circle class="node-dot" cx="1140" cy="560" r="4"/></g>
+      </svg>
+
+      <span class="hero-vline" aria-hidden="true"></span>
+
+      <div class="container hero-inner">
+        <p class="eyebrow">
+          <span class="eyebrow-strong" data-i18n="hero.eyebrowA">Europe ⇄ India</span>
+          <span class="eyebrow-dot" aria-hidden="true"></span>
+          <span class="eyebrow-rest" data-i18n="hero.eyebrowB">Bridge</span>
+        </p>
+
+        <h1 class="hero-title">
+          <span data-i18n="hero.line1">We don't sell consulting.</span><br />
+          <em data-i18n="hero.emphasis">We sell access</em><span data-i18n="hero.line2b"> to the market.</span>
+        </h1>
+
+        <p class="hero-sub" data-i18n="hero.sub">
+          Valeris gives companies a local presence in India — and Indian companies a path into Europe. Real people on the ground, not consulting from a distance.
+        </p>
+
+        <div class="hero-cta-row">
+          <a href="#services" class="btn btn-primary" data-i18n="hero.ctaPrimary">Explore Services</a>
+          <a href="#contact" class="btn btn-ghost" data-i18n="hero.ctaSecondary">Get in Touch</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num" data-i18n="hero.stat1num">2</span><span class="stat-label" data-i18n="hero.stat1label">Markets — Europe &amp; India</span></div>
+          <div class="stat"><span class="stat-num" data-i18n="hero.stat2num">5</span><span class="stat-label" data-i18n="hero.stat2label">Service areas</span></div>
+          <div class="stat"><span class="stat-num" data-i18n="hero.stat3num">1</span><span class="stat-label" data-i18n="hero.stat3label">Trusted local partner</span></div>
+        </div>
+      </div>
+
+      <a href="#usp" class="scroll-cue" aria-label="Scroll down">
+        <span class="scroll-cue-line" aria-hidden="true"></span>
+        <span data-i18n="hero.scroll">Scroll</span>
+      </a>
+    </section>
+
+    <!-- ─────────────────────────  USP STRIP  ───────────────────────── -->
+    <section id="usp" class="usp section--band" aria-label="What sets us apart">
+      <div class="container usp-grid">
+        <div class="usp-item" data-reveal>
+          <span class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s7-7.58 7-12A7 7 0 0 0 5 9c0 4.42 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+          </span>
+          <h2 class="usp-title" data-i18n="usp.1.title">Local presence in India</h2>
+          <p class="usp-desc" data-i18n="usp.1.desc">On the ground. Not just research — real visits, real contacts, real market knowledge.</p>
+        </div>
+        <div class="usp-item" data-reveal>
+          <span class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l7 3v5c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+          </span>
+          <h2 class="usp-title" data-i18n="usp.2.title">Supplier verification in the real world</h2>
+          <p class="usp-desc" data-i18n="usp.2.desc">We visit the factory and verify the partner before you sign anything.</p>
+        </div>
+        <div class="usp-item" data-reveal>
+          <span class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </span>
+          <h2 class="usp-title" data-i18n="usp.3.title">Consulting + action</h2>
+          <p class="usp-desc" data-i18n="usp.3.desc">We don't just advise. We act locally — meetings, coordination, facilitation.</p>
+        </div>
+        <div class="usp-item" data-reveal>
+          <span class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8.5" cy="12" r="5.2"/><circle cx="15.5" cy="12" r="5.2"/></svg>
+          </span>
+          <h2 class="usp-title" data-i18n="usp.4.title">We understand both markets</h2>
+          <p class="usp-desc" data-i18n="usp.4.desc">European business experience, Indian market knowledge. We connect the two.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  TWO DIRECTIONS  ───────────────────────── -->
+    <section id="directions" class="section section--dark ei">
+      <div class="ei-bg" aria-hidden="true"></div>
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="kicker" data-i18n="directions.kicker">Two directions, one partner</p>
+          <h2 class="section-title"><span data-i18n="directions.titleA">We connect </span><em data-i18n="directions.titleEm">both worlds</em><span data-i18n="directions.titleB">.</span></h2>
+        </div>
+
+        <div class="ei-cards">
+          <article class="ei-card" data-reveal>
+            <span class="ei-dir" data-i18n="directions.card1Dir">🇪🇺 → 🇮🇳</span>
+            <h3 class="ei-card-title" data-i18n="directions.card1Title">European companies entering India</h3>
+            <p class="ei-desc" data-i18n="directions.card1Desc">Supplier verification, consulting, representation and operational support for companies that want to source from or invest in India — without going in blind.</p>
+            <div class="flagship-tags">
+              <span data-i18n="directions.card1Tag1">Supplier Verification</span>
+              <span data-i18n="directions.card1Tag2">Consulting</span>
+              <span data-i18n="directions.card1Tag3">Representation</span>
+              <span data-i18n="directions.card1Tag4">Business Facilitation</span>
+            </div>
+          </article>
+          <article class="ei-card" data-reveal>
+            <span class="ei-dir" data-i18n="directions.card2Dir">🇮🇳 → 🇪🇺</span>
+            <h3 class="ei-card-title" data-i18n="directions.card2Title">Indian companies entering Europe</h3>
+            <p class="ei-desc" data-i18n="directions.card2Desc">Market entry consulting, partner search, export readiness and European representation — guided by someone who knows both sides.</p>
+            <div class="flagship-tags">
+              <span data-i18n="directions.card2Tag1">Market Entry</span>
+              <span data-i18n="directions.card2Tag2">Partner Search</span>
+              <span data-i18n="directions.card2Tag3">Export Readiness</span>
+              <span data-i18n="directions.card2Tag4">Trade Development</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  SERVICES  ───────────────────────── -->
+    <section id="services" class="section section--paper">
+      <div class="container">
+        <div class="section-head section-head--split" data-reveal>
+          <div>
+            <p class="kicker" data-i18n="services.kicker">What we do</p>
+            <h2 class="section-title"><span data-i18n="services.titleA">Five ways we </span><em data-i18n="services.titleEm">help</em><span data-i18n="services.titleB">.</span></h2>
+          </div>
+          <p class="section-intro" data-i18n="services.intro">Every service is tailored to where you are in your journey — from the first curiosity about the market to full operational presence. We work as your local partner, not a distant advisor.</p>
+        </div>
+
+        <div class="services-layout">
+          <article class="service-flagship" data-reveal>
+            <span class="flagship-eyebrow" data-i18n="services.flagshipLabel">India → Europe</span>
+            <h3 class="flagship-title" data-i18n="svc.5.title">European Market Entry Services</h3>
+            <p class="flagship-desc" data-i18n="svc.5.desc">We help Indian companies grow into Europe in a structured, safe way — combining local presence in India with business and logistics experience in Europe.</p>
+
+            <div class="flagship-subgrid">
+              <div>
+                <h4 data-i18n="services.sub1Title">Market Entry Consulting</h4>
+                <ul>
+                  <li data-i18n="services.sub1L1">European market specifics &amp; regulations</li>
+                  <li data-i18n="services.sub1L2">Product &amp; quality-standard requirements</li>
+                  <li data-i18n="services.sub1L3">Market entry strategy</li>
+                </ul>
+              </div>
+              <div>
+                <h4 data-i18n="services.sub2Title">Business Partner Search</h4>
+                <ul>
+                  <li data-i18n="services.sub2L1">Distributors &amp; importers in Europe</li>
+                  <li data-i18n="services.sub2L2">Business meeting organisation</li>
+                  <li data-i18n="services.sub2L3">Communication bridge</li>
+                </ul>
+              </div>
+              <div>
+                <h4 data-i18n="services.sub3Title">Export Readiness</h4>
+                <ul>
+                  <li data-i18n="services.sub3L1">Certification &amp; standards requirements</li>
+                  <li data-i18n="services.sub3L2">Adapting the offer to the EU market</li>
+                  <li data-i18n="services.sub3L3">Preparing for European buyer talks</li>
+                </ul>
+              </div>
+              <div>
+                <h4 data-i18n="services.sub4Title">Representation in Europe</h4>
+                <ul>
+                  <li data-i18n="services.sub4L1">Trade fair representation</li>
+                  <li data-i18n="services.sub4L2">Relationship building with EU partners</li>
+                  <li data-i18n="services.sub4L3">Market &amp; competition intelligence</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="flagship-corridor">
+              <span class="corr-point"><span class="corr-dot corr-dot--in"></span><span class="corr-name" data-i18n="corridor.india">India</span></span>
+              <span class="corr-connector"><svg viewBox="0 0 100 22" preserveAspectRatio="none" aria-hidden="true"><path class="arc" pathLength="1" d="M2 17 Q50 1 98 9" fill="none" vector-effect="non-scaling-stroke"/></svg></span>
+              <span class="corr-point corr-point--end"><span class="corr-name" data-i18n="corridor.europe">Europe</span><span class="corr-dot corr-dot--eu"></span></span>
+            </div>
+            <a href="pharma.html" class="flagship-link">
+              <span data-i18n="services.flagshipLink">Explore Pharma Services</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </article>
+
+          <ol class="services-list">
+            <li class="service-row" data-reveal>
+              <span class="row-num">01</span>
+              <div class="row-body"><h3 class="row-title" data-i18n="svc.1.title">Supplier Verification</h3><p class="row-desc" data-i18n="svc.1.desc">Check your Indian supplier before you start. We give you real information from the ground — not just an internet search — so you can decide based on facts, not declarations.</p></div>
+              <span class="row-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </li>
+            <li class="service-row" data-reveal>
+              <span class="row-num">02</span>
+              <div class="row-body"><h3 class="row-title" data-i18n="svc.2.title">Consulting</h3><p class="row-desc" data-i18n="svc.2.desc">India is a huge market — and a complex one. We help European companies understand how business really works there and prepare to enter safely.</p></div>
+              <span class="row-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </li>
+            <li class="service-row" data-reveal>
+              <span class="row-num">03</span>
+              <div class="row-body"><h3 class="row-title" data-i18n="svc.3.title">Representation in India</h3><p class="row-desc" data-i18n="svc.3.desc">Not every company needs to set up an entity in India. Often all you need is a local partner who represents you on the spot.</p></div>
+              <span class="row-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </li>
+            <li class="service-row" data-reveal>
+              <span class="row-num">04</span>
+              <div class="row-body"><h3 class="row-title" data-i18n="svc.4.title">Business Facilitation</h3><p class="row-desc" data-i18n="svc.4.desc">Running a project in India means dealing with real, on-the-ground problems. We're the trusted local partner who helps you solve them faster.</p></div>
+              <span class="row-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  PHARMA CALLOUT  ───────────────────────── -->
+    <section id="pharma" class="section section--band pharma-callout">
+      <div class="container pharma-callout-inner">
+        <div>
+          <p class="kicker" data-i18n="pharmaCallout.kicker">Specialised vertical</p>
+          <h2 class="pharma-callout-title" data-i18n="pharmaCallout.title">Europe Market Entry for Pharmaceutical Companies</h2>
+          <p class="pharma-callout-desc" data-i18n="pharmaCallout.desc">We help Indian pharmaceutical companies prepare for the European market — strategy, partnerships, and getting ready for certification and export.</p>
+        </div>
+        <a href="pharma.html" class="btn btn-ghost" data-i18n="pharmaCallout.cta">Explore Pharma Services</a>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  HOW IT WORKS  ───────────────────────── -->
+    <section id="process" class="section section--light">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="kicker" data-i18n="process.kicker">How it works</p>
+          <h2 class="section-title"><span data-i18n="process.titleA">From first contact to </span><em data-i18n="process.titleEm">market presence</em><span data-i18n="process.titleB">.</span></h2>
+        </div>
+        <div class="process-steps">
+          <div class="process-step" data-reveal>
+            <div class="step-num-circle">01</div>
+            <h3 class="step-title" data-i18n="process.1t">Initial consultation</h3>
+            <p class="step-desc" data-i18n="process.1d">We discuss your goals, your situation, and what kind of support makes sense.</p>
+          </div>
+          <div class="process-step" data-reveal>
+            <div class="step-num-circle">02</div>
+            <h3 class="step-title" data-i18n="process.2t">Scope &amp; proposal</h3>
+            <p class="step-desc" data-i18n="process.2d">A clear scope and transparent proposal. No hidden fees, no vague deliverables.</p>
+          </div>
+          <div class="process-step" data-reveal>
+            <div class="step-num-circle">03</div>
+            <h3 class="step-title" data-i18n="process.3t">On-the-ground work</h3>
+            <p class="step-desc" data-i18n="process.3d">We execute locally — visits, meetings, verifications, introductions. You stay informed.</p>
+          </div>
+          <div class="process-step" data-reveal>
+            <div class="step-num-circle">04</div>
+            <h3 class="step-title" data-i18n="process.4t">Report &amp; next steps</h3>
+            <p class="step-desc" data-i18n="process.4d">A clear deliverable: a report, a set of contacts, or a recommended path forward.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  WHY VALERIS  ───────────────────────── -->
+    <section id="why" class="section section--dark">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="kicker" data-i18n="why.kicker">Why Valeris</p>
+          <h2 class="section-title"><span data-i18n="why.titleA">What makes us </span><em data-i18n="why.titleEm">different</em><span data-i18n="why.titleB">.</span></h2>
+        </div>
+        <div class="why-layout">
+          <div class="why-primary">
+            <article class="why-lead" data-reveal>
+              <h3 class="why-lead-title" data-i18n="why.1t">Local presence, not remote research</h3>
+              <p class="why-lead-desc" data-i18n="why.1d">We're physically in India. We visit factories and build relationships — not from a desk in Europe.</p>
+            </article>
+            <article class="why-lead" data-reveal>
+              <h3 class="why-lead-title" data-i18n="why.3t">Real business relationships</h3>
+              <p class="why-lead-desc" data-i18n="why.3d">We don't just deliver reports. We build relationships that become your long-term asset.</p>
+            </article>
+          </div>
+          <ul class="why-list">
+            <li class="why-row" data-reveal><h3 class="why-row-title" data-i18n="why.2t">We understand both markets</h3><p class="why-row-desc" data-i18n="why.2d">European business experience combined with deep knowledge of Indian realities — regulatory, cultural and operational.</p></li>
+            <li class="why-row" data-reveal><h3 class="why-row-title" data-i18n="why.4t">Honest about what we do</h3><p class="why-row-desc" data-i18n="why.4d">We're not lawyers or accountants — but we know the best ones, vetted and ready to introduce.</p></li>
+            <li class="why-row" data-reveal><h3 class="why-row-title" data-i18n="why.5t">Flexible &amp; cost-effective</h3><p class="why-row-desc" data-i18n="why.5d">Local presence without the cost of a full subsidiary. Our model scales with your needs.</p></li>
+            <li class="why-row" data-reveal><h3 class="why-row-title" data-i18n="why.6t">One point of contact</h3><p class="why-row-desc" data-i18n="why.6d">One trusted partner coordinating everything — from verification to introductions to logistics via Polfrost.</p></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  BRAND ESSENCE  ───────────────────────── -->
+    <section id="essence" class="section section--paper essence">
+      <div class="container">
+        <p class="essence-quote" data-reveal>&ldquo;<span data-i18n="essence.quote">A trusted guide helping companies navigate complex business environments between Europe and India.</span>&rdquo;</p>
+        <span class="essence-sig" data-i18n="essence.sig">Valeris — Clarity. Trust. Insight.</span>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  PARTNERSHIP — POLFROST  ───────────────────────── -->
+    <section id="partner" class="section section--dark">
+      <div class="container partner-grid">
+        <div class="partner-text" data-reveal>
+          <p class="kicker" data-i18n="partner.kicker">Strategic partnership</p>
+          <h2 class="section-title" data-i18n="partner.title">Backed by Polfrost — European logistics expertise</h2>
+          <p class="section-text" data-i18n="partner.p1">Through our partnership with Polfrost, Valeris can support full trade projects between India and Europe — not just advice, but end-to-end commercial facilitation.</p>
+          <p class="section-text" data-i18n="partner.p2">Your project has the logistics backbone to move goods, not only build relationships.</p>
+        </div>
+        <div class="partner-box" data-reveal>
+          <svg viewBox="0 0 48 48" fill="none" stroke-width="1.5">
+            <rect x="4" y="16" width="40" height="24" rx="2"/>
+            <path d="M4 22l8-8h24l8 8"/>
+            <circle cx="14" cy="40" r="4"/>
+            <circle cx="34" cy="40" r="4"/>
+          </svg>
+          <span class="partner-name" data-i18n="partner.name">POLFROST</span>
+          <span class="partner-tagline" data-i18n="partner.tagline">European Logistics Partner</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────  CONTACT  ───────────────────────── -->
+    <section id="contact" class="section section--band contact">
+      <div class="container contact-inner">
+        <div class="section-head section-head--center" data-reveal>
+          <p class="kicker kicker--center" data-i18n="contact.kicker">Start the conversation</p>
+          <h2 class="section-title"><span data-i18n="contact.titleA">Tell us about your </span><em data-i18n="contact.titleEm">project</em><span data-i18n="contact.titleB">.</span></h2>
+          <p class="section-intro section-intro--center" data-i18n="contact.intro">Whether you're exploring India for the first time or ready to verify a specific supplier — we'll help you move forward with confidence.</p>
+        </div>
+
+        <form class="contact-form" id="contactForm" novalidate data-reveal>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="cf-name" class="form-label" data-i18n="form.name">Name</label>
+              <input id="cf-name" name="name" type="text" class="form-input" required autocomplete="name" />
+            </div>
+            <div class="form-field">
+              <label for="cf-company" class="form-label" data-i18n="form.company">Company</label>
+              <input id="cf-company" name="company" type="text" class="form-input" autocomplete="organization" />
+            </div>
+            <div class="form-field">
+              <label for="cf-email" class="form-label" data-i18n="form.email">Email</label>
+              <input id="cf-email" name="email" type="email" class="form-input" required autocomplete="email" />
+            </div>
+            <div class="form-field">
+              <label for="cf-phone" class="form-label" data-i18n="form.phone">Phone</label>
+              <input id="cf-phone" name="phone" type="tel" class="form-input" autocomplete="tel" />
+            </div>
+            <div class="form-field form-field--full">
+              <label for="cf-interest" class="form-label" data-i18n="form.interest">I'm interested in</label>
+              <select id="cf-interest" name="interest" class="form-input form-select">
+                <option value="" data-i18n="form.optDefault">Select a service…</option>
+                <option data-i18n="form.opt1">Supplier Verification</option>
+                <option data-i18n="form.opt2">India Market Entry Consulting</option>
+                <option data-i18n="form.opt3">Representation in India</option>
+                <option data-i18n="form.opt4">Business Facilitation</option>
+                <option data-i18n="form.opt5">Europe Market Entry (Indian company)</option>
+                <option data-i18n="form.opt6">Pharma — Europe Market Entry</option>
+                <option data-i18n="form.opt7">Other / Not sure yet</option>
+              </select>
+            </div>
+            <div class="form-field form-field--full">
+              <label for="cf-message" class="form-label" data-i18n="form.message">Tell us briefly about your project</label>
+              <textarea id="cf-message" name="message" class="form-input form-textarea" rows="4" required
+                        data-i18n-attr="placeholder" data-i18n="form.messagePlaceholder"
+                        placeholder="We are considering a supplier in Gujarat and want to verify them before a large order…"></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary form-submit" data-i18n="form.submit">Send Message</button>
+          <p class="form-note" data-i18n="form.note">We typically reply within one business day. Your details are used only to respond to your enquiry.</p>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ─────────────────────────  FOOTER  ───────────────────────── -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="wordmark wordmark--footer">VALERIS</span>
+        <p class="footer-desc" data-i18n="footer.desc">Your trusted partner for Europe–India business development. Local presence, real market access.</p>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title" data-i18n="footer.servicesTitle">Services</h3>
+        <ul class="footer-links">
+          <li><a href="#services" data-i18n="footer.s1">Supplier Verification</a></li>
+          <li><a href="#services" data-i18n="footer.s2">India Market Consulting</a></li>
+          <li><a href="#services" data-i18n="footer.s3">Representation</a></li>
+          <li><a href="#services" data-i18n="footer.s4">Business Facilitation</a></li>
+          <li><a href="#directions" data-i18n="footer.s5">Europe Entry Support</a></li>
+          <li><a href="pharma.html" data-i18n="footer.s6">Pharma</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title" data-i18n="footer.companyTitle">Company</h3>
+        <ul class="footer-links">
+          <li><a href="#why" data-i18n="footer.c1">Why Valeris</a></li>
+          <li><a href="#process" data-i18n="footer.c2">How It Works</a></li>
+          <li><a href="#contact" data-i18n="footer.c3">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title" data-i18n="footer.contactTitle">Contact</h3>
+        <!-- Registered address / company number not yet supplied — add once confirmed. -->
+        <address class="footer-address">
+          Valeris Group Private Limited<br />
+          <a href="tel:+48697751377">+48 697 751 377</a><br />
+          <a href="mailto:agata@valeris.com.in" rel="noopener">agata@valeris.com.in</a>
+        </address>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span data-i18n="footer.rights">© 2026 Valeris Group Private Limited. All rights reserved.</span>
+      <span>Poland · India</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/i18n.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</body>
+</html>
