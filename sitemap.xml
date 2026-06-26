@@ -19,4 +19,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://www.valeris.com.in/india.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.com.in/india.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.com.in/india.html?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.com.in/india.html"/>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>

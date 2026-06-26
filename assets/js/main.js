@@ -62,19 +62,25 @@
 
   /* ---------- mobile menu ---------- */
   if (hamburger && navLinks) {
+    var closeMobileMenu = function () {
+      navLinks.classList.remove('is-open');
+      hamburger.classList.remove('is-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      hamburger.setAttribute('aria-label', 'Open menu');
+      document.body.style.overflow = '';
+    };
     hamburger.addEventListener('click', function () {
       var open = navLinks.classList.toggle('is-open');
       hamburger.classList.toggle('is-open', open);
       hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
       hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      document.body.style.overflow = open ? 'hidden' : '';
     });
     navLinks.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', function () {
-        navLinks.classList.remove('is-open');
-        hamburger.classList.remove('is-open');
-        hamburger.setAttribute('aria-expanded', 'false');
-        hamburger.setAttribute('aria-label', 'Open menu');
-      });
+      a.addEventListener('click', closeMobileMenu);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && navLinks.classList.contains('is-open')) closeMobileMenu();
     });
   }
 
@@ -113,6 +119,16 @@
     revealEls.forEach(function (el) { el.classList.add('is-visible'); });
   }
 
+  /* ---------- service accordions ---------- */
+  document.querySelectorAll('.row-trigger').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var row = btn.closest('.service-row');
+      if (!row) return;
+      var open = row.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
   /* ---------- hero numeral count-up (hero stats only, runs once) ---------- */
   var statNums = document.querySelectorAll('.hero-stats .stat-num');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -142,13 +158,13 @@
     }
   }
 
-  /* ---------- page transition: index <-> pharma (200ms fade) ---------- */
+  /* ---------- page transition: index <-> pharma <-> india (200ms fade) ---------- */
   var thisPage = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('a[href]').forEach(function (a) {
     var href = a.getAttribute('href');
     if (!href || href.charAt(0) === '#' || href.indexOf('mailto:') === 0 || href.indexOf('tel:') === 0) return;
     var hrefPage = href.split('#')[0].split('?')[0].split('/').pop();
-    if (hrefPage !== 'index.html' && hrefPage !== 'pharma.html') return;
+    if (hrefPage !== 'index.html' && hrefPage !== 'pharma.html' && hrefPage !== 'india.html') return;
     if (hrefPage === thisPage) return;   /* same document — no cross-page transition needed */
     a.addEventListener('click', function (e) {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank') return;
