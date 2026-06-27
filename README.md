@@ -16,7 +16,7 @@ Three independent HTML documents — a general consultancy site, a pharma export
 [![SEO](https://img.shields.io/badge/SEO-Structured%20Data%20%2B%20hreflang-C19559?style=flat-square)](#7-seo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 
-<img src="docs/screenshots/index-desktop-1440.jpg" alt="Valeris homepage — desktop hero and services" width="860" />
+<img src="docs/screenshots/hero-section.jpg" alt="Valeris homepage — hero section" width="860" />
 
 </div>
 
@@ -732,48 +732,29 @@ Ordered by what would actually move the needle, not alphabetically:
 
 ## 17. Screenshots
 
-### `index.html` — desktop (1440×900)
+Full-page captures don't survive GitHub's image scaling — at README width, a 900px-tall viewport screenshot shrinks to a strip of mostly background color. The crops below are scoped to one section each, at the size they actually render at, so typography, cards and buttons stay legible without opening the file.
 
-![Homepage desktop](docs/screenshots/index-desktop-1440.jpg)
+| | |
+|---|---|
+| **Hero** | **Two Directions** |
+| ![Hero](docs/screenshots/hero-section.jpg) | ![Two Directions](docs/screenshots/directions-section.jpg) |
+| **Services** | **How It Works** |
+| ![Services](docs/screenshots/services-section.jpg) | ![Process](docs/screenshots/process-section.jpg) |
+| **Why Valeris** | **Polfrost Partnership** |
+| ![Why Valeris](docs/screenshots/why-valeris-section.jpg) | ![Polfrost](docs/screenshots/polfrost-section.jpg) |
 
-### `index.html` — tablet (834×1194)
-
-![Homepage tablet](docs/screenshots/index-tablet-834.jpg)
-
-### `index.html` — mobile (390×844)
-
-![Homepage mobile](docs/screenshots/index-mobile-390.jpg)
+<p align="center"><strong>Contact</strong><br><img src="docs/screenshots/contact-section.jpg" alt="Contact form" width="380" /></p>
 
 <details>
-<summary><strong>Interaction states — mobile menu open · accordion expanded</strong></summary>
+<summary><strong>Other pages — <code>pharma.html</code> and <code>india.html</code> hero sections</strong></summary>
 
 <br>
 
-**Mobile navigation, open state**
-
-![Mobile menu open](docs/screenshots/index-mobile-menu-open.jpg)
-
-**Service accordion, expanded state (desktop)**
-
-![Accordion expanded](docs/screenshots/index-accordion-open-desktop.jpg)
+| `pharma.html` | `india.html` |
+|---|---|
+| ![Pharma hero](docs/screenshots/pharma-hero-section.jpg) | ![India hero](docs/screenshots/india-hero-section.jpg) |
 
 </details>
-
-### `india.html` — desktop (1440×900)
-
-![India vertical desktop](docs/screenshots/india-desktop-1440.jpg)
-
-### `india.html` — mobile (390×844)
-
-![India vertical mobile](docs/screenshots/india-mobile-390.jpg)
-
-### `pharma.html` — desktop (1440×900)
-
-![Pharma vertical desktop](docs/screenshots/pharma-desktop-1440.jpg)
-
-### `pharma.html` — mobile (390×844)
-
-![Pharma vertical mobile](docs/screenshots/pharma-mobile-390.jpg)
 
 ---
 
