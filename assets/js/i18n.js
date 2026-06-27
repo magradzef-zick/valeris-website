@@ -28,8 +28,6 @@ window.VALERIS_I18N = {
     'usp.2.title': 'Supplier verification in the real world', 'usp.2.desc': "We visit the factory and verify the partner before you sign anything. You know who you're doing business with before you send the first payment.",
     'usp.3.title': 'Consulting + action', 'usp.3.desc': "We don't just advise. We act locally — we arrange the meetings, lead the conversations, and stay on top of things for you.",
     'usp.4.title': 'We understand both markets', 'usp.4.desc': 'Polish business reality and Indian market knowledge. We connect the two.',
-    'usp.ctaKicker': 'Indian company looking at Poland?',
-    'usp.ctaText': "This is exactly the kind of cross-border work we do every day — on the ground in Maharashtra and in Poland.",
 
     'directions.kicker': 'Two directions, one partner',
     'directions.titleA': 'We connect ', 'directions.titleEm': 'both worlds', 'directions.titleB': '.',
@@ -188,37 +186,8 @@ window.VALERIS_I18N = {
     'pharma.5.title': 'Export Strategy Development', 'pharma.5.sub': 'A sales strategy for Europe',
     'pharma.5.l1': 'Defining target European markets', 'pharma.5.l2': 'Choosing a distribution model', 'pharma.5.l3': 'Preparing the sales strategy',
 
-    /* ── India subpage ── */
-    'india.meta.title': 'Poland Market Entry for Indian Companies | Valeris',
-    'india.meta.description': 'Valeris helps Indian companies enter the Polish market and Europe — market entry consulting, partner search, representation and export support. We operate on the ground in Poland and Maharashtra.',
-    'india.backLink': '← Back to Valeris',
-    'india.hero.eyebrow': 'India → Poland · Your entry into Europe',
-    'india.hero.title': 'Want to sell in Europe? Start in Poland.',
-    'india.hero.desc': "You have a good product, but Europe is a different world — different regulations, different requirements, a different way of doing business. We help Indian companies enter the Polish market and treat it as a gateway to the rest of Europe. We know both sides: we're on the ground in Maharashtra and active in Poland. We translate one business culture to the other — and guide you step by step.",
-    'india.cta': 'Start the Conversation',
-
-    'india.services.kicker': 'What we actually do',
-
-    'india.1.title': 'Market Entry Consulting', 'india.1.sub': 'India → Poland · Step one',
-    'india.1.desc': "We tell you plainly what the Polish and European market looks like, what local customers expect, and how it differs from what you know in India. We point out what to watch for and help you put together an entry plan. We connect you with strong lawyers and tax advisors in Poland.",
-    'india.2.title': 'Communication with Your Trade Partners', 'india.2.sub': 'First contact & conversations',
-    'india.2.desc': 'We make the first contact, arrange meetings, and help you communicate — even when language and cultural differences get in the way.',
-    'india.3.title': 'Representation in Poland', 'india.3.sub': 'Your local presence',
-    'india.3.desc': "We're your presence on the ground before you set up your own company here. We represent you at trade fairs, meet partners on your behalf, and gather market and competitor intelligence.",
-    'india.4.title': 'Export Preparation', 'india.4.sub': 'Getting Europe-ready',
-    'india.4.desc': "Many Indian companies have a great product but aren't yet ready for European requirements. We help you understand which certificates and standards you'll need, adapt your offer to the local market, and prepare for conversations with Polish buyers.",
-    'india.5.title': 'India–Poland Trade Development', 'india.5.sub': 'Real opportunities for cooperation',
-    'india.5.desc': "We look for real opportunities for cooperation and help put them together. And thanks to our partnership with logistics company Polfrost, we can also support the transport side.",
-
-    'india.why.kicker': 'Why Indian companies work with Valeris',
-    'india.why.titleA': 'Why Indian companies work with ', 'india.why.titleEm': 'Valeris', 'india.why.titleB': '.',
-    'india.why.1t': 'We Know Both Sides', 'india.why.1d': "We're on the ground in both Maharashtra and Poland. We know how an Indian manufacturer thinks and how a Polish buyer thinks — and we know how to get them talking.",
-    'india.why.2t': 'Support Across Two Business Worlds', 'india.why.2d': "We help you navigate two very different business environments, so you don't have to learn them the hard way.",
-    'india.why.3t': 'Not Just Talk — Real Contacts', 'india.why.3d': "We don't stop at advice. We sit down for meetings, connect you with real people, and make sure the first relationships actually move forward.",
-    'india.why.4t': 'Poland as Your Gateway to Europe', 'india.why.4d': "You start with one market we know well — and from here, the road opens further into Europe.",
-
-    'india.aiSentence': 'Valeris helps Indian companies — especially from the Maharashtra region — enter the Polish market as a gateway to Europe. We offer market entry consulting, distributor and partner search, local representation in Poland, and export readiness support, backed by a real presence in both India and Poland.',
-    'india.aiKeywords': 'How to enter the European market from India · Indian company entering Poland · Find distributors in Poland · Export from India to Europe · Maharashtra exporters Europe · Poland market entry for Indian companies'
+    /* india.html is English-only by design (see main.js IS_INDIA_PAGE) — its copy is hardcoded
+       directly in the page, not routed through this dictionary. No india.* keys here. */
   },
 
   pl: {
@@ -246,8 +215,6 @@ window.VALERIS_I18N = {
     'usp.2.title': 'Weryfikacja dostawców w praktyce', 'usp.2.desc': 'Jedziemy do fabryki i sprawdzamy partnera, zanim podpiszesz jakąkolwiek umowę. Wiesz, z kim robisz biznes, zanim wyślesz pierwszą złotówkę.',
     'usp.3.title': 'Konsulting + działanie', 'usp.3.desc': 'Nie tylko doradzamy. Działamy na miejscu — umawiamy spotkania, prowadzimy rozmowy, pilnujemy spraw za Ciebie.',
     'usp.4.title': 'Rozumiemy oba rynki', 'usp.4.desc': 'Znamy polskie realia biznesowe i posiadamy znajomość rynku indyjskiego. Łączymy oba światy.',
-    'usp.ctaKicker': 'Indyjska firma patrzy na Polskę?',
-    'usp.ctaText': 'To właśnie ten rodzaj transgranicznej pracy, którą robimy każdego dnia — na miejscu w Maharasztrze i w Polsce.',
 
     'directions.kicker': 'Dwa kierunki, jeden partner',
     'directions.titleA': 'Łączymy ', 'directions.titleEm': 'obie strony', 'directions.titleB': '.',
@@ -406,36 +373,6 @@ window.VALERIS_I18N = {
     'pharma.5.title': 'Opracowanie strategii eksportowej', 'pharma.5.sub': 'Strategia sprzedaży dla Europy',
     'pharma.5.l1': 'Określenie docelowych rynków europejskich', 'pharma.5.l2': 'Wybór modelu dystrybucji', 'pharma.5.l3': 'Przygotowanie strategii sprzedaży',
 
-    /* ── Podstrona Indie ── */
-    'india.meta.title': 'Wejście na polski rynek dla firm indyjskich | Valeris',
-    'india.meta.description': 'Valeris pomaga indyjskim firmom wejść na polski rynek i do Europy — doradztwo, szukanie partnerów, reprezentacja i wsparcie eksportu. Działamy na miejscu w Polsce i w Maharasztrze.',
-    'india.backLink': '← Powrót do Valeris',
-    'india.hero.eyebrow': 'Indie → Polska · Twoje wejście do Europy',
-    'india.hero.title': 'Chcesz sprzedawać w Europie? Zacznij od Polski.',
-    'india.hero.desc': 'Masz dobry produkt, ale Europa to inny świat — inne przepisy, inne wymagania, inny sposób robienia biznesu. Pomagamy indyjskim firmom wejść na polski rynek i potraktować go jako bramę do reszty Europy. Znamy obie strony: jesteśmy na miejscu w Maharasztrze i działamy w Polsce. Tłumaczymy jedną kulturę biznesową drugiej — i prowadzimy Cię krok po kroku.',
-    'india.cta': 'Rozpocznij rozmowę',
-
-    'india.services.kicker': 'Co konkretnie robimy',
-
-    'india.1.title': 'Doradztwo wejścia na rynek', 'india.1.sub': 'Indie → Polska · Pierwszy krok',
-    'india.1.desc': 'Mówimy wprost, jak wygląda polski i europejski rynek, czego oczekują tutejsi klienci i czym różni się od tego, co znasz z Indii. Wskazujemy, na co uważać i pomagamy ułożyć plan wejścia. Łączymy z silnymi prawnikami oraz doradcami podatkowymi w Polsce.',
-    'india.2.title': 'Komunikacja z Twoimi partnerami handlowymi', 'india.2.sub': 'Pierwszy kontakt i rozmowy',
-    'india.2.desc': 'Nawiązujemy pierwszy kontakt, umawiamy spotkania i pomagamy się dogadać — także wtedy, gdy język i różnice kulturowe stają na drodze.',
-    'india.3.title': 'Reprezentacja w Polsce', 'india.3.sub': 'Twoja lokalna obecność',
-    'india.3.desc': 'Jesteśmy Twoją obecnością na miejscu, zanim założysz tu własną firmę. Reprezentujemy Cię na targach, spotykamy się z partnerami w Twoim imieniu, zbieramy informacje o rynku i konkurencji.',
-    'india.4.title': 'Przygotowanie do eksportu', 'india.4.sub': 'Przygotowanie do Europy',
-    'india.4.desc': 'Wiele indyjskich firm ma świetny produkt, ale nie jest jeszcze gotowych na europejskie wymagania. Pomagamy zrozumieć, jakie certyfikaty i normy będą potrzebne, dopasować ofertę do tutejszego rynku i przygotować się do rozmów z polskimi kupującymi.',
-    'india.5.title': 'Rozwój handlu Indie – Polska', 'india.5.sub': 'Realne okazje do współpracy',
-    'india.5.desc': 'Szukamy realnych okazji do współpracy i pomagamy je poukładać. A dzięki współpracy z firmą logistyczną Polfrost, możemy również wspierać stronę transportową.',
-
-    'india.why.kicker': 'Dlaczego indyjskie firmy pracują z Valeris',
-    'india.why.titleA': 'Dlaczego indyjskie firmy pracują z ', 'india.why.titleEm': 'Valeris', 'india.why.titleB': '.',
-    'india.why.1t': 'Znamy obie strony', 'india.why.1d': 'Działamy na miejscu w Maharasztrze i w Polsce. Wiemy, jak myśli indyjski producent i jak myśli polski kupujący — i potrafimy ich ze sobą dogadać.',
-    'india.why.2t': 'Wsparcie w dwóch światach naraz', 'india.why.2d': 'Pomagamy poruszać się w dwóch różnych środowiskach biznesowych, żebyś nie musiał uczyć się ich na własnych błędach.',
-    'india.why.3t': 'Nie tylko rozmowy — realne kontakty', 'india.why.3d': 'Nie kończymy na doradztwie. Siadamy do spotkań, łączymy Cię z konkretnymi ludźmi i pilnujemy, żeby pierwsze relacje faktycznie ruszyły.',
-    'india.why.4t': 'Polska jako brama do Europy', 'india.why.4d': 'Zaczynasz od jednego rynku, który dobrze znamy, a stąd otwiera się droga dalej w głąb Europy.',
-
-    'india.aiSentence': 'Valeris pomaga indyjskim firmom — zwłaszcza z regionu Maharasztra — wejść na polski rynek jako bramę do Europy. Oferuje doradztwo wejścia na rynek, szukanie dystrybutorów i partnerów, reprezentację w Polsce oraz przygotowanie do eksportu, korzystając z lokalnej obecności w Indiach i w Polsce.',
-    'india.aiKeywords': 'Jak wejść na rynek europejski z Indii · Indian company entering Poland · Find distributors in Poland · Export from India to Europe · Maharashtra exporters Europe · Wejście na rynek polski dla firm indyjskich'
+    /* india.html ma tylko wersję angielską (zob. main.js IS_INDIA_PAGE) — brak kluczy india.* */
   }
 };

@@ -13,6 +13,10 @@
   var LANG_KEY = 'valeris_lang';
   var LANGS = ['en', 'pl'];
 
+  /* india.html is English-only by design (Indian-company audience, not Polish visitors) —
+     it never runs the language system, regardless of a stored/URL language preference. */
+  var IS_INDIA_PAGE = (location.pathname.split('/').pop() || 'index.html') === 'india.html';
+
   var header = document.getElementById('siteHeader');
   var hamburger = document.getElementById('hamburger');
   var navLinks = document.getElementById('navLinks');
@@ -51,9 +55,11 @@
   }
   window.__valerisT = function (key) { var l = document.documentElement.lang || 'en'; return (DICT[l] || DICT.en)[key] || (DICT.en[key] || key); };
 
-  document.querySelectorAll('.lang-btn').forEach(function (b) {
-    b.addEventListener('click', function () { applyLang(b.getAttribute('data-lang')); });
-  });
+  if (!IS_INDIA_PAGE) {
+    document.querySelectorAll('.lang-btn').forEach(function (b) {
+      b.addEventListener('click', function () { applyLang(b.getAttribute('data-lang')); });
+    });
+  }
 
   /* ---------- sticky nav ---------- */
   function onScroll() { if (header) header.classList.toggle('is-scrolled', window.scrollY > 24); }
@@ -240,5 +246,9 @@
   }
 
   /* ---------- init ---------- */
-  applyLang(getInitialLang());
+  if (IS_INDIA_PAGE) {
+    document.documentElement.lang = 'en';
+  } else {
+    applyLang(getInitialLang());
+  }
 })();
