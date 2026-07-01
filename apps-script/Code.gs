@@ -29,7 +29,7 @@
 var NOTIFY_EMAIL = ''; // e.g. 'agata@valeris.com.in' — leave empty to disable
 
 var SESSION_HOURS = 24;   // sliding window: each valid request extends by this many hours
-var HASH_ITERATIONS = 50000; // SHA-256 iterations for password hashing
+var HASH_ITERATIONS = 2000; // SHA-256 iterations for password hashing (Apps Script bridge adds ~1ms/call; 50k = 50s login)
 var CACHE_TTL = 300;      // seconds to cache Users and Settings reads (5 minutes)
 var SCHEMA_VERSION = '2';
 
