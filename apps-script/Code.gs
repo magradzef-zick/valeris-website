@@ -29,7 +29,7 @@
 var NOTIFY_EMAIL = ''; // e.g. 'agata@valeris.com.in' — leave empty to disable
 
 var SESSION_HOURS = 24;   // sliding window: each valid request extends by this many hours
-var HASH_ITERATIONS = 1000; // SHA-256 iterations for password hashing
+var HASH_ITERATIONS = 50000; // SHA-256 iterations for password hashing
 var CACHE_TTL = 300;      // seconds to cache Users and Settings reads (5 minutes)
 var SCHEMA_VERSION = '2';
 
@@ -278,8 +278,8 @@ var USER_STATUSES     = ['Active', 'Inactive'];
 var PROJECT_STATUSES  = ['Active', 'On Hold', 'Completed', 'Cancelled'];
 var PROJECT_PHASES    = ['Discovery', 'Proposal', 'Execution', 'Delivery', 'Closed'];
 var TASK_STATUSES     = ['Open', 'In Progress', 'Done', 'Cancelled'];
-var COMPANY_TYPES     = ['Manufacturer', 'Distributor', 'Trading Company', 'Service Provider', 'Other'];
-var COMPANY_STATUSES  = ['Active', 'Inactive', 'Prospect'];
+var COMPANY_TYPES     = ['Importer', 'Exporter', 'Manufacturer', 'Distributor', 'Agent / Broker', 'Retailer', 'Service Provider', 'Other'];
+var COMPANY_STATUSES  = ['Active', 'Inactive', 'Prospect', 'Partner'];
 var CONTACT_STATUSES  = ['Active', 'Inactive'];
 var LANGUAGES         = ['English', 'Polish', 'Hindi', 'Other'];
 var TRADE_DIRECTIONS  = ['India → Poland', 'Poland → India'];
@@ -321,28 +321,63 @@ function doGet(e) {
   }
 }
 
+// Read-only actions that must NOT hold the script lock (parallel reads are safe)
+var READ_ACTIONS = [
+  'getLeads', 'getLead', 'getTimeline',
+  'getCompanies', 'getCompany',
+  'getContacts', 'getContact',
+  'getProjects', 'getProject',
+  'getTasks', 'getTask',
+  'getUsers', 'getDashboardStats'
+];
+
 function doPost(e) {
+  var body   = parsePayload_(e);
+  var action = body.action || '';
+
+  // No action field = website contact form submission (backward compatible)
+  if (!action) {
+    return handleWebsiteFormSubmission_(body);
+  }
+
+  // Unauthenticated actions — no lock needed
+  if (action === 'login') {
+    return json_(handleLogin_(body.data || {}));
+  }
+
+  var auth = body.auth || {};
+  var data = body.data || {};
+
+  // Read-only actions bypass the script lock so parallel reads don't queue behind writes
+  if (READ_ACTIONS.indexOf(action) !== -1) {
+    try {
+      switch (action) {
+        case 'getLeads':          return json_(handleGetLeads_(auth, data));
+        case 'getLead':           return json_(handleGetLead_(auth, data));
+        case 'getTimeline':       return json_(handleGetTimeline_(auth, data));
+        case 'getCompanies':      return json_(handleGetCompanies_(auth, data));
+        case 'getCompany':        return json_(handleGetCompany_(auth, data));
+        case 'getContacts':       return json_(handleGetContacts_(auth, data));
+        case 'getContact':        return json_(handleGetContact_(auth, data));
+        case 'getProjects':       return json_(handleGetProjects_(auth, data));
+        case 'getProject':        return json_(handleGetProject_(auth, data));
+        case 'getTasks':          return json_(handleGetTasks_(auth, data));
+        case 'getTask':           return json_(handleGetTask_(auth, data));
+        case 'getUsers':          return json_(handleGetUsers_(auth, data));
+        case 'getDashboardStats': return json_(handleGetDashboardStats_(auth, data));
+        default:
+          return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
+      }
+    } catch (err) {
+      return handleError_(err);
+    }
+  }
+
+  // Write actions — serialise with script lock to prevent concurrent mutations
   var lock = LockService.getScriptLock();
   lock.waitLock(10000);
 
   try {
-    var body   = parsePayload_(e);
-    var action = body.action || '';
-
-    // No action field = website contact form submission (backward compatible)
-    if (!action) {
-      return handleWebsiteFormSubmission_(body);
-    }
-
-    // Unauthenticated actions
-    if (action === 'login') {
-      return json_(handleLogin_(body.data || {}));
-    }
-
-    // All other actions require a valid session
-    var auth = body.auth || {};
-    var data = body.data || {};
-
     switch (action) {
       case 'updateLead':      return json_(handleUpdateLead_(auth, data));
       case 'deleteLead':      return json_(handleDeleteLead_(auth, data));
@@ -358,6 +393,7 @@ function doPost(e) {
       case 'deleteProject':   return json_(handleDeleteProject_(auth, data));
       case 'createTask':      return json_(handleCreateTask_(auth, data));
       case 'updateTask':      return json_(handleUpdateTask_(auth, data));
+      case 'deleteTask':      return json_(handleDeleteTask_(auth, data));
       case 'createUser':      return json_(handleCreateUser_(auth, data));
       case 'updateUser':      return json_(handleUpdateUser_(auth, data));
       default:
@@ -773,25 +809,6 @@ function handleError_(err) {
 
   console.error('[Valeris CRM] Unhandled error:', msg);
   return json_({ ok: false, error: 'An unexpected error occurred', code: ERR.INTERNAL });
-}
-
-function getSchemaVersion_() {
-  var cached = getCached_('schema_version');
-  if (cached) return cached;
-
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sh = ss.getSheetByName(SHEET.META);
-  if (!sh || sh.getLastRow() < 2) return SCHEMA_VERSION;
-
-  var data = sh.getDataRange().getValues();
-  for (var i = 1; i < data.length; i++) {
-    if (data[i][COLS.META.key - 1] === 'schema_version') {
-      var v = String(data[i][COLS.META.value - 1]);
-      setCached_('schema_version', v);
-      return v;
-    }
-  }
-  return SCHEMA_VERSION;
 }
 
 // ============================================================
@@ -1629,7 +1646,17 @@ function setupUsersSheet_(ss) {
 
 function setupMetaSheet_(ss) {
   var sh = ss.getSheetByName(SHEET.META) || ss.insertSheet(SHEET.META);
-  sh.clear();
+
+  // Only clear and rewrite if schema version has changed or sheet is empty.
+  // This protects deployed_at / deployed_by on subsequent setupCrm() runs.
+  if (sh.getLastRow() >= 2) {
+    var existing = sh.getDataRange().getValues();
+    for (var i = 1; i < existing.length; i++) {
+      if (existing[i][0] === 'schema_version' && String(existing[i][1]) === SCHEMA_VERSION) {
+        return sh; // Already up-to-date; skip clearing
+      }
+    }
+  }
 
   var now = new Date().toISOString();
   var rows = [
@@ -1653,6 +1680,11 @@ function setupMetaSheet_(ss) {
 
 function createDashboard_(ss) {
   var sh = ss.getSheetByName(SHEET.DASHBOARD) || ss.insertSheet(SHEET.DASHBOARD);
+
+  // Don't overwrite an existing dashboard — it may contain live formula results.
+  // Delete the Dashboard sheet manually before re-running setupCrm() to rebuild it.
+  if (sh.getLastRow() > 1) return sh;
+
   sh.clear();
 
   // Title
@@ -2048,7 +2080,7 @@ function handleUpdateProject_(auth, data) {
 }
 
 function handleDeleteProject_(auth, data) {
-  var user      = requireAuth_(auth);
+  var user      = requireRole_(auth, ['Owner', 'Administrator']);
   var projectId = String(data.projectId || '').trim();
   if (!projectId) throw new Error(ERR.VALIDATION);
 
@@ -2334,7 +2366,7 @@ function handleUpdateUser_(auth, data) {
 // ============================================================
 
 function handleDeleteLead_(auth, data) {
-  var user   = requireAuth_(auth);
+  var user   = requireRole_(auth, ['Owner', 'Administrator']);
   var leadId = String(data.leadId || '').trim();
   if (!leadId) throw new Error(ERR.VALIDATION);
 
@@ -2351,7 +2383,7 @@ function handleDeleteLead_(auth, data) {
 }
 
 function handleDeleteCompany_(auth, data) {
-  var user      = requireAuth_(auth);
+  var user      = requireRole_(auth, ['Owner', 'Administrator']);
   var companyId = String(data.companyId || '').trim();
   if (!companyId) throw new Error(ERR.VALIDATION);
 
@@ -2368,7 +2400,7 @@ function handleDeleteCompany_(auth, data) {
 }
 
 function handleDeleteContact_(auth, data) {
-  var user      = requireAuth_(auth);
+  var user      = requireRole_(auth, ['Owner', 'Administrator']);
   var contactId = String(data.contactId || '').trim();
   if (!contactId) throw new Error(ERR.VALIDATION);
 
@@ -2381,6 +2413,23 @@ function handleDeleteContact_(auth, data) {
     deleted_at: now, updated_at: now, updated_by: user.user_id
   });
   logActivity_('Contact', contactId, 'contact_deleted', 'Contact soft-deleted', '', user.user_id);
+  return { ok: true };
+}
+
+function handleDeleteTask_(auth, data) {
+  var user   = requireRole_(auth, ['Owner', 'Administrator']);
+  var taskId = String(data.taskId || '').trim();
+  if (!taskId) throw new Error(ERR.VALIDATION);
+
+  var found = getTaskById_(taskId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var sh  = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET.TASKS);
+  var now = new Date().toISOString();
+  batchWriteRow_(sh, found.rowNum, COLS.TASKS, {
+    deleted_at: now, updated_at: now, updated_by: user.user_id
+  });
+  logActivity_('Task', taskId, 'task_deleted', 'Task soft-deleted', '', user.user_id);
   return { ok: true };
 }
 
