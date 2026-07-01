@@ -327,6 +327,7 @@ function doPost(e) {
 
     switch (action) {
       case 'updateLead':  return json_(handleUpdateLead_(auth, data));
+      case 'createNote':  return json_(handleCreateNote_(auth, data));
       default:
         return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
     }
@@ -941,6 +942,60 @@ function handleUpdateLead_(auth, data) {
 
   var updated = getLeadById_(leadId);
   return { ok: true, data: { lead: updated ? updated.lead : found.lead } };
+}
+
+// ============================================================
+// M1 — NOTES HANDLER
+// ============================================================
+
+/**
+ * POST createNote — add a polymorphic note to any entity.
+ * Works for Leads now; same action will serve Companies, Contacts, Projects in M2+.
+ */
+function handleCreateNote_(auth, data) {
+  var user = requireAuth_(auth);
+
+  var entityType = sanitize_(data.entityType || '');
+  var entityId   = sanitize_(data.entityId || '');
+  var content    = sanitize_(data.content || '');
+
+  if (!entityType || !entityId || !content) throw new Error(ERR.VALIDATION);
+
+  var ALLOWED_TYPES = ['Lead', 'Company', 'Contact', 'Project'];
+  if (ALLOWED_TYPES.indexOf(entityType) === -1) throw new Error(ERR.VALIDATION);
+
+  var ss  = SpreadsheetApp.getActiveSpreadsheet();
+  var sh  = getOrCreateSheet_(SHEET.NOTES);
+  var now = new Date().toISOString();
+  var noteId = makeId_('NOT', new Date());
+
+  var row = buildRow_(COLS.NOTES, {
+    note_id:        noteId,
+    entity_type:    entityType,
+    entity_id:      entityId,
+    content:        content,
+    author_user_id: user.user_id,
+    created_at:     now,
+    updated_at:     now,
+    deleted_at:     ''
+  });
+  sh.appendRow(row);
+
+  return {
+    ok: true,
+    data: {
+      note: {
+        note_id:        noteId,
+        entity_type:    entityType,
+        entity_id:      entityId,
+        content:        content,
+        author_user_id: user.user_id,
+        created_at:     now,
+        updated_at:     now,
+        deleted_at:     ''
+      }
+    }
+  };
 }
 
 // ============================================================
