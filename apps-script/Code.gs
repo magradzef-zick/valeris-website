@@ -292,9 +292,13 @@ function doGet(e) {
     var auth = extractGetAuth_(e);
 
     switch (action) {
-      case 'getLeads':    return json_(handleGetLeads_(auth, e.parameter || {}));
-      case 'getLead':     return json_(handleGetLead_(auth, e.parameter || {}));
-      case 'getTimeline': return json_(handleGetTimeline_(auth, e.parameter || {}));
+      case 'getLeads':      return json_(handleGetLeads_(auth, e.parameter || {}));
+      case 'getLead':       return json_(handleGetLead_(auth, e.parameter || {}));
+      case 'getTimeline':   return json_(handleGetTimeline_(auth, e.parameter || {}));
+      case 'getCompanies':  return json_(handleGetCompanies_(auth, e.parameter || {}));
+      case 'getCompany':    return json_(handleGetCompany_(auth, e.parameter || {}));
+      case 'getContacts':   return json_(handleGetContacts_(auth, e.parameter || {}));
+      case 'getContact':    return json_(handleGetContact_(auth, e.parameter || {}));
       default:
         return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
     }
@@ -326,8 +330,12 @@ function doPost(e) {
     var data = body.data || {};
 
     switch (action) {
-      case 'updateLead':  return json_(handleUpdateLead_(auth, data));
-      case 'createNote':  return json_(handleCreateNote_(auth, data));
+      case 'updateLead':     return json_(handleUpdateLead_(auth, data));
+      case 'createNote':     return json_(handleCreateNote_(auth, data));
+      case 'createCompany':  return json_(handleCreateCompany_(auth, data));
+      case 'updateCompany':  return json_(handleUpdateCompany_(auth, data));
+      case 'createContact':  return json_(handleCreateContact_(auth, data));
+      case 'updateContact':  return json_(handleUpdateContact_(auth, data));
       default:
         return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
     }
@@ -827,7 +835,7 @@ function handleGetLead_(auth, params) {
   var found = getLeadById_(leadId);
   if (!found) throw new Error(ERR.NOT_FOUND);
 
-  return { ok: true, data: { lead: found.lead } };
+  return { ok: true, data: { lead: found.record } };
 }
 
 /**
@@ -914,7 +922,7 @@ function handleUpdateLead_(auth, data) {
   if (!sh) throw new Error(ERR.INTERNAL);
 
   var fields     = data.fields || {};
-  var prevStatus = found.lead.status;
+  var prevStatus = found.record.status;
   var updates    = {};
   var now        = new Date().toISOString();
 
@@ -926,7 +934,7 @@ function handleUpdateLead_(auth, data) {
   });
 
   if (!Object.keys(updates).length) {
-    return { ok: true, data: { lead: found.lead } };
+    return { ok: true, data: { lead: found.record } };
   }
 
   updates.updated_at = now;
@@ -941,7 +949,7 @@ function handleUpdateLead_(auth, data) {
   }
 
   var updated = getLeadById_(leadId);
-  return { ok: true, data: { lead: updated ? updated.lead : found.lead } };
+  return { ok: true, data: { lead: updated ? updated.record : found.record } };
 }
 
 // ============================================================
@@ -999,27 +1007,326 @@ function handleCreateNote_(auth, data) {
 }
 
 // ============================================================
-// LEAD HELPERS
+// M2 — COMPANIES HANDLERS
+// ============================================================
+
+function handleGetCompanies_(auth, params) {
+  requireAuth_(auth);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.COMPANIES);
+  if (!sh || sh.getLastRow() < 2) {
+    return { ok: true, data: { companies: [] } };
+  }
+
+  var numCols = Object.keys(COLS.COMPANIES).length;
+  var rows = sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues();
+
+  var companies = [];
+  for (var i = rows.length - 1; i >= 0; i--) {
+    var row = rows[i];
+    var id        = row[COLS.COMPANIES.company_id - 1];
+    var deletedAt = row[COLS.COMPANIES.deleted_at - 1];
+    if (!id || deletedAt) continue;
+
+    companies.push({
+      company_id:         id,
+      name:               row[COLS.COMPANIES.name - 1],
+      type:               row[COLS.COMPANIES.type - 1],
+      country:            row[COLS.COMPANIES.country - 1],
+      city:               row[COLS.COMPANIES.city - 1],
+      industry:           row[COLS.COMPANIES.industry - 1],
+      trade_direction:    row[COLS.COMPANIES.trade_direction - 1],
+      email:              row[COLS.COMPANIES.email - 1],
+      phone:              row[COLS.COMPANIES.phone - 1],
+      status:             row[COLS.COMPANIES.status - 1],
+      owner_user_id:      row[COLS.COMPANIES.owner_user_id - 1],
+      primary_contact_id: row[COLS.COMPANIES.primary_contact_id - 1],
+      deleted_at:         deletedAt
+    });
+  }
+
+  return { ok: true, data: { companies: companies } };
+}
+
+function handleGetCompany_(auth, params) {
+  requireAuth_(auth);
+
+  var companyId = String(params.companyId || '').trim();
+  if (!companyId) throw new Error(ERR.VALIDATION);
+
+  var found = getCompanyById_(companyId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  return { ok: true, data: { company: found.record } };
+}
+
+function handleCreateCompany_(auth, data) {
+  var user = requireAuth_(auth);
+
+  var name = sanitize_(data.name || '');
+  if (!name) throw new Error(ERR.VALIDATION);
+
+  var sh  = getOrCreateSheet_(SHEET.COMPANIES);
+  var now = new Date().toISOString();
+  var companyId = makeId_('CMP', new Date());
+
+  var row = buildRow_(COLS.COMPANIES, {
+    company_id:         companyId,
+    name:               name,
+    type:               sanitize_(data.type || ''),
+    country:            sanitize_(data.country || ''),
+    city:               sanitize_(data.city || ''),
+    industry:           sanitize_(data.industry || ''),
+    trade_direction:    sanitize_(data.trade_direction || ''),
+    website:            sanitize_(data.website || ''),
+    linkedin:           sanitize_(data.linkedin || ''),
+    email:              sanitize_(data.email || ''),
+    phone:              sanitize_(data.phone || ''),
+    status:             sanitize_(data.status || 'Active'),
+    owner_user_id:      user.user_id,
+    primary_contact_id: '',
+    created_at:         now,
+    created_by:         user.user_id,
+    updated_at:         now,
+    updated_by:         user.user_id,
+    deleted_at:         '',
+    notes:              sanitize_(data.notes || '')
+  });
+  sh.appendRow(row);
+
+  logActivity_('Company', companyId, 'company_created',
+    'Company created: ' + name, '', user.user_id);
+
+  return { ok: true, data: { company_id: companyId } };
+}
+
+function handleUpdateCompany_(auth, data) {
+  var user = requireAuth_(auth);
+
+  var companyId = String(data.companyId || '').trim();
+  if (!companyId) throw new Error(ERR.VALIDATION);
+
+  var found = getCompanyById_(companyId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var WRITABLE = {
+    name: true, type: true, country: true, city: true, industry: true,
+    trade_direction: true, website: true, linkedin: true, email: true,
+    phone: true, status: true, notes: true, owner_user_id: true
+  };
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.COMPANIES);
+  if (!sh) throw new Error(ERR.INTERNAL);
+
+  var fields  = data.fields || {};
+  var updates = {};
+  var now     = new Date().toISOString();
+
+  Object.keys(fields).forEach(function(key) {
+    if (WRITABLE[key] && COLS.COMPANIES[key] !== undefined) {
+      var val = fields[key];
+      updates[key] = (val !== null && val !== undefined) ? sanitize_(String(val)) : '';
+    }
+  });
+
+  if (!Object.keys(updates).length) {
+    return { ok: true, data: { company: found.record } };
+  }
+
+  updates.updated_at = now;
+  updates.updated_by = user.user_id;
+
+  batchWriteRow_(sh, found.rowNum, COLS.COMPANIES, updates);
+
+  var updated = getCompanyById_(companyId);
+  return { ok: true, data: { company: updated ? updated.record : found.record } };
+}
+
+// ============================================================
+// M2 — CONTACTS HANDLERS
+// ============================================================
+
+function handleGetContacts_(auth, params) {
+  requireAuth_(auth);
+
+  var filterCompanyId = String(params.companyId || '').trim();
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.CONTACTS);
+  if (!sh || sh.getLastRow() < 2) {
+    return { ok: true, data: { contacts: [] } };
+  }
+
+  var numCols = Object.keys(COLS.CONTACTS).length;
+  var rows = sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues();
+
+  var contacts = [];
+  for (var i = rows.length - 1; i >= 0; i--) {
+    var row = rows[i];
+    var id        = row[COLS.CONTACTS.contact_id - 1];
+    var deletedAt = row[COLS.CONTACTS.deleted_at - 1];
+    if (!id || deletedAt) continue;
+    if (filterCompanyId && row[COLS.CONTACTS.company_id - 1] !== filterCompanyId) continue;
+
+    contacts.push({
+      contact_id:    id,
+      company_id:    row[COLS.CONTACTS.company_id - 1],
+      first_name:    row[COLS.CONTACTS.first_name - 1],
+      last_name:     row[COLS.CONTACTS.last_name - 1],
+      full_name:     row[COLS.CONTACTS.full_name - 1],
+      title:         row[COLS.CONTACTS.title - 1],
+      email:         row[COLS.CONTACTS.email - 1],
+      phone:         row[COLS.CONTACTS.phone - 1],
+      language:      row[COLS.CONTACTS.language - 1],
+      is_primary:    row[COLS.CONTACTS.is_primary - 1],
+      status:        row[COLS.CONTACTS.status - 1],
+      owner_user_id: row[COLS.CONTACTS.owner_user_id - 1],
+      deleted_at:    deletedAt
+    });
+  }
+
+  return { ok: true, data: { contacts: contacts } };
+}
+
+function handleGetContact_(auth, params) {
+  requireAuth_(auth);
+
+  var contactId = String(params.contactId || '').trim();
+  if (!contactId) throw new Error(ERR.VALIDATION);
+
+  var found = getContactById_(contactId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  return { ok: true, data: { contact: found.record } };
+}
+
+function handleCreateContact_(auth, data) {
+  var user = requireAuth_(auth);
+
+  var firstName = sanitize_(data.first_name || '');
+  var lastName  = sanitize_(data.last_name || '');
+  if (!firstName || !lastName) throw new Error(ERR.VALIDATION);
+
+  var sh  = getOrCreateSheet_(SHEET.CONTACTS);
+  var now = new Date().toISOString();
+  var contactId = makeId_('CON', new Date());
+  var fullName  = (firstName + ' ' + lastName).trim();
+
+  // is_primary should be a boolean — sheet checkboxes expect TRUE/FALSE
+  var isPrimary = data.is_primary === true || data.is_primary === 'true';
+
+  var row = buildRow_(COLS.CONTACTS, {
+    contact_id:    contactId,
+    company_id:    sanitize_(data.company_id || ''),
+    first_name:    firstName,
+    last_name:     lastName,
+    full_name:     fullName,
+    title:         sanitize_(data.title || ''),
+    email:         sanitize_(data.email || ''),
+    phone:         sanitize_(data.phone || ''),
+    linkedin:      sanitize_(data.linkedin || ''),
+    language:      sanitize_(data.language || ''),
+    is_primary:    isPrimary,
+    status:        sanitize_(data.status || 'Active'),
+    owner_user_id: user.user_id,
+    created_at:    now,
+    created_by:    user.user_id,
+    updated_at:    now,
+    updated_by:    user.user_id,
+    deleted_at:    ''
+  });
+  sh.appendRow(row);
+
+  logActivity_('Contact', contactId, 'contact_created',
+    'Contact created: ' + fullName, '', user.user_id);
+
+  return { ok: true, data: { contact_id: contactId } };
+}
+
+function handleUpdateContact_(auth, data) {
+  var user = requireAuth_(auth);
+
+  var contactId = String(data.contactId || '').trim();
+  if (!contactId) throw new Error(ERR.VALIDATION);
+
+  var found = getContactById_(contactId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var WRITABLE = {
+    first_name: true, last_name: true, full_name: true, title: true,
+    email: true, phone: true, linkedin: true, language: true,
+    is_primary: true, status: true, company_id: true, owner_user_id: true
+  };
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.CONTACTS);
+  if (!sh) throw new Error(ERR.INTERNAL);
+
+  var fields  = data.fields || {};
+  var updates = {};
+  var now     = new Date().toISOString();
+
+  Object.keys(fields).forEach(function(key) {
+    if (WRITABLE[key] && COLS.CONTACTS[key] !== undefined) {
+      var val = fields[key];
+      if (key === 'is_primary') {
+        updates[key] = (val === true || val === 'true');
+      } else {
+        updates[key] = (val !== null && val !== undefined) ? sanitize_(String(val)) : '';
+      }
+    }
+  });
+
+  if (!Object.keys(updates).length) {
+    return { ok: true, data: { contact: found.record } };
+  }
+
+  updates.updated_at = now;
+  updates.updated_by = user.user_id;
+
+  batchWriteRow_(sh, found.rowNum, COLS.CONTACTS, updates);
+
+  var updated = getContactById_(contactId);
+  return { ok: true, data: { contact: updated ? updated.record : found.record } };
+}
+
+// ============================================================
+// RECORD LOOKUP HELPERS
 // ============================================================
 
 /**
- * Find a lead by lead_id. Returns { rowNum, lead } or null.
- * rowNum is 1-indexed and accounts for the header row.
+ * Find any record by its ID field. Returns { rowNum, record } or null.
+ * rowNum is 1-indexed (accounts for the header row).
+ * Used by all entity handlers — avoids duplicating the search loop per sheet.
  */
-function getLeadById_(leadId) {
+function getRecordById_(sheetName, colMap, idField, idValue) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sh = ss.getSheetByName(SHEET.LEADS);
+  var sh = ss.getSheetByName(sheetName);
   if (!sh || sh.getLastRow() < 2) return null;
 
-  var numCols = Object.keys(COLS.LEADS).length;
+  var numCols = Object.keys(colMap).length;
   var rows = sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues();
 
   for (var i = 0; i < rows.length; i++) {
-    if (rows[i][COLS.LEADS.lead_id - 1] === leadId) {
-      return { rowNum: i + 2, lead: rowToObject_(COLS.LEADS, rows[i]) };
+    if (rows[i][colMap[idField] - 1] === idValue) {
+      return { rowNum: i + 2, record: rowToObject_(colMap, rows[i]) };
     }
   }
   return null;
+}
+
+function getLeadById_(leadId) {
+  return getRecordById_(SHEET.LEADS, COLS.LEADS, 'lead_id', leadId);
+}
+
+function getCompanyById_(companyId) {
+  return getRecordById_(SHEET.COMPANIES, COLS.COMPANIES, 'company_id', companyId);
+}
+
+function getContactById_(contactId) {
+  return getRecordById_(SHEET.CONTACTS, COLS.CONTACTS, 'contact_id', contactId);
 }
 
 /**
