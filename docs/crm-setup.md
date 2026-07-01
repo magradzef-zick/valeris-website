@@ -201,7 +201,7 @@ After the first Owner is created:
 
 Alternatively, call `seedUser(email, password, fullName, role)` directly from the Apps Script editor.
 
-> **Password reset (M0):** Owner or Administrator resets a password by running `changePassword_(userId, newPlainPassword)` in the Apps Script editor. A self-service reset flow is planned for a future milestone.
+> **Password reset (M0):** Owner or Administrator resets a password by running `changePassword(userId, newPlainPassword)` in the Apps Script editor. The function also invalidates the user's current session, forcing a fresh login. A self-service reset flow is planned for a future milestone.
 
 ---
 

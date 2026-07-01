@@ -290,10 +290,9 @@ function doGet(e) {
 
   try {
     var auth = extractGetAuth_(e);
-    var p    = e.parameter || {};
 
     switch (action) {
-      // M1+ actions will be added here as each milestone ships
+      // M1+ read actions will be added here (each requires requireAuth_(auth))
       default:
         return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
     }
@@ -472,9 +471,14 @@ function requireAuth_(auth) {
     throw new Error(ERR.AUTH_REQUIRED);
   }
 
-  // Slide the session window on every authenticated request
-  var newExpiry = new Date(new Date().getTime() + SESSION_HOURS * 3600 * 1000).toISOString();
-  updateUserSession_(user.user_id, auth.token, newExpiry, null);
+  // Slide the session window only when more than half has elapsed.
+  // This avoids a Sheets write (and cache invalidation) on every request.
+  var halfWindowMs = SESSION_HOURS * 0.5 * 3600 * 1000;
+  var expiryTime   = new Date(user.session_expires_at).getTime();
+  if (expiryTime - Date.now() < halfWindowMs) {
+    var newExpiry = new Date(Date.now() + SESSION_HOURS * 3600 * 1000).toISOString();
+    updateUserSession_(user.user_id, auth.token, newExpiry, null);
+  }
 
   return user;
 }
@@ -563,11 +567,19 @@ function updateUserSession_(userId, token, expiresAt, lastLoginAt) {
   for (var i = 0; i < data.length; i++) {
     if (data[i][COLS.USERS.user_id - 1] === userId) {
       var rowNum = i + 2;
-      sh.getRange(rowNum, COLS.USERS.session_token).setValue(token);
-      sh.getRange(rowNum, COLS.USERS.session_expires_at).setValue(expiresAt);
-      if (lastLoginAt) {
-        sh.getRange(rowNum, COLS.USERS.last_login_at).setValue(lastLoginAt);
-      }
+      // Batch all session-related writes into a single range update
+      // to avoid multiple Sheets API round-trips per request.
+      var tokenCol   = COLS.USERS.session_token;
+      var expiryCol  = COLS.USERS.session_expires_at;
+      var loginCol   = COLS.USERS.last_login_at;
+      var minCol     = Math.min(tokenCol, expiryCol, lastLoginAt ? loginCol : tokenCol);
+      var maxCol     = Math.max(tokenCol, expiryCol, lastLoginAt ? loginCol : expiryCol);
+      var numCols_   = maxCol - minCol + 1;
+      var vals       = new Array(numCols_).fill('');
+      vals[tokenCol  - minCol] = token;
+      vals[expiryCol - minCol] = expiresAt;
+      if (lastLoginAt) vals[loginCol - minCol] = lastLoginAt;
+      sh.getRange(rowNum, minCol, 1, numCols_).setValues([vals]);
       invalidateCache_('users');
       return;
     }
@@ -839,23 +851,13 @@ function ensureHeaders_(sh, expectedHeaders) {
   var lastCol = Math.max(sh.getLastColumn(), 1);
   var existing = sh.getRange(1, 1, 1, lastCol).getValues()[0].map(String);
 
-  // Add missing headers at the end
+  // Append any headers that are missing entirely.
+  // We never reorder existing columns — data integrity trumps schema alignment.
   var nextCol = lastCol;
   for (var i = 0; i < expectedHeaders.length; i++) {
     if (existing.indexOf(expectedHeaders[i]) === -1) {
-      // Header not found — check if this position is still empty
-      if (i < existing.length && existing[i] === '') {
-        sh.getRange(1, i + 1).setValue(expectedHeaders[i]);
-      } else {
-        nextCol++;
-        sh.getRange(1, nextCol).setValue(expectedHeaders[i]);
-      }
-    } else {
-      // Header exists but may be in wrong column — update in place if position differs
-      var actualIdx = existing.indexOf(expectedHeaders[i]);
-      if (actualIdx !== i && i < existing.length) {
-        // Leave it where it is (don't rearrange existing data)
-      }
+      nextCol++;
+      sh.getRange(1, nextCol).setValue(expectedHeaders[i]);
     }
   }
 }
@@ -1102,6 +1104,51 @@ function seedOwner(email, plainPassword, fullName) {
  */
 function seedUser(email, plainPassword, fullName, role) {
   return seedUser_(email, plainPassword, fullName, role || 'Sales');
+}
+
+/**
+ * Reset a team member's password.
+ * Run from the Apps Script editor — not callable via HTTP.
+ *
+ * Usage: changePassword('USR-20260701120000000-abc123', 'new-password')
+ */
+function changePassword(userId, newPlainPassword) {
+  if (!userId || !newPlainPassword) {
+    throw new Error('userId and newPlainPassword are both required');
+  }
+  var user = getUserById_(userId);
+  if (!user) throw new Error('User not found: ' + userId);
+
+  var salt = Utilities.getUuid();
+  var hash = hashPassword_(newPlainPassword, salt);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.USERS);
+  if (!sh) throw new Error('Users sheet not found');
+
+  var numCols = Object.keys(COLS.USERS).length;
+  var data = sh.getLastRow() > 1
+    ? sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues()
+    : [];
+
+  for (var i = 0; i < data.length; i++) {
+    if (data[i][COLS.USERS.user_id - 1] === userId) {
+      var rowNum = i + 2;
+      var hashCol = COLS.USERS.password_hash;
+      var saltCol = COLS.USERS.password_salt;
+      var minCol  = Math.min(hashCol, saltCol);
+      var vals    = ['', ''];
+      vals[hashCol - minCol] = hash;
+      vals[saltCol - minCol] = salt;
+      sh.getRange(rowNum, minCol, 1, 2).setValues([vals]);
+      // Invalidate any existing session so the user must log in with the new password
+      sh.getRange(rowNum, COLS.USERS.session_token).setValue('');
+      sh.getRange(rowNum, COLS.USERS.session_expires_at).setValue('');
+      invalidateCache_('users');
+      return 'Password changed for: ' + user.email;
+    }
+  }
+  throw new Error('User row not found in sheet: ' + userId);
 }
 
 function seedUser_(email, plainPassword, fullName, role) {
