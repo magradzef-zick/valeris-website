@@ -292,7 +292,9 @@ function doGet(e) {
     var auth = extractGetAuth_(e);
 
     switch (action) {
-      // M1+ read actions will be added here (each requires requireAuth_(auth))
+      case 'getLeads':    return json_(handleGetLeads_(auth, e.parameter || {}));
+      case 'getLead':     return json_(handleGetLead_(auth, e.parameter || {}));
+      case 'getTimeline': return json_(handleGetTimeline_(auth, e.parameter || {}));
       default:
         return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
     }
@@ -324,7 +326,7 @@ function doPost(e) {
     var data = body.data || {};
 
     switch (action) {
-      // M1+ actions will be added here as each milestone ships
+      case 'updateLead':  return json_(handleUpdateLead_(auth, data));
       default:
         return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
     }
@@ -757,6 +759,237 @@ function getSchemaVersion_() {
     }
   }
   return SCHEMA_VERSION;
+}
+
+// ============================================================
+// M1 — LEADS HANDLERS
+// ============================================================
+
+/**
+ * GET getLeads — returns all non-deleted leads as lean summary objects.
+ * Heavy fields (message, user_agent, UTMs, etc.) are excluded to keep the
+ * response small; use getLead for the full record.
+ */
+function handleGetLeads_(auth, params) {
+  requireAuth_(auth);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.LEADS);
+  if (!sh || sh.getLastRow() < 2) {
+    return { ok: true, data: { leads: [] } };
+  }
+
+  var numCols = Object.keys(COLS.LEADS).length;
+  var rows = sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues();
+
+  var leads = [];
+  for (var i = rows.length - 1; i >= 0; i--) {
+    var row = rows[i];
+    var leadId    = row[COLS.LEADS.lead_id - 1];
+    var deletedAt = row[COLS.LEADS.deleted_at - 1];
+    if (!leadId || deletedAt) continue;
+
+    leads.push({
+      lead_id:          leadId,
+      received:         row[COLS.LEADS.received - 1],
+      status:           row[COLS.LEADS.status - 1],
+      priority:         row[COLS.LEADS.priority - 1],
+      owner:            row[COLS.LEADS.owner - 1],
+      next_action:      row[COLS.LEADS.next_action - 1],
+      next_action_date: row[COLS.LEADS.next_action_date - 1],
+      updated_at:       row[COLS.LEADS.updated_at - 1],
+      first_name:       row[COLS.LEADS.first_name - 1],
+      last_name:        row[COLS.LEADS.last_name - 1],
+      full_name:        row[COLS.LEADS.full_name - 1],
+      company_name:     row[COLS.LEADS.company_name - 1],
+      email:            row[COLS.LEADS.email - 1],
+      phone:            row[COLS.LEADS.phone - 1],
+      interest:         row[COLS.LEADS.interest - 1],
+      language:         row[COLS.LEADS.language - 1],
+      deleted_at:       deletedAt,
+      trade_direction:  row[COLS.LEADS.trade_direction - 1]
+    });
+  }
+
+  return { ok: true, data: { leads: leads } };
+}
+
+/**
+ * GET getLead — returns the full Lead record for a given lead_id.
+ */
+function handleGetLead_(auth, params) {
+  requireAuth_(auth);
+
+  var leadId = String(params.leadId || '').trim();
+  if (!leadId) throw new Error(ERR.VALIDATION);
+
+  var found = getLeadById_(leadId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  return { ok: true, data: { lead: found.lead } };
+}
+
+/**
+ * GET getTimeline — merges Notes and Activities for an entity, newest first.
+ */
+function handleGetTimeline_(auth, params) {
+  requireAuth_(auth);
+
+  var entityType = String(params.entityType || '').trim();
+  var entityId   = String(params.entityId || '').trim();
+  if (!entityType || !entityId) throw new Error(ERR.VALIDATION);
+
+  var ss    = SpreadsheetApp.getActiveSpreadsheet();
+  var items = [];
+
+  // Collect notes
+  var notesSh = ss.getSheetByName(SHEET.NOTES);
+  if (notesSh && notesSh.getLastRow() >= 2) {
+    var notesCols = Object.keys(COLS.NOTES).length;
+    var notesData = notesSh.getRange(2, 1, notesSh.getLastRow() - 1, notesCols).getValues();
+    for (var n = 0; n < notesData.length; n++) {
+      var note = rowToObject_(COLS.NOTES, notesData[n]);
+      if (note.note_id && note.entity_type === entityType && note.entity_id === entityId && !note.deleted_at) {
+        note._kind = 'note';
+        note._sortKey = note.created_at;
+        items.push(note);
+      }
+    }
+  }
+
+  // Collect activities
+  var actSh = ss.getSheetByName(SHEET.ACTIVITIES);
+  if (actSh && actSh.getLastRow() >= 2) {
+    var actCols = Object.keys(COLS.ACTIVITIES).length;
+    var actData = actSh.getRange(2, 1, actSh.getLastRow() - 1, actCols).getValues();
+    for (var a = 0; a < actData.length; a++) {
+      var act = rowToObject_(COLS.ACTIVITIES, actData[a]);
+      if (act.activity_id && act.entity_type === entityType && act.entity_id === entityId) {
+        act._kind = 'activity';
+        act._sortKey = act.performed_at;
+        items.push(act);
+      }
+    }
+  }
+
+  // Sort newest first
+  items.sort(function(a, b) {
+    if (b._sortKey < a._sortKey) return -1;
+    if (b._sortKey > a._sortKey) return 1;
+    return 0;
+  });
+
+  return { ok: true, data: { items: items } };
+}
+
+/**
+ * POST updateLead — update editable CRM fields on a lead.
+ * Only the fields in WRITABLE_FIELDS can be changed via this action.
+ * A status change is recorded as an Activity automatically.
+ */
+function handleUpdateLead_(auth, data) {
+  var user = requireAuth_(auth);
+
+  var leadId = String(data.leadId || '').trim();
+  if (!leadId) throw new Error(ERR.VALIDATION);
+
+  var found = getLeadById_(leadId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var WRITABLE = {
+    status:           true,
+    priority:         true,
+    owner:            true,
+    next_action:      true,
+    next_action_date: true,
+    notes:            true,
+    trade_direction:  true,
+    company_id:       true,
+    contact_id:       true
+  };
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.LEADS);
+  if (!sh) throw new Error(ERR.INTERNAL);
+
+  var fields     = data.fields || {};
+  var prevStatus = found.lead.status;
+  var updates    = {};
+  var now        = new Date().toISOString();
+
+  Object.keys(fields).forEach(function(key) {
+    if (WRITABLE[key] && COLS.LEADS[key] !== undefined) {
+      var val = fields[key];
+      updates[key] = (val !== null && val !== undefined) ? sanitize_(String(val)) : '';
+    }
+  });
+
+  if (!Object.keys(updates).length) {
+    return { ok: true, data: { lead: found.lead } };
+  }
+
+  updates.updated_at = now;
+  updates.updated_by = user.user_id;
+
+  batchWriteRow_(sh, found.rowNum, COLS.LEADS, updates);
+
+  if (updates.status && updates.status !== prevStatus) {
+    logActivity_('Lead', leadId, 'status_changed',
+      'Status changed from ' + prevStatus + ' to ' + updates.status,
+      '', user.user_id);
+  }
+
+  var updated = getLeadById_(leadId);
+  return { ok: true, data: { lead: updated ? updated.lead : found.lead } };
+}
+
+// ============================================================
+// LEAD HELPERS
+// ============================================================
+
+/**
+ * Find a lead by lead_id. Returns { rowNum, lead } or null.
+ * rowNum is 1-indexed and accounts for the header row.
+ */
+function getLeadById_(leadId) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.LEADS);
+  if (!sh || sh.getLastRow() < 2) return null;
+
+  var numCols = Object.keys(COLS.LEADS).length;
+  var rows = sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues();
+
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i][COLS.LEADS.lead_id - 1] === leadId) {
+      return { rowNum: i + 2, lead: rowToObject_(COLS.LEADS, rows[i]) };
+    }
+  }
+  return null;
+}
+
+/**
+ * Write a sparse set of column updates to a single row in one Sheets API call.
+ * Reads the affected range first so non-updated cells are preserved.
+ * updates: { fieldName: value } where fieldName must exist in colMap.
+ */
+function batchWriteRow_(sh, rowNum, colMap, updates) {
+  var keys = Object.keys(updates).filter(function(k) { return colMap[k] !== undefined; });
+  if (!keys.length) return;
+
+  var minCol = Infinity, maxCol = 0;
+  keys.forEach(function(k) {
+    if (colMap[k] < minCol) minCol = colMap[k];
+    if (colMap[k] > maxCol) maxCol = colMap[k];
+  });
+
+  var width    = maxCol - minCol + 1;
+  var existing = sh.getRange(rowNum, minCol, 1, width).getValues()[0];
+
+  keys.forEach(function(k) {
+    existing[colMap[k] - minCol] = updates[k];
+  });
+
+  sh.getRange(rowNum, minCol, 1, width).setValues([existing]);
 }
 
 // ============================================================
