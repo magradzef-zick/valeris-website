@@ -31,7 +31,7 @@ var NOTIFY_EMAIL = ''; // e.g. 'agata@valeris.com.in' — leave empty to disable
 var SESSION_HOURS = 24;   // sliding window: each valid request extends by this many hours
 var HASH_ITERATIONS = 1000; // SHA-256 iterations for password hashing
 var CACHE_TTL = 300;      // seconds to cache Users and Settings reads (5 minutes)
-var SCHEMA_VERSION = '1';
+var SCHEMA_VERSION = '2';
 
 // ============================================================
 // SHEET NAMES
@@ -273,8 +273,16 @@ var SERVICES = [
   'Pharma — Europe Market Entry',
   'Other / Not sure yet'
 ];
-var ROLES          = ['Owner', 'Administrator', 'Sales', 'Operations'];
-var USER_STATUSES  = ['Active', 'Inactive'];
+var ROLES             = ['Owner', 'Administrator', 'Sales', 'Operations'];
+var USER_STATUSES     = ['Active', 'Inactive'];
+var PROJECT_STATUSES  = ['Active', 'On Hold', 'Completed', 'Cancelled'];
+var PROJECT_PHASES    = ['Discovery', 'Proposal', 'Execution', 'Delivery', 'Closed'];
+var TASK_STATUSES     = ['Open', 'In Progress', 'Done', 'Cancelled'];
+var COMPANY_TYPES     = ['Manufacturer', 'Distributor', 'Trading Company', 'Service Provider', 'Other'];
+var COMPANY_STATUSES  = ['Active', 'Inactive', 'Prospect'];
+var CONTACT_STATUSES  = ['Active', 'Inactive'];
+var LANGUAGES         = ['English', 'Polish', 'Hindi', 'Other'];
+var TRADE_DIRECTIONS  = ['India → Poland', 'Poland → India'];
 
 // ============================================================
 // ENTRY POINTS
@@ -292,13 +300,19 @@ function doGet(e) {
     var auth = extractGetAuth_(e);
 
     switch (action) {
-      case 'getLeads':      return json_(handleGetLeads_(auth, e.parameter || {}));
-      case 'getLead':       return json_(handleGetLead_(auth, e.parameter || {}));
-      case 'getTimeline':   return json_(handleGetTimeline_(auth, e.parameter || {}));
-      case 'getCompanies':  return json_(handleGetCompanies_(auth, e.parameter || {}));
-      case 'getCompany':    return json_(handleGetCompany_(auth, e.parameter || {}));
-      case 'getContacts':   return json_(handleGetContacts_(auth, e.parameter || {}));
-      case 'getContact':    return json_(handleGetContact_(auth, e.parameter || {}));
+      case 'getLeads':           return json_(handleGetLeads_(auth, e.parameter || {}));
+      case 'getLead':            return json_(handleGetLead_(auth, e.parameter || {}));
+      case 'getTimeline':        return json_(handleGetTimeline_(auth, e.parameter || {}));
+      case 'getCompanies':       return json_(handleGetCompanies_(auth, e.parameter || {}));
+      case 'getCompany':         return json_(handleGetCompany_(auth, e.parameter || {}));
+      case 'getContacts':        return json_(handleGetContacts_(auth, e.parameter || {}));
+      case 'getContact':         return json_(handleGetContact_(auth, e.parameter || {}));
+      case 'getProjects':        return json_(handleGetProjects_(auth, e.parameter || {}));
+      case 'getProject':         return json_(handleGetProject_(auth, e.parameter || {}));
+      case 'getTasks':           return json_(handleGetTasks_(auth, e.parameter || {}));
+      case 'getTask':            return json_(handleGetTask_(auth, e.parameter || {}));
+      case 'getUsers':           return json_(handleGetUsers_(auth, e.parameter || {}));
+      case 'getDashboardStats':  return json_(handleGetDashboardStats_(auth, e.parameter || {}));
       default:
         return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
     }
@@ -330,12 +344,22 @@ function doPost(e) {
     var data = body.data || {};
 
     switch (action) {
-      case 'updateLead':     return json_(handleUpdateLead_(auth, data));
-      case 'createNote':     return json_(handleCreateNote_(auth, data));
-      case 'createCompany':  return json_(handleCreateCompany_(auth, data));
-      case 'updateCompany':  return json_(handleUpdateCompany_(auth, data));
-      case 'createContact':  return json_(handleCreateContact_(auth, data));
-      case 'updateContact':  return json_(handleUpdateContact_(auth, data));
+      case 'updateLead':      return json_(handleUpdateLead_(auth, data));
+      case 'deleteLead':      return json_(handleDeleteLead_(auth, data));
+      case 'createNote':      return json_(handleCreateNote_(auth, data));
+      case 'createCompany':   return json_(handleCreateCompany_(auth, data));
+      case 'updateCompany':   return json_(handleUpdateCompany_(auth, data));
+      case 'deleteCompany':   return json_(handleDeleteCompany_(auth, data));
+      case 'createContact':   return json_(handleCreateContact_(auth, data));
+      case 'updateContact':   return json_(handleUpdateContact_(auth, data));
+      case 'deleteContact':   return json_(handleDeleteContact_(auth, data));
+      case 'createProject':   return json_(handleCreateProject_(auth, data));
+      case 'updateProject':   return json_(handleUpdateProject_(auth, data));
+      case 'deleteProject':   return json_(handleDeleteProject_(auth, data));
+      case 'createTask':      return json_(handleCreateTask_(auth, data));
+      case 'updateTask':      return json_(handleUpdateTask_(auth, data));
+      case 'createUser':      return json_(handleCreateUser_(auth, data));
+      case 'updateUser':      return json_(handleUpdateUser_(auth, data));
       default:
         return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
     }
@@ -1384,22 +1408,34 @@ function notify_(leadId, fullName, company, email, phone, interest, priority,
 /**
  * Create or update all CRM sheets.
  * Safe to run on an existing sheet: adds missing columns, never removes data.
+ * Run this once after pasting Code.gs, then again on every schema version bump.
  */
 function setupCrm() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
   setupLeadsSheet_(ss);
   setupUsersSheet_(ss);
-  setupSheet_(ss, SHEET.COMPANIES,  buildHeadersFromCols_(COLS.COMPANIES));
-  setupSheet_(ss, SHEET.CONTACTS,   buildHeadersFromCols_(COLS.CONTACTS));
-  setupSheet_(ss, SHEET.PROJECTS,   buildHeadersFromCols_(COLS.PROJECTS));
-  setupSheet_(ss, SHEET.TASKS,      buildHeadersFromCols_(COLS.TASKS));
-  setupSheet_(ss, SHEET.NOTES,      buildHeadersFromCols_(COLS.NOTES));
-  setupSheet_(ss, SHEET.ACTIVITIES, buildHeadersFromCols_(COLS.ACTIVITIES));
-  setupSheet_(ss, SHEET.SETTINGS,   buildHeadersFromCols_(COLS.SETTINGS));
+  setupCompaniesSheet_(ss);
+  setupContactsSheet_(ss);
+  setupProjectsSheet_(ss);
+  setupTasksSheet_(ss);
+  setupNotesSheet_(ss);
+  setupActivitiesSheet_(ss);
+  setupSettingsSheet_(ss);
   setupMetaSheet_(ss);
   createDashboard_(ss);
   createReadme_(ss);
+
+  // Move utility sheets to the end so data sheets come first
+  var tabOrder = [
+    SHEET.LEADS, SHEET.COMPANIES, SHEET.CONTACTS, SHEET.PROJECTS,
+    SHEET.TASKS, SHEET.NOTES, SHEET.ACTIVITIES, SHEET.USERS,
+    SHEET.SETTINGS, SHEET.META, SHEET.DASHBOARD, SHEET.README
+  ];
+  tabOrder.forEach(function(name, idx) {
+    var sh = ss.getSheetByName(name);
+    if (sh) ss.moveActiveSheet && ss.setActiveSheet(sh) && ss.moveActiveSheet(idx + 1);
+  });
 
   return 'Valeris CRM setup complete (schema v' + SCHEMA_VERSION + ').';
 }
@@ -1619,36 +1655,68 @@ function createDashboard_(ss) {
   var sh = ss.getSheetByName(SHEET.DASHBOARD) || ss.insertSheet(SHEET.DASHBOARD);
   sh.clear();
 
-  sh.getRange(1, 1, 1, 4).merge().setValue('Valeris CRM Dashboard');
-  sh.getRange(1, 1).setFontWeight('bold').setFontSize(16)
+  // Title
+  sh.getRange(1, 1, 1, 6).merge().setValue('Valeris CRM — Dashboard');
+  sh.getRange(1, 1).setFontWeight('bold').setFontSize(14)
     .setFontColor('#F1E4D1').setBackground('#071917');
+  sh.setRowHeight(1, 36);
 
-  sh.getRange(3, 1, 4, 2).setValues([
-    ['Total leads',    '=COUNTA(Leads!B2:B)'],
-    ['Open leads',     '=COUNTIF(Leads!C2:C,"New")+COUNTIF(Leads!C2:C,"Contacted")+COUNTIF(Leads!C2:C,"Qualified")+COUNTIF(Leads!C2:C,"Proposal")'],
-    ['Won',            '=COUNTIF(Leads!C2:C,"Won")'],
-    ['High priority',  '=COUNTIF(Leads!D2:D,"High")']
+  // KPI headers row
+  sh.getRange(3, 1, 1, 6).setValues([['Leads', '', 'Projects', '', 'Tasks', '']]);
+  sh.getRange(3, 1, 1, 6).setFontWeight('bold').setFontColor('#F1E4D1').setBackground('#113632');
+
+  // KPIs
+  sh.getRange(4, 1, 5, 2).setValues([
+    ['Total leads',       '=COUNTA(Leads!B2:B)'],
+    ['Open leads',        '=COUNTIF(Leads!C2:C,"New")+COUNTIF(Leads!C2:C,"Contacted")+COUNTIF(Leads!C2:C,"Qualified")+COUNTIF(Leads!C2:C,"Proposal")'],
+    ['Won',               '=COUNTIF(Leads!C2:C,"Won")'],
+    ['High priority',     '=COUNTIF(Leads!D2:D,"High")'],
+    ['New this month',    '=COUNTIFS(Leads!A2:A,">="&DATE(YEAR(TODAY()),MONTH(TODAY()),1),Leads!B2:B,"<>")']
   ]);
 
-  sh.getRange(8, 1, LEAD_STATUSES.length + 1, 2).setValues(
-    [['Status', 'Count']].concat(LEAD_STATUSES.map(function(s) {
+  sh.getRange(4, 3, 4, 2).setValues([
+    ['Total projects',    '=COUNTA(Projects!A2:A)'],
+    ['Active',            '=COUNTIF(Projects!H2:H,"Active")'],
+    ['Completed',         '=COUNTIF(Projects!H2:H,"Completed")'],
+    ['On hold',           '=COUNTIF(Projects!H2:H,"On Hold")']
+  ]);
+
+  sh.getRange(4, 5, 4, 2).setValues([
+    ['Total tasks',       '=COUNTA(Tasks!A2:A)'],
+    ['Open',              '=COUNTIF(Tasks!F2:F,"Open")+COUNTIF(Tasks!F2:F,"In Progress")'],
+    ['Due today',         '=COUNTIFS(Tasks!I2:I,TODAY(),Tasks!F2:F,"<>Done",Tasks!F2:F,"<>Cancelled")'],
+    ['Overdue',           '=COUNTIFS(Tasks!I2:I,"<"&TODAY(),Tasks!F2:F,"<>Done",Tasks!F2:F,"<>Cancelled")']
+  ]);
+
+  sh.getRange(4, 1, 5, 1).setFontWeight('bold');
+  sh.getRange(4, 3, 4, 1).setFontWeight('bold');
+  sh.getRange(4, 5, 4, 1).setFontWeight('bold');
+
+  // Lead status breakdown
+  sh.getRange(11, 1, 1, 2).setValues([['Lead Status', 'Count']]);
+  sh.getRange(11, 1, 1, 2).setFontWeight('bold').setFontColor('#F1E4D1').setBackground('#071917');
+  sh.getRange(12, 1, LEAD_STATUSES.length, 2).setValues(
+    LEAD_STATUSES.map(function(s) {
       return [s, '=COUNTIF(Leads!C2:C,"' + s + '")'];
-    }))
+    })
   );
 
-  sh.getRange(8, 4, SERVICES.length + 1, 2).setValues(
-    [['Interest', 'Count']].concat(SERVICES.map(function(s) {
+  // Interest breakdown
+  sh.getRange(11, 4, 1, 2).setValues([['Interest', 'Count']]);
+  sh.getRange(11, 4, 1, 2).setFontWeight('bold').setFontColor('#F1E4D1').setBackground('#071917');
+  sh.getRange(12, 4, SERVICES.length, 2).setValues(
+    SERVICES.map(function(s) {
       return [s, '=COUNTIF(Leads!O2:O,"' + s + '")'];
-    }))
+    })
   );
 
-  sh.getRange('A3:A6').setFontWeight('bold');
-  sh.getRange('A8:B8').setFontWeight('bold').setFontColor('#F1E4D1').setBackground('#071917');
-  sh.getRange('D8:E8').setFontWeight('bold').setFontColor('#F1E4D1').setBackground('#071917');
-  sh.setColumnWidth(1, 160);
-  sh.setColumnWidth(2, 100);
+  // Column widths
+  sh.setColumnWidth(1, 170);
+  sh.setColumnWidth(2, 90);
+  sh.setColumnWidth(3, 170);
   sh.setColumnWidth(4, 280);
-  sh.setColumnWidth(5, 100);
+  sh.setColumnWidth(5, 170);
+  sh.setColumnWidth(6, 90);
 }
 
 function createReadme_(ss) {
@@ -1808,4 +1876,803 @@ function listRule_(values) {
     .requireValueInList(values, true)
     .setAllowInvalid(true)
     .build();
+}
+
+// ============================================================
+// M3 — PROJECTS HANDLERS
+// ============================================================
+
+function handleGetProjects_(auth, params) {
+  requireAuth_(auth);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.PROJECTS);
+  if (!sh || sh.getLastRow() < 2) return { ok: true, data: { projects: [] } };
+
+  var numCols = Object.keys(COLS.PROJECTS).length;
+  var rows = sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues();
+
+  var filterCompanyId = String(params.companyId || '').trim();
+  var filterStatus    = String(params.status    || '').trim();
+
+  var projects = [];
+  for (var i = rows.length - 1; i >= 0; i--) {
+    var row = rows[i];
+    var id        = row[COLS.PROJECTS.project_id - 1];
+    var deletedAt = row[COLS.PROJECTS.deleted_at - 1];
+    if (!id || deletedAt) continue;
+    if (filterCompanyId && row[COLS.PROJECTS.company_id - 1] !== filterCompanyId) continue;
+    if (filterStatus    && row[COLS.PROJECTS.status - 1]    !== filterStatus)    continue;
+
+    projects.push({
+      project_id:         id,
+      lead_id:            row[COLS.PROJECTS.lead_id - 1],
+      company_id:         row[COLS.PROJECTS.company_id - 1],
+      contact_id:         row[COLS.PROJECTS.contact_id - 1],
+      name:               row[COLS.PROJECTS.name - 1],
+      service_line:       row[COLS.PROJECTS.service_line - 1],
+      trade_direction:    row[COLS.PROJECTS.trade_direction - 1],
+      status:             row[COLS.PROJECTS.status - 1],
+      phase:              row[COLS.PROJECTS.phase - 1],
+      priority:           row[COLS.PROJECTS.priority - 1],
+      owner_user_id:      row[COLS.PROJECTS.owner_user_id - 1],
+      operations_user_id: row[COLS.PROJECTS.operations_user_id - 1],
+      start_date:         row[COLS.PROJECTS.start_date - 1],
+      target_end_date:    row[COLS.PROJECTS.target_end_date - 1],
+      deleted_at:         deletedAt
+    });
+  }
+  return { ok: true, data: { projects: projects } };
+}
+
+function handleGetProject_(auth, params) {
+  requireAuth_(auth);
+  var projectId = String(params.projectId || '').trim();
+  if (!projectId) throw new Error(ERR.VALIDATION);
+  var found = getProjectById_(projectId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+  return { ok: true, data: { project: found.record } };
+}
+
+function handleCreateProject_(auth, data) {
+  var user = requireAuth_(auth);
+
+  var name = sanitize_(data.name || '');
+  if (!name) throw new Error(ERR.VALIDATION);
+
+  var sh        = getOrCreateSheet_(SHEET.PROJECTS);
+  var now       = new Date().toISOString();
+  var projectId = makeId_('PRJ', new Date());
+
+  var row = buildRow_(COLS.PROJECTS, {
+    project_id:         projectId,
+    lead_id:            sanitize_(data.lead_id            || ''),
+    company_id:         sanitize_(data.company_id         || ''),
+    contact_id:         sanitize_(data.contact_id         || ''),
+    name:               name,
+    service_line:       sanitize_(data.service_line       || ''),
+    trade_direction:    sanitize_(data.trade_direction    || ''),
+    status:             sanitize_(data.status             || 'Active'),
+    phase:              sanitize_(data.phase              || 'Discovery'),
+    priority:           sanitize_(data.priority           || 'Medium'),
+    owner_user_id:      sanitize_(data.owner_user_id      || user.user_id),
+    operations_user_id: sanitize_(data.operations_user_id || ''),
+    start_date:         sanitize_(data.start_date         || ''),
+    target_end_date:    sanitize_(data.target_end_date    || ''),
+    actual_end_date:    '',
+    description:        sanitize_(data.description        || ''),
+    created_at:         now,
+    created_by:         user.user_id,
+    updated_at:         now,
+    updated_by:         user.user_id,
+    deleted_at:         ''
+  });
+  sh.appendRow(row);
+
+  logActivity_('Project', projectId, 'project_created',
+    'Project created: ' + name, '', user.user_id);
+
+  // If created from a lead, mark it converted
+  if (data.lead_id) {
+    try {
+      var leadFound = getLeadById_(String(data.lead_id));
+      if (leadFound) {
+        var leadSh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET.LEADS);
+        batchWriteRow_(leadSh, leadFound.rowNum, COLS.LEADS, {
+          status: 'Won',
+          converted_to_project_id: projectId,
+          converted_at: now,
+          converted_by: user.user_id,
+          updated_at:   now,
+          updated_by:   user.user_id
+        });
+        logActivity_('Lead', String(data.lead_id), 'converted_to_project',
+          'Lead converted to project: ' + name, projectId, user.user_id);
+      }
+    } catch (e) {
+      console.error('[Valeris] Lead conversion update failed:', String(e));
+    }
+  }
+
+  return { ok: true, data: { project_id: projectId } };
+}
+
+function handleUpdateProject_(auth, data) {
+  var user = requireAuth_(auth);
+
+  var projectId = String(data.projectId || '').trim();
+  if (!projectId) throw new Error(ERR.VALIDATION);
+
+  var found = getProjectById_(projectId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var WRITABLE = {
+    name: true, service_line: true, trade_direction: true,
+    status: true, phase: true, priority: true,
+    owner_user_id: true, operations_user_id: true,
+    start_date: true, target_end_date: true, actual_end_date: true,
+    description: true, company_id: true, contact_id: true
+  };
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.PROJECTS);
+  if (!sh) throw new Error(ERR.INTERNAL);
+
+  var fields     = data.fields || {};
+  var updates    = {};
+  var now        = new Date().toISOString();
+  var prevStatus = found.record.status;
+
+  Object.keys(fields).forEach(function(key) {
+    if (WRITABLE[key] && COLS.PROJECTS[key] !== undefined) {
+      var val = fields[key];
+      updates[key] = (val !== null && val !== undefined) ? sanitize_(String(val)) : '';
+    }
+  });
+
+  if (!Object.keys(updates).length) return { ok: true, data: { project: found.record } };
+
+  updates.updated_at = now;
+  updates.updated_by = user.user_id;
+
+  batchWriteRow_(sh, found.rowNum, COLS.PROJECTS, updates);
+
+  if (updates.status && updates.status !== prevStatus) {
+    logActivity_('Project', projectId, 'status_changed',
+      'Status changed from ' + prevStatus + ' to ' + updates.status,
+      '', user.user_id);
+  }
+
+  var updated = getProjectById_(projectId);
+  return { ok: true, data: { project: updated ? updated.record : found.record } };
+}
+
+function handleDeleteProject_(auth, data) {
+  var user      = requireAuth_(auth);
+  var projectId = String(data.projectId || '').trim();
+  if (!projectId) throw new Error(ERR.VALIDATION);
+
+  var found = getProjectById_(projectId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var ss  = SpreadsheetApp.getActiveSpreadsheet();
+  var sh  = ss.getSheetByName(SHEET.PROJECTS);
+  var now = new Date().toISOString();
+  batchWriteRow_(sh, found.rowNum, COLS.PROJECTS, {
+    deleted_at: now, updated_at: now, updated_by: user.user_id
+  });
+  logActivity_('Project', projectId, 'project_deleted', 'Project soft-deleted', '', user.user_id);
+  return { ok: true };
+}
+
+// ============================================================
+// M3 — TASKS HANDLERS
+// ============================================================
+
+function handleGetTasks_(auth, params) {
+  requireAuth_(auth);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.TASKS);
+  if (!sh || sh.getLastRow() < 2) return { ok: true, data: { tasks: [] } };
+
+  var numCols = Object.keys(COLS.TASKS).length;
+  var rows    = sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues();
+
+  var filterEntityType = String(params.entityType || '').trim();
+  var filterEntityId   = String(params.entityId   || '').trim();
+  var filterAssigned   = String(params.assignedTo || '').trim();
+  var filterStatus     = String(params.status     || '').trim();
+
+  var tasks = [];
+  for (var i = rows.length - 1; i >= 0; i--) {
+    var row       = rows[i];
+    var id        = row[COLS.TASKS.task_id    - 1];
+    var deletedAt = row[COLS.TASKS.deleted_at - 1];
+    if (!id || deletedAt) continue;
+    if (filterEntityType && row[COLS.TASKS.entity_type - 1] !== filterEntityType) continue;
+    if (filterEntityId   && row[COLS.TASKS.entity_id   - 1] !== filterEntityId)   continue;
+    if (filterAssigned   && row[COLS.TASKS.assigned_to - 1] !== filterAssigned)   continue;
+    if (filterStatus     && row[COLS.TASKS.status      - 1] !== filterStatus)     continue;
+
+    tasks.push({
+      task_id:      id,
+      entity_type:  row[COLS.TASKS.entity_type  - 1],
+      entity_id:    row[COLS.TASKS.entity_id    - 1],
+      title:        row[COLS.TASKS.title         - 1],
+      description:  row[COLS.TASKS.description  - 1],
+      status:       row[COLS.TASKS.status        - 1],
+      priority:     row[COLS.TASKS.priority      - 1],
+      assigned_to:  row[COLS.TASKS.assigned_to  - 1],
+      due_date:     row[COLS.TASKS.due_date      - 1],
+      completed_at: row[COLS.TASKS.completed_at - 1],
+      completed_by: row[COLS.TASKS.completed_by - 1],
+      created_at:   row[COLS.TASKS.created_at   - 1],
+      created_by:   row[COLS.TASKS.created_by   - 1],
+      deleted_at:   deletedAt
+    });
+  }
+  return { ok: true, data: { tasks: tasks } };
+}
+
+function handleGetTask_(auth, params) {
+  requireAuth_(auth);
+  var taskId = String(params.taskId || '').trim();
+  if (!taskId) throw new Error(ERR.VALIDATION);
+  var found = getTaskById_(taskId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+  return { ok: true, data: { task: found.record } };
+}
+
+function handleCreateTask_(auth, data) {
+  var user  = requireAuth_(auth);
+  var title = sanitize_(data.title || '');
+  if (!title) throw new Error(ERR.VALIDATION);
+
+  var sh     = getOrCreateSheet_(SHEET.TASKS);
+  var now    = new Date().toISOString();
+  var taskId = makeId_('TSK', new Date());
+
+  var row = buildRow_(COLS.TASKS, {
+    task_id:      taskId,
+    entity_type:  sanitize_(data.entity_type || ''),
+    entity_id:    sanitize_(data.entity_id   || ''),
+    title:        title,
+    description:  sanitize_(data.description || ''),
+    status:       sanitize_(data.status      || 'Open'),
+    priority:     sanitize_(data.priority    || 'Medium'),
+    assigned_to:  sanitize_(data.assigned_to || user.user_id),
+    due_date:     sanitize_(data.due_date    || ''),
+    completed_at: '',
+    completed_by: '',
+    created_at:   now,
+    created_by:   user.user_id,
+    updated_at:   now,
+    updated_by:   user.user_id,
+    deleted_at:   ''
+  });
+  sh.appendRow(row);
+
+  if (data.entity_type && data.entity_id) {
+    try {
+      logActivity_(sanitize_(data.entity_type), sanitize_(data.entity_id), 'task_created',
+        'Task created: ' + title, '', user.user_id);
+    } catch (e) {}
+  }
+
+  return { ok: true, data: { task_id: taskId } };
+}
+
+function handleUpdateTask_(auth, data) {
+  var user   = requireAuth_(auth);
+  var taskId = String(data.taskId || '').trim();
+  if (!taskId) throw new Error(ERR.VALIDATION);
+
+  var found = getTaskById_(taskId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var WRITABLE = {
+    title: true, description: true, status: true, priority: true,
+    assigned_to: true, due_date: true, entity_type: true, entity_id: true
+  };
+
+  var ss         = SpreadsheetApp.getActiveSpreadsheet();
+  var sh         = ss.getSheetByName(SHEET.TASKS);
+  if (!sh) throw new Error(ERR.INTERNAL);
+
+  var fields     = data.fields || {};
+  var updates    = {};
+  var now        = new Date().toISOString();
+  var prevStatus = found.record.status;
+
+  Object.keys(fields).forEach(function(key) {
+    if (WRITABLE[key] && COLS.TASKS[key] !== undefined) {
+      var val = fields[key];
+      updates[key] = (val !== null && val !== undefined) ? sanitize_(String(val)) : '';
+    }
+  });
+
+  if (updates.status === 'Done' && prevStatus !== 'Done') {
+    updates.completed_at = now;
+    updates.completed_by = user.user_id;
+  }
+
+  if (!Object.keys(updates).length) return { ok: true, data: { task: found.record } };
+
+  updates.updated_at = now;
+  updates.updated_by = user.user_id;
+
+  batchWriteRow_(sh, found.rowNum, COLS.TASKS, updates);
+
+  var updated = getTaskById_(taskId);
+  return { ok: true, data: { task: updated ? updated.record : found.record } };
+}
+
+// ============================================================
+// M4 — TEAM HANDLERS
+// ============================================================
+
+function handleGetUsers_(auth, params) {
+  requireAuth_(auth);
+  var users = getAllUsers_();
+  var safe  = users.map(function(u) {
+    return {
+      user_id:      u.user_id,
+      email:        u.email,
+      full_name:    u.full_name,
+      role:         u.role,
+      status:       u.status,
+      last_login_at: u.last_login_at || '',
+      created_at:   u.created_at
+    };
+  });
+  return { ok: true, data: { users: safe } };
+}
+
+function handleCreateUser_(auth, data) {
+  var actor     = requireRole_(auth, ['Owner', 'Administrator']);
+  var email     = sanitize_(data.email     || '');
+  var fullName  = sanitize_(data.full_name || '');
+  var role      = sanitize_(data.role      || 'Sales');
+  var plainPass = String(data.password     || '');
+
+  if (!email || !fullName || !plainPass) throw new Error(ERR.VALIDATION);
+  if (ROLES.indexOf(role) === -1) throw new Error(ERR.VALIDATION);
+  if ((role === 'Owner' || role === 'Administrator') && actor.role !== 'Owner') {
+    throw new Error(ERR.FORBIDDEN);
+  }
+
+  var existing = getUserByEmail_(email);
+  if (existing) {
+    return { ok: false, error: 'A user with this email already exists', code: ERR.VALIDATION };
+  }
+
+  var salt      = Utilities.getUuid();
+  var hash      = hashPassword_(plainPass, salt);
+  var now       = new Date().toISOString();
+  var userId    = makeId_('USR', new Date());
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.USERS);
+  if (!sh) throw new Error(ERR.INTERNAL);
+
+  var row = buildRow_(COLS.USERS, {
+    user_id:       userId,
+    email:         email.toLowerCase().trim(),
+    full_name:     fullName,
+    role:          role,
+    status:        'Active',
+    password_hash: hash,
+    password_salt: salt,
+    created_at:    now,
+    created_by:    actor.user_id
+  });
+  sh.appendRow(row);
+  invalidateCache_('users');
+
+  logActivity_('User', userId, 'user_created',
+    'Team member added: ' + fullName + ' (' + role + ')', '', actor.user_id);
+
+  return { ok: true, data: { user_id: userId } };
+}
+
+function handleUpdateUser_(auth, data) {
+  var actor  = requireRole_(auth, ['Owner', 'Administrator']);
+  var userId = String(data.userId || '').trim();
+  if (!userId) throw new Error(ERR.VALIDATION);
+
+  var target = getUserById_(userId);
+  if (!target) throw new Error(ERR.NOT_FOUND);
+
+  // Administrators cannot edit other Owners or Administrators
+  if (actor.role === 'Administrator' &&
+      (target.role === 'Owner' || target.role === 'Administrator') &&
+      target.user_id !== actor.user_id) {
+    throw new Error(ERR.FORBIDDEN);
+  }
+
+  var WRITABLE = { full_name: true, role: true, status: true };
+  var fields   = data.fields || {};
+  var updates  = {};
+
+  Object.keys(fields).forEach(function(key) {
+    if (WRITABLE[key] && COLS.USERS[key] !== undefined) {
+      var val = fields[key];
+      updates[key] = (val !== null && val !== undefined) ? sanitize_(String(val)) : '';
+    }
+  });
+
+  if (updates.role && (updates.role === 'Owner' || updates.role === 'Administrator') &&
+      actor.role !== 'Owner') {
+    throw new Error(ERR.FORBIDDEN);
+  }
+
+  if (!Object.keys(updates).length) return { ok: true };
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.USERS);
+  if (!sh) throw new Error(ERR.INTERNAL);
+
+  var numCols = Object.keys(COLS.USERS).length;
+  var rows    = sh.getLastRow() > 1
+    ? sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues()
+    : [];
+
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i][COLS.USERS.user_id - 1] === userId) {
+      batchWriteRow_(sh, i + 2, COLS.USERS, updates);
+      invalidateCache_('users');
+      break;
+    }
+  }
+
+  return { ok: true };
+}
+
+// ============================================================
+// M4 — SOFT DELETE HANDLERS
+// ============================================================
+
+function handleDeleteLead_(auth, data) {
+  var user   = requireAuth_(auth);
+  var leadId = String(data.leadId || '').trim();
+  if (!leadId) throw new Error(ERR.VALIDATION);
+
+  var found = getLeadById_(leadId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var sh  = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET.LEADS);
+  var now = new Date().toISOString();
+  batchWriteRow_(sh, found.rowNum, COLS.LEADS, {
+    deleted_at: now, updated_at: now, updated_by: user.user_id
+  });
+  logActivity_('Lead', leadId, 'lead_deleted', 'Lead soft-deleted', '', user.user_id);
+  return { ok: true };
+}
+
+function handleDeleteCompany_(auth, data) {
+  var user      = requireAuth_(auth);
+  var companyId = String(data.companyId || '').trim();
+  if (!companyId) throw new Error(ERR.VALIDATION);
+
+  var found = getCompanyById_(companyId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var sh  = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET.COMPANIES);
+  var now = new Date().toISOString();
+  batchWriteRow_(sh, found.rowNum, COLS.COMPANIES, {
+    deleted_at: now, updated_at: now, updated_by: user.user_id
+  });
+  logActivity_('Company', companyId, 'company_deleted', 'Company soft-deleted', '', user.user_id);
+  return { ok: true };
+}
+
+function handleDeleteContact_(auth, data) {
+  var user      = requireAuth_(auth);
+  var contactId = String(data.contactId || '').trim();
+  if (!contactId) throw new Error(ERR.VALIDATION);
+
+  var found = getContactById_(contactId);
+  if (!found) throw new Error(ERR.NOT_FOUND);
+
+  var sh  = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET.CONTACTS);
+  var now = new Date().toISOString();
+  batchWriteRow_(sh, found.rowNum, COLS.CONTACTS, {
+    deleted_at: now, updated_at: now, updated_by: user.user_id
+  });
+  logActivity_('Contact', contactId, 'contact_deleted', 'Contact soft-deleted', '', user.user_id);
+  return { ok: true };
+}
+
+// ============================================================
+// DASHBOARD STATS
+// ============================================================
+
+function handleGetDashboardStats_(auth, params) {
+  requireAuth_(auth);
+
+  var ss      = SpreadsheetApp.getActiveSpreadsheet();
+  var tz      = Session.getScriptTimeZone();
+  var today   = new Date();
+  var todayStr = Utilities.formatDate(today, tz, 'yyyy-MM-dd');
+  var monthStart = Utilities.formatDate(
+    new Date(today.getFullYear(), today.getMonth(), 1), tz, 'yyyy-MM-dd'
+  );
+
+  var stats = {
+    leads:    { total: 0, byStatus: {}, newThisMonth: 0, highPriority: 0 },
+    projects: { total: 0, active: 0, completed: 0 },
+    tasks:    { total: 0, open: 0, dueToday: 0, overdue: 0 }
+  };
+
+  // Leads
+  var leadsSh = ss.getSheetByName(SHEET.LEADS);
+  if (leadsSh && leadsSh.getLastRow() >= 2) {
+    var lCols = Object.keys(COLS.LEADS).length;
+    var lRows = leadsSh.getRange(2, 1, leadsSh.getLastRow() - 1, lCols).getValues();
+    lRows.forEach(function(row) {
+      if (!row[COLS.LEADS.lead_id - 1] || row[COLS.LEADS.deleted_at - 1]) return;
+      var status   = row[COLS.LEADS.status - 1];
+      var priority = row[COLS.LEADS.priority - 1];
+      var received = row[COLS.LEADS.received - 1];
+      stats.leads.total++;
+      stats.leads.byStatus[status] = (stats.leads.byStatus[status] || 0) + 1;
+      if (priority === 'High') stats.leads.highPriority++;
+      if (received) {
+        try {
+          var rStr = Utilities.formatDate(
+            received instanceof Date ? received : new Date(received), tz, 'yyyy-MM-dd'
+          );
+          if (rStr >= monthStart) stats.leads.newThisMonth++;
+        } catch (e) {}
+      }
+    });
+  }
+
+  // Projects
+  var projSh = ss.getSheetByName(SHEET.PROJECTS);
+  if (projSh && projSh.getLastRow() >= 2) {
+    var pCols = Object.keys(COLS.PROJECTS).length;
+    var pRows = projSh.getRange(2, 1, projSh.getLastRow() - 1, pCols).getValues();
+    pRows.forEach(function(row) {
+      if (!row[COLS.PROJECTS.project_id - 1] || row[COLS.PROJECTS.deleted_at - 1]) return;
+      var status = row[COLS.PROJECTS.status - 1];
+      stats.projects.total++;
+      if (status === 'Active')    stats.projects.active++;
+      if (status === 'Completed') stats.projects.completed++;
+    });
+  }
+
+  // Tasks
+  var tasksSh = ss.getSheetByName(SHEET.TASKS);
+  if (tasksSh && tasksSh.getLastRow() >= 2) {
+    var tCols = Object.keys(COLS.TASKS).length;
+    var tRows = tasksSh.getRange(2, 1, tasksSh.getLastRow() - 1, tCols).getValues();
+    tRows.forEach(function(row) {
+      if (!row[COLS.TASKS.task_id - 1] || row[COLS.TASKS.deleted_at - 1]) return;
+      var status  = row[COLS.TASKS.status - 1];
+      var dueDate = row[COLS.TASKS.due_date - 1];
+      stats.tasks.total++;
+      if (status === 'Open' || status === 'In Progress') {
+        stats.tasks.open++;
+        if (dueDate) {
+          try {
+            var dStr = dueDate instanceof Date
+              ? Utilities.formatDate(dueDate, tz, 'yyyy-MM-dd')
+              : String(dueDate).slice(0, 10);
+            if (dStr === todayStr)        stats.tasks.dueToday++;
+            else if (dStr < todayStr)    stats.tasks.overdue++;
+          } catch (e) {}
+        }
+      }
+    });
+  }
+
+  return { ok: true, data: { stats: stats } };
+}
+
+// ============================================================
+// PROJECT & TASK LOOKUP HELPERS
+// ============================================================
+
+function getProjectById_(projectId) {
+  return getRecordById_(SHEET.PROJECTS, COLS.PROJECTS, 'project_id', projectId);
+}
+
+function getTaskById_(taskId) {
+  return getRecordById_(SHEET.TASKS, COLS.TASKS, 'task_id', taskId);
+}
+
+// ============================================================
+// FULL SHEET SETUP FUNCTIONS (per entity)
+// ============================================================
+
+function setupCompaniesSheet_(ss) {
+  var headers = buildHeadersFromCols_(COLS.COMPANIES);
+  var sh = setupSheet_(ss, SHEET.COMPANIES, headers);
+  sh.setFrozenColumns(2);
+
+  var lastRow = Math.max(sh.getMaxRows(), 1000);
+  sh.getRange(2, COLS.COMPANIES.type,            lastRow - 1, 1).setDataValidation(listRule_(COMPANY_TYPES));
+  sh.getRange(2, COLS.COMPANIES.status,          lastRow - 1, 1).setDataValidation(listRule_(COMPANY_STATUSES));
+  sh.getRange(2, COLS.COMPANIES.trade_direction, lastRow - 1, 1).setDataValidation(listRule_(TRADE_DIRECTIONS));
+
+  var statusRange = sh.getRange(2, COLS.COMPANIES.status, lastRow - 1, 1);
+  sh.setConditionalFormatRules([
+    formatRule_(statusRange, 'Active',   '#D9EAD3'),
+    formatRule_(statusRange, 'Inactive', '#F4CCCC'),
+    formatRule_(statusRange, 'Prospect', '#D9EAF7')
+  ]);
+
+  var widths = {};
+  widths[COLS.COMPANIES.company_id]      = 220;
+  widths[COLS.COMPANIES.name]            = 200;
+  widths[COLS.COMPANIES.type]            = 150;
+  widths[COLS.COMPANIES.country]         = 120;
+  widths[COLS.COMPANIES.city]            = 120;
+  widths[COLS.COMPANIES.industry]        = 160;
+  widths[COLS.COMPANIES.trade_direction] = 160;
+  widths[COLS.COMPANIES.website]         = 220;
+  widths[COLS.COMPANIES.email]           = 210;
+  widths[COLS.COMPANIES.notes]           = 300;
+  Object.keys(widths).forEach(function(col) { sh.setColumnWidth(Number(col), widths[col]); });
+  return sh;
+}
+
+function setupContactsSheet_(ss) {
+  var headers = buildHeadersFromCols_(COLS.CONTACTS);
+  var sh = setupSheet_(ss, SHEET.CONTACTS, headers);
+  sh.setFrozenColumns(2);
+
+  var lastRow = Math.max(sh.getMaxRows(), 1000);
+  sh.getRange(2, COLS.CONTACTS.status,     lastRow - 1, 1).setDataValidation(listRule_(CONTACT_STATUSES));
+  sh.getRange(2, COLS.CONTACTS.language,   lastRow - 1, 1).setDataValidation(listRule_(LANGUAGES));
+
+  // is_primary is a checkbox column
+  sh.getRange(2, COLS.CONTACTS.is_primary, lastRow - 1, 1)
+    .setDataValidation(SpreadsheetApp.newDataValidation().requireCheckbox().build());
+
+  var widths = {};
+  widths[COLS.CONTACTS.contact_id] = 220;
+  widths[COLS.CONTACTS.company_id] = 220;
+  widths[COLS.CONTACTS.full_name]  = 180;
+  widths[COLS.CONTACTS.email]      = 210;
+  widths[COLS.CONTACTS.title]      = 160;
+  Object.keys(widths).forEach(function(col) { sh.setColumnWidth(Number(col), widths[col]); });
+  return sh;
+}
+
+function setupProjectsSheet_(ss) {
+  var headers = buildHeadersFromCols_(COLS.PROJECTS);
+  var sh = setupSheet_(ss, SHEET.PROJECTS, headers);
+  sh.setFrozenColumns(2);
+
+  var lastRow = Math.max(sh.getMaxRows(), 1000);
+  sh.getRange(2, COLS.PROJECTS.status,          lastRow - 1, 1).setDataValidation(listRule_(PROJECT_STATUSES));
+  sh.getRange(2, COLS.PROJECTS.phase,           lastRow - 1, 1).setDataValidation(listRule_(PROJECT_PHASES));
+  sh.getRange(2, COLS.PROJECTS.priority,        lastRow - 1, 1).setDataValidation(listRule_(PRIORITIES));
+  sh.getRange(2, COLS.PROJECTS.service_line,    lastRow - 1, 1).setDataValidation(listRule_(SERVICES));
+  sh.getRange(2, COLS.PROJECTS.trade_direction, lastRow - 1, 1).setDataValidation(listRule_(TRADE_DIRECTIONS));
+
+  sh.getRange(2, COLS.PROJECTS.start_date,      lastRow - 1, 1).setNumberFormat('yyyy-mm-dd');
+  sh.getRange(2, COLS.PROJECTS.target_end_date, lastRow - 1, 1).setNumberFormat('yyyy-mm-dd');
+  sh.getRange(2, COLS.PROJECTS.actual_end_date, lastRow - 1, 1).setNumberFormat('yyyy-mm-dd');
+
+  var statusRange = sh.getRange(2, COLS.PROJECTS.status,   lastRow - 1, 1);
+  var priRange    = sh.getRange(2, COLS.PROJECTS.priority,  lastRow - 1, 1);
+  sh.setConditionalFormatRules([
+    formatRule_(statusRange, 'Active',    '#D9EAD3'),
+    formatRule_(statusRange, 'On Hold',   '#FFF2CC'),
+    formatRule_(statusRange, 'Completed', '#B6D7A8'),
+    formatRule_(statusRange, 'Cancelled', '#F4CCCC'),
+    formatRule_(priRange,    'High',      '#F4CCCC'),
+    formatRule_(priRange,    'Medium',    '#FFF2CC'),
+    formatRule_(priRange,    'Low',       '#D9EAD3')
+  ]);
+
+  var widths = {};
+  widths[COLS.PROJECTS.project_id]      = 220;
+  widths[COLS.PROJECTS.name]            = 220;
+  widths[COLS.PROJECTS.service_line]    = 230;
+  widths[COLS.PROJECTS.description]     = 300;
+  widths[COLS.PROJECTS.company_id]      = 220;
+  Object.keys(widths).forEach(function(col) { sh.setColumnWidth(Number(col), widths[col]); });
+  return sh;
+}
+
+function setupTasksSheet_(ss) {
+  var headers = buildHeadersFromCols_(COLS.TASKS);
+  var sh = setupSheet_(ss, SHEET.TASKS, headers);
+
+  var lastRow = Math.max(sh.getMaxRows(), 1000);
+  sh.getRange(2, COLS.TASKS.status,   lastRow - 1, 1).setDataValidation(listRule_(TASK_STATUSES));
+  sh.getRange(2, COLS.TASKS.priority, lastRow - 1, 1).setDataValidation(listRule_(PRIORITIES));
+  sh.getRange(2, COLS.TASKS.due_date, lastRow - 1, 1).setNumberFormat('yyyy-mm-dd');
+
+  var statusRange = sh.getRange(2, COLS.TASKS.status,   lastRow - 1, 1);
+  var priRange    = sh.getRange(2, COLS.TASKS.priority,  lastRow - 1, 1);
+  sh.setConditionalFormatRules([
+    formatRule_(statusRange, 'Open',       '#D9EAF7'),
+    formatRule_(statusRange, 'In Progress', '#FFF2CC'),
+    formatRule_(statusRange, 'Done',        '#D9EAD3'),
+    formatRule_(statusRange, 'Cancelled',   '#D9D9D9'),
+    formatRule_(priRange,    'High',        '#F4CCCC'),
+    formatRule_(priRange,    'Medium',      '#FFF2CC'),
+    formatRule_(priRange,    'Low',         '#D9EAD3')
+  ]);
+
+  var widths = {};
+  widths[COLS.TASKS.task_id]     = 220;
+  widths[COLS.TASKS.title]       = 260;
+  widths[COLS.TASKS.description] = 300;
+  widths[COLS.TASKS.entity_id]   = 220;
+  Object.keys(widths).forEach(function(col) { sh.setColumnWidth(Number(col), widths[col]); });
+  return sh;
+}
+
+function setupNotesSheet_(ss) {
+  var headers = buildHeadersFromCols_(COLS.NOTES);
+  var sh = setupSheet_(ss, SHEET.NOTES, headers);
+  sh.getRange(2, COLS.NOTES.content, Math.max(sh.getMaxRows(), 1000) - 1, 1).setWrap(true);
+
+  var widths = {};
+  widths[COLS.NOTES.note_id]       = 220;
+  widths[COLS.NOTES.entity_id]     = 220;
+  widths[COLS.NOTES.content]       = 400;
+  widths[COLS.NOTES.author_user_id] = 220;
+  Object.keys(widths).forEach(function(col) { sh.setColumnWidth(Number(col), widths[col]); });
+  return sh;
+}
+
+function setupActivitiesSheet_(ss) {
+  var headers = buildHeadersFromCols_(COLS.ACTIVITIES);
+  var sh = setupSheet_(ss, SHEET.ACTIVITIES, headers);
+  var widths = {};
+  widths[COLS.ACTIVITIES.activity_id]  = 220;
+  widths[COLS.ACTIVITIES.entity_id]    = 220;
+  widths[COLS.ACTIVITIES.summary]      = 300;
+  widths[COLS.ACTIVITIES.details]      = 260;
+  widths[COLS.ACTIVITIES.performed_by] = 220;
+  Object.keys(widths).forEach(function(col) { sh.setColumnWidth(Number(col), widths[col]); });
+  return sh;
+}
+
+function setupSettingsSheet_(ss) {
+  var headers = buildHeadersFromCols_(COLS.SETTINGS);
+  var sh = setupSheet_(ss, SHEET.SETTINGS, headers);
+
+  // Only seed if the sheet is empty (don't overwrite user changes)
+  if (sh.getLastRow() <= 1) {
+    var sortOrder = 0;
+    var rows = [];
+
+    LEAD_STATUSES.forEach(function(s) {
+      rows.push(['lead_status', s, s, '', ++sortOrder, true, '']);
+    });
+    PROJECT_STATUSES.forEach(function(s) {
+      rows.push(['project_status', s, s, '', ++sortOrder, true, '']);
+    });
+    PROJECT_PHASES.forEach(function(s) {
+      rows.push(['project_phase', s, s, '', ++sortOrder, true, '']);
+    });
+    TASK_STATUSES.forEach(function(s) {
+      rows.push(['task_status', s, s, '', ++sortOrder, true, '']);
+    });
+    SERVICES.forEach(function(s) {
+      rows.push(['service_line', s, s, '', ++sortOrder, true, '']);
+    });
+    TRADE_DIRECTIONS.forEach(function(s) {
+      rows.push(['trade_direction', s, s, '', ++sortOrder, true, '']);
+    });
+
+    if (rows.length) {
+      sh.getRange(2, 1, rows.length, Object.keys(COLS.SETTINGS).length).setValues(rows);
+    }
+  }
+
+  sh.setColumnWidth(COLS.SETTINGS.category,    150);
+  sh.setColumnWidth(COLS.SETTINGS.key,         200);
+  sh.setColumnWidth(COLS.SETTINGS.label,       200);
+  sh.setColumnWidth(COLS.SETTINGS.description, 300);
+  return sh;
 }
