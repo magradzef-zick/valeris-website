@@ -9,7 +9,7 @@ window.VALERIS_CONFIG = {
 
   /* Google Apps Script Web App URL bound to the client's Sheet.
      Leave empty until deployment; the form shows a configuration error. */
-  crmEndpoint: '',
+  crmEndpoint: 'https://script.google.com/macros/s/AKfycbyr6gMGhjb_PrNhESVddEsDSmVvrYZ4vejf-CJ7lBxrj8WmwDIPruwLXGKy4VDL39Rb/exec',
 
   /* Final production origin (no trailing slash) — used only for reference.
      TBD: business card uses valeris.com.in, content brief uses valeris.com — confirm final domain before launch. */
