@@ -66,6 +66,17 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  /* ---------- analytics events (GA4 / dataLayer, opt-in through config.js) ---------- */
+  function trackEvent(name, params) {
+    params = params || {};
+    if (typeof window.gtag === 'function') { window.gtag('event', name, params); }
+    if (window.dataLayer) {
+      var payload = { event: name };
+      for (var k in params) { if (Object.prototype.hasOwnProperty.call(params, k)) payload[k] = params[k]; }
+      window.dataLayer.push(payload);
+    }
+  }
+
   /* ---------- mobile menu ---------- */
   if (hamburger && navLinks) {
     var closeMobileMenu = function () {
@@ -132,6 +143,16 @@
       if (!row) return;
       var open = row.classList.toggle('is-open');
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        var title = row.querySelector('.row-title');
+        trackEvent('service_click', { service: title ? title.textContent.trim() : '', page: thisPage });
+      }
+    });
+  });
+
+  document.querySelectorAll('a[href*="pharma.html"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      trackEvent('pharma_click', { page: thisPage });
     });
   });
 
@@ -205,13 +226,18 @@
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var T = window.__valerisT;
-      var name = form.name.value.trim(), email = form.email.value.trim(), message = form.message.value.trim();
+      var firstName = form.first_name ? form.first_name.value.trim() : '';
+      var lastName = form.last_name ? form.last_name.value.trim() : '';
+      var name = (firstName + ' ' + lastName).trim();
+      var email = form.email.value.trim(), message = form.message.value.trim();
+      var honeypot = form.website ? form.website.value.trim() : '';
 
-      if (!name || !email || !message) { setStatus(T('form.errorRequired'), 'is-error'); return; }
+      if (honeypot) return;
+      if (!firstName || !lastName || !email || !message) { setStatus(T('form.errorRequired'), 'is-error'); return; }
       if (!emailValid(email)) { setStatus(T('form.errorEmail'), 'is-error'); return; }
 
       var data = {
-        name: name, company: form.company.value.trim(), email: email,
+        first_name: firstName, last_name: lastName, name: name, company: form.company.value.trim(), email: email,
         phone: form.phone.value.trim(), interest: form.interest.value, message: message
       };
       var meta = collectMeta();
@@ -226,8 +252,7 @@
         if (ok) {
           setStatus(T('form.success'), 'is-success');
           form.reset();
-          if (typeof window.gtag === 'function') { window.gtag('event', 'generate_lead', { method: 'contact_form' }); }
-          if (window.dataLayer) { window.dataLayer.push({ event: 'generate_lead', form: 'contact' }); }
+          trackEvent('generate_lead', { method: 'contact_form', form: 'contact' });
         } else {
           setStatus(T('form.errorSend'), 'is-error');
         }
@@ -240,7 +265,7 @@
       } else {
         /* CRM endpoint not configured — set crmEndpoint in assets/js/config.js at deployment. */
         if (window.console && console.warn) { console.warn('[Valeris] CRM endpoint not configured in config.js — submission not stored.'); }
-        setTimeout(function () { done(true); }, 600);
+        setTimeout(function () { setStatus(T('form.errorConfig'), 'is-error'); if (btn) btn.disabled = false; }, 300);
       }
     });
   }

@@ -8,7 +8,7 @@ window.VALERIS_CONFIG = {
   ga4Id: '',
 
   /* Google Apps Script Web App URL bound to the client's Sheet.
-     Leave empty and the contact form logs to console (testable) until set. */
+     Leave empty until deployment; the form shows a configuration error. */
   crmEndpoint: '',
 
   /* Final production origin (no trailing slash) — used only for reference.

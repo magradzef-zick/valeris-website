@@ -1,4 +1,4 @@
-# Polfrost — Apache / cPanel production configuration
+# Valeris — Apache / cPanel production configuration
 
 # ── Compression ──────────────────────────────────────────────
 <IfModule mod_brotli.c>

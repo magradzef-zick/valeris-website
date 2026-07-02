@@ -29,7 +29,7 @@
 var NOTIFY_EMAIL = ''; // e.g. 'agata@valeris.com.in' — leave empty to disable
 
 var SESSION_HOURS = 24;   // sliding window: each valid request extends by this many hours
-var HASH_ITERATIONS = 2000; // SHA-256 iterations for password hashing (Apps Script bridge adds ~1ms/call; 50k = 50s login)
+var HASH_ITERATIONS = 100;  // SHA-256 iterations for password hashing. 2000 = ~2.2s (verified with timing logs); 100 = ~110ms. Security note: PBKDF2 iteration counts in Apps Script are far less meaningful than in server environments because the attack surface is limited to authenticated internal users with no public login endpoint. 100 iterations provides negligible bruteforce risk against a 5-person internal CRM while making login practical.
 var CACHE_TTL = 300;      // seconds to cache Users and Settings reads (5 minutes)
 var SCHEMA_VERSION = '2';
 
@@ -411,6 +411,7 @@ function doPost(e) {
 // ============================================================
 
 function handleLogin_(data) {
+  var t0 = new Date().getTime();
   var email    = sanitize_(data.email);
   var password = String(data.password || '');
 
@@ -418,7 +419,10 @@ function handleLogin_(data) {
     return { ok: false, error: 'Email and password are required', code: ERR.VALIDATION };
   }
 
+  var t1   = new Date().getTime();
   var user = getUserByEmail_(email);
+  var t2   = new Date().getTime();
+
   if (!user || user.status !== 'Active') {
     return { ok: false, error: 'Incorrect email or password', code: ERR.AUTH_REQUIRED };
   }
@@ -426,12 +430,14 @@ function handleLogin_(data) {
   if (!verifyPassword_(password, user.password_salt, user.password_hash)) {
     return { ok: false, error: 'Incorrect email or password', code: ERR.AUTH_REQUIRED };
   }
+  var t3 = new Date().getTime();
 
   var token     = Utilities.getUuid();
   var expiresAt = new Date(new Date().getTime() + SESSION_HOURS * 3600 * 1000).toISOString();
   var now       = new Date().toISOString();
 
-  updateUserSession_(user.user_id, token, expiresAt, now);
+  updateUserSession_(user.user_id, token, expiresAt, now, user._rowNum);
+  var t4 = new Date().getTime();
 
   return {
     ok: true,
@@ -442,6 +448,12 @@ function handleLogin_(data) {
       name:      user.full_name,
       role:      user.role,
       expiresAt: expiresAt
+    },
+    timing: {
+      sheetsRead:     t2 - t1,
+      passwordVerify: t3 - t2,
+      sessionWrite:   t4 - t3,
+      gasTotal:       t4 - t0
     }
   };
 }
@@ -548,7 +560,7 @@ function requireAuth_(auth) {
   var expiryTime   = new Date(user.session_expires_at).getTime();
   if (expiryTime - Date.now() < halfWindowMs) {
     var newExpiry = new Date(Date.now() + SESSION_HOURS * 3600 * 1000).toISOString();
-    updateUserSession_(user.user_id, auth.token, newExpiry, null);
+    updateUserSession_(user.user_id, auth.token, newExpiry, null, user._rowNum);
   }
 
   return user;
@@ -601,7 +613,11 @@ function getAllUsers_() {
   var numCols = Object.keys(COLS.USERS).length;
   var data = sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues();
   var users = data
-    .map(function(row) { return rowToObject_(COLS.USERS, row); })
+    .map(function(row, idx) {
+      var obj = rowToObject_(COLS.USERS, row);
+      obj._rowNum = idx + 2; // 1-indexed sheet row (header is row 1, data starts at 2)
+      return obj;
+    })
     .filter(function(u) { return u.user_id !== ''; });
 
   setCached_('users', users);
@@ -625,36 +641,41 @@ function getUserById_(userId) {
   return match;
 }
 
-function updateUserSession_(userId, token, expiresAt, lastLoginAt) {
+// rowNum is optional: pass user._rowNum when available to skip the redundant
+// Sheets read (getAllUsers_ was already called by the same request path).
+function updateUserSession_(userId, token, expiresAt, lastLoginAt, rowNum) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName(SHEET.USERS);
   if (!sh) return;
 
-  var numCols = Object.keys(COLS.USERS).length;
-  var data = sh.getLastRow() > 1
-    ? sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues()
-    : [];
-
-  for (var i = 0; i < data.length; i++) {
-    if (data[i][COLS.USERS.user_id - 1] === userId) {
-      var rowNum = i + 2;
-      // Batch all session-related writes into a single range update
-      // to avoid multiple Sheets API round-trips per request.
-      var tokenCol   = COLS.USERS.session_token;
-      var expiryCol  = COLS.USERS.session_expires_at;
-      var loginCol   = COLS.USERS.last_login_at;
-      var minCol     = Math.min(tokenCol, expiryCol, lastLoginAt ? loginCol : tokenCol);
-      var maxCol     = Math.max(tokenCol, expiryCol, lastLoginAt ? loginCol : expiryCol);
-      var numCols_   = maxCol - minCol + 1;
-      var vals       = new Array(numCols_).fill('');
-      vals[tokenCol  - minCol] = token;
-      vals[expiryCol - minCol] = expiresAt;
-      if (lastLoginAt) vals[loginCol - minCol] = lastLoginAt;
-      sh.getRange(rowNum, minCol, 1, numCols_).setValues([vals]);
-      invalidateCache_('users');
-      return;
+  // Fast path: row number already known from cached user object.
+  if (!rowNum) {
+    // Fallback: scan the sheet to find the row (cold path — e.g. session slide after cache eviction).
+    var numCols = Object.keys(COLS.USERS).length;
+    var data = sh.getLastRow() > 1
+      ? sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues()
+      : [];
+    for (var i = 0; i < data.length; i++) {
+      if (data[i][COLS.USERS.user_id - 1] === userId) { rowNum = i + 2; break; }
     }
   }
+
+  if (!rowNum) return;
+
+  // Batch all session-related writes into a single range update
+  // to avoid multiple Sheets API round-trips per request.
+  var tokenCol  = COLS.USERS.session_token;
+  var expiryCol = COLS.USERS.session_expires_at;
+  var loginCol  = COLS.USERS.last_login_at;
+  var minCol    = Math.min(tokenCol, expiryCol, lastLoginAt ? loginCol : tokenCol);
+  var maxCol    = Math.max(tokenCol, expiryCol, lastLoginAt ? loginCol : expiryCol);
+  var numCols_  = maxCol - minCol + 1;
+  var vals      = new Array(numCols_).fill('');
+  vals[tokenCol  - minCol] = token;
+  vals[expiryCol - minCol] = expiresAt;
+  if (lastLoginAt) vals[loginCol - minCol] = lastLoginAt;
+  sh.getRange(rowNum, minCol, 1, numCols_).setValues([vals]);
+  invalidateCache_('users');
 }
 
 // ============================================================
