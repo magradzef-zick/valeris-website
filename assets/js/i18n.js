@@ -9,11 +9,11 @@ window.VALERIS_I18N = {
 
     'nav.services': 'Services', 'nav.how': 'How We Work',
     'nav.why': 'Why Valeris', 'nav.contact': 'Contact', 'nav.cta': 'Contact Us',
-    'nav.startPoland': 'Start in Poland',
+    'nav.startPoland': 'For Indian Companies',
 
     'hero.eyebrowA': 'Poland ⇄ India', 'hero.eyebrowB': 'On the ground in Maharashtra',
     'hero.line1': "Before you board the plane, we've already checked the supplier.",
-    'hero.sub': "Valeris helps Polish companies operate safely in India and Indian companies enter Poland and Europe. We work on the ground in Maharashtra (Mumbai, Pune) — visiting factories, sitting in meetings, verifying suppliers ourselves. Local partners, not distant advisors.",
+    'hero.sub': "Valeris helps Polish companies operate safely in India and Indian companies enter Poland and Europe. We work on the ground in Maharashtra (Mumbai, Pune) — visiting factories, attending meetings, verifying suppliers in person. Local partners, not distant advisors.",
     'hero.ctaPrimary': 'Explore Services', 'hero.ctaSecondary': 'Get in Touch',
     'hero.stat1num': '2', 'hero.stat1label': 'Markets we connect',
     'hero.stat2num': '2', 'hero.stat2label': 'Regions we know inside out',
@@ -24,7 +24,7 @@ window.VALERIS_I18N = {
     'directions.titleA': 'We connect ', 'directions.titleEm': 'both worlds', 'directions.titleB': '.',
     'directions.card1Dir': 'Poland → India (Maharashtra)',
     'directions.card1Title': 'Polish companies entering India',
-    'directions.card1Desc': "We verify suppliers, advise and represent you on the ground in Maharashtra. For companies pursuing business or procurement in India — without the risk of going in blind.",
+    'directions.card1Desc': "We verify suppliers, advise, and represent you on the ground in Maharashtra. For companies entering India for business or sourcing — without the risk of going in blind.",
     'directions.card1Tag1': 'Supplier Verification', 'directions.card1Tag2': 'Consulting',
     'directions.card1Tag3': 'Representation', 'directions.card1Tag4': 'Operational Support',
     'directions.card2Dir': 'India (Maharashtra) → Poland',
@@ -49,16 +49,16 @@ window.VALERIS_I18N = {
     'svc.1.d7': 'A written visit report with findings and our assessment',
 
     'svc.2.title': 'Poland Market Entry for Indian Companies',
-    'svc.2.desc': "We help Indian companies understand the Polish market, build their presence, and begin selling. With operations in both Maharashtra and Poland, we bridge the gap between your context and your new market.",
+    'svc.2.desc': "We help Indian companies understand the Polish market, build their presence, and begin selling. With teams in both Maharashtra and Poland, we understand both markets from the inside.",
     'svc.2.d1': 'Polish market dynamics and what local customers actually expect',
     'svc.2.d2': 'A clear map of where the Indian and Polish markets diverge',
     'svc.2.d3': 'Meeting facilitation and effective cross-cultural communication',
     'svc.2.d4': 'In-person representation at trade events and business meetings in Poland',
     'svc.2.d5': 'Export readiness support: certification pathways, regulatory standards and product positioning',
-    'svc.2.synergy': 'Poland as your entry point into Europe — and a proven launchpad for broader EU expansion.',
+    'svc.2.synergy': 'Poland as your first foothold in Europe — a gateway to the broader EU market.',
 
     'svc.3.title': 'India Market Entry Consulting',
-    'svc.3.desc': "India is a large, complex market — and the gap between what looks straightforward from outside and what actually works on the ground is significant. We help Polish companies understand how business is really conducted in India and build a well-informed entry.",
+    'svc.3.desc': "India is a large and complex market. We help Polish companies understand how business is actually conducted there — and build a well-informed, grounded entry strategy.",
     'svc.3.d1': 'A ground-level read on how business is actually conducted in India',
     'svc.3.d2': 'Identifying genuine opportunities and the risks that deserve attention',
     'svc.3.d3': 'Operational preparation for market entry',
@@ -108,7 +108,7 @@ window.VALERIS_I18N = {
     'why.6t': 'One point of contact',
 
     'essence.quote': "Before you board the plane, we've already checked the supplier.",
-    'essence.sig': 'VALERIS — POLAND ⇄ INDIA, ON THE GROUND ON BOTH SIDES',
+    'essence.sig': 'VALERIS — POLSKA ⇄ INDIE, NA MIEJSCU PO OBU STRONACH',
 
     'partner.kicker': 'Strategic partnership',
     'partner.title': 'Our partnership with Polfrost — logistics that delivers',
