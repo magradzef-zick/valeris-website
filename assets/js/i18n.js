@@ -13,7 +13,7 @@ window.VALERIS_I18N = {
 
     'hero.eyebrowA': 'Poland ⇄ India', 'hero.eyebrowB': 'On the ground in Maharashtra',
     'hero.line1': "Before you board the plane, we've already checked the supplier.",
-    'hero.sub': "Valeris helps Polish companies operate safely in India and Indian companies enter Poland and Europe. We work on the ground in Maharashtra (Mumbai, Pune) — visiting factories, attending meetings, verifying suppliers in person. Local partners, not distant advisors.",
+    'hero.sub': "Valeris helps Polish companies operate safely in India and Indian companies enter Poland and Europe. We work on the ground in Maharashtra (Mumbai, Pune) — visiting factories, attending meetings, verifying suppliers in person. We are local partners, not distant advisors.",
     'hero.ctaPrimary': 'Explore Services', 'hero.ctaSecondary': 'Get in Touch',
     'hero.stat1num': '2', 'hero.stat1label': 'Markets we connect',
     'hero.stat2num': '2', 'hero.stat2label': 'Regions we know inside out',
