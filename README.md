@@ -44,13 +44,12 @@ The project uses plain HTML, CSS, and vanilla JavaScript. There is no framework,
 │   └── img/
 ├── apps-script/
 │   └── Code.gs
-├── docs/
-│   ├── crm-setup.md
-│   └── screenshots/
-└── dist/
+└── docs/
+    ├── crm-setup.md
+    └── screenshots/
 ```
 
-`dist/` is a gitignored deploy mirror. The source files in the repository root are also directly deployable.
+The source files in the repository root are directly deployable — no build step required.
 
 ## Local Development
 

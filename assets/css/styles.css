@@ -295,24 +295,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .partner::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(115deg, rgba(7,25,23,0.95) 0%, rgba(7,25,23,0.88) 36%, rgba(11,33,29,0.78) 60%, rgba(11,33,29,0.66) 100%); }
 
 .partner-grid { display: grid; grid-template-columns: 1.3fr 0.82fr; gap: 3.4rem; align-items: center; }
-.partner-facts { display: flex; flex-wrap: wrap; gap: 2.4rem; margin-top: 2.1rem; padding-top: 1.5rem; border-top: 1px solid var(--line-on-navy); }
-.partner-facts .stat-num { font-size: 1.7rem; }
 .partner-box { background: var(--canvas); border-radius: 6px; padding: 2.7rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.9rem; box-shadow: 0 26px 55px rgba(7, 25, 23, 0.35); }
-.partner-rail { width: 100%; max-width: 200px; height: auto; color: var(--gold-ink); opacity: 0.7; }
-.partner-box-eyebrow { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-ink); font-weight: 600; }
 .partner-box img { width: 100%; max-width: 190px; height: auto; display: block; }
 .partner-legal-name { font-size: 0.78rem; color: var(--ink-body); opacity: 0.65; margin-top: 0.4rem; }
 
 /* =================================================================
-   WHY VALERIS
+   WHY ITEMS (used by india.html)
    ================================================================= */
-.why-layout { display: flex; flex-direction: column; gap: 3.6rem; margin-top: 0.5rem; }
-/* Tier 1 — primary differentiators */
-.why-primary { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
-.why-lead { padding-top: 1.7rem; border-top: 2px solid rgba(205, 166, 89, 0.55); }
-.why-lead-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.65rem, 2.3vw, 2.1rem); line-height: 1.12; color: var(--head-on-navy); margin-bottom: 0.85rem; }
-.why-lead-desc { font-size: 1rem; line-height: 1.75; color: var(--text-on-navy); max-width: 34ch; }
-/* Tier 2 — supporting strengths (editorial hairline columns, no boxes) */
 .why-list { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4rem 2rem; }
 .why-row { padding-top: 1.5rem; border-top: 1px solid rgba(205, 166, 89, 0.22); }
 .why-row-title { font-family: var(--font-display); font-weight: 500; font-size: 1.22rem; color: var(--title); margin-bottom: 0.5rem; }
@@ -405,7 +394,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .process-steps { grid-template-columns: 1fr 1fr; gap: 2.4rem 1.8rem; }
   .process-steps::before { display: none; }
   .partner-grid { grid-template-columns: 1fr; gap: 2.2rem; }
-  .why-primary { grid-template-columns: 1fr; gap: 2.2rem; }
   .why-list { grid-template-columns: 1fr 1fr; gap: 2.2rem 2.5rem; }
   .footer-inner { grid-template-columns: 1fr 1fr; gap: 2.2rem; }
   .footer-col { border-left: none; padding-left: 0; }

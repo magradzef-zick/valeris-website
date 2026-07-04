@@ -8,7 +8,7 @@ window.VALERIS_I18N = {
     'meta.description': "Valeris helps Polish companies verify suppliers and enter the market in India's Maharashtra region (Mumbai, Pune), and helps Indian companies enter Europe through Poland. Valeris operates locally, on the ground.",
 
     'nav.services': 'Services', 'nav.how': 'How We Work',
-    'nav.why': 'Why Valeris', 'nav.contact': 'Contact', 'nav.cta': 'Contact Us',
+    'nav.contact': 'Contact', 'nav.cta': 'Contact Us',
     'nav.startPoland': 'For Indian Companies',
 
     'hero.eyebrowA': 'Poland ⇄ India', 'hero.eyebrowB': 'On the ground in Maharashtra',
@@ -98,25 +98,10 @@ window.VALERIS_I18N = {
     'process.3t': 'On-the-ground work', 'process.3d': "We work on the ground — factory visits, partner meetings, verifications, negotiations. You are always informed.",
     'process.4t': 'Report & next steps', 'process.4d': 'You receive something concrete: a report, a list of contacts, or a clear recommended path forward.',
 
-    'why.kicker': 'Why Valeris',
-    'why.titleA': 'What makes us ', 'why.titleEm': 'different', 'why.titleB': '.',
-    'why.1t': 'Local presence — not remote research', 'why.1d': "We are physically present in Maharashtra. We go to the factory, talk to people face to face — not from a desk in Poland.",
-    'why.2t': 'We know both markets', 'why.2d': 'Polish business culture and the realities of operating in Maharashtra — regulatory, cultural and commercial — understood from the inside.',
-    'why.3t': 'Real business relationships', 'why.3d': "We do not stop at the report. We build business relationships that endure.",
-    'why.4t': 'Honesty & transparency', 'why.4d': "You always know what you are paying for and what to expect. Anything outside our scope is handled by specialists we know personally and vouch for.",
-    'why.5t': 'Flexible & cost-effective', 'why.5d': 'Permanent on-the-ground presence without the overhead of a local entity. You pay for exactly what you need.',
-    'why.6t': 'One point of contact',
-
-    'essence.quote': "Before you board the plane, we've already checked the supplier.",
     'essence.sig': 'VALERIS — POLSKA ⇄ INDIE, NA MIEJSCU PO OBU STRONACH',
 
     'partner.kicker': 'Strategic partnership',
     'partner.title': 'Our partnership with Polfrost — logistics that delivers',
-    'partner.lead': "Valeris partners with Polfrost — a European, family-owned logistics company with over 30 years of experience and particular strength on Eastern routes. Our advisory work does not end at the handover. From supplier verification to goods transport between Poland and India, you work with one coordinated team.",
-    'partner.fact1Num': '30+', 'partner.fact1Label': 'Years in operation',
-    'partner.fact3Num': 'Global', 'partner.fact3Label': 'Reach, strongest on Eastern routes',
-    'partner.badgeEyebrow': 'In partnership with',
-    'partner.name': 'Polfrost',
 
     'contact.kicker': 'Start the conversation',
     'contact.titleA': 'Tell us about your ', 'contact.titleEm': 'project', 'contact.titleB': '.',
@@ -143,7 +128,7 @@ window.VALERIS_I18N = {
     'footer.s1': 'Supplier Verification', 'footer.s2': 'India Market Consulting', 'footer.s3': 'Representation',
     'footer.s4': 'Operational Support', 'footer.s5': 'Europe Entry Support', 'footer.s6': 'Pharma',
     'footer.companyTitle': 'Company',
-    'footer.c1': 'Why Valeris', 'footer.c2': 'How It Works', 'footer.c3': 'Contact',
+    'footer.c2': 'How It Works', 'footer.c3': 'Contact',
     'footer.contactTitle': 'Contact',
     'footer.rights': '© 2026 Valeris Group Private Limited. All rights reserved.',
 
@@ -186,7 +171,7 @@ window.VALERIS_I18N = {
     'meta.description': 'Valeris pomaga polskim firmom sprawdzać dostawców i wchodzić na rynek w indyjskim regionie Maharasztra (Mumbai, Pune), a firmom indyjskim pomaga wejść do Europy przez Polskę. Valeris działa lokalnie, na miejscu.',
 
     'nav.services': 'Usługi', 'nav.how': 'Jak działamy',
-    'nav.why': 'Dlaczego Valeris', 'nav.contact': 'Kontakt', 'nav.cta': 'Skontaktuj się',
+    'nav.contact': 'Kontakt', 'nav.cta': 'Skontaktuj się',
     'nav.startPoland': 'FOR INDIAN COMPANIES',
 
     'hero.eyebrowA': 'Polska ⇄ Indie', 'hero.eyebrowB': 'Na miejscu w Maharasztrze',
@@ -276,25 +261,10 @@ window.VALERIS_I18N = {
     'process.3t': 'Praca na miejscu', 'process.3d': 'Działamy lokalnie — wizyty, spotkania, weryfikacje, rozmowy z partnerami. Na bieżąco wiesz, co się dzieje.',
     'process.4t': 'Raport i kolejne kroki', 'process.4d': 'Dostajesz konkret: raport, listę kontaktów albo rekomendowaną drogę dalej.',
 
-    'why.kicker': 'Dlaczego Valeris',
-    'why.titleA': 'Co nas ', 'why.titleEm': 'wyróżnia', 'why.titleB': '.',
-    'why.1t': 'Lokalna obecność, nie zdalny research', 'why.1d': 'Jesteśmy fizycznie w Maharasztrze. Jedziemy do fabryki, rozmawiamy z ludźmi twarzą w twarz — nie z biurka w Polsce.',
-    'why.2t': 'Znamy oba rynki', 'why.2d': 'Polskie realia biznesowe i znajomość tego, jak działa się w Maharasztrze — regulacyjnie, kulturowo i operacyjnie.',
-    'why.3t': 'Realne relacje biznesowe', 'why.3d': 'Nie kończymy na raportach. Budujemy relacje, które zostają z Tobą na lata.',
-    'why.4t': 'Szczerość i przejrzystość', 'why.4d': 'Zawsze wiesz, za co płacisz i czego się spodziewać. To, czego nie robimy sami, powierzamy zaufanym specjalistom, których znamy osobiście.',
-    'why.5t': 'Elastyczność i opłacalność', 'why.5d': 'Lokalna obecność bez kosztów własnej spółki w Indiach. Płacisz za tyle, ile potrzebujesz.',
-    'why.6t': 'Jeden punkt kontaktu',
-
-    'essence.quote': 'Zanim Ty wsiądziesz w samolot, my już sprawdziliśmy dostawcę.',
     'essence.sig': 'VALERIS — POLSKA ⇄ INDIE, NA MIEJSCU PO OBU STRONACH',
 
     'partner.kicker': 'Partnerstwo strategiczne',
     'partner.title': 'Współpraca z Polfrost — logistyka, na której można polegać',
-    'partner.lead': 'Valeris współpracuje z Polfrost — europejską, rodzinną firmą logistyczną z ponad 30-letnim doświadczeniem, działającą na całym świecie, ze szczególną siłą na kierunkach wschodnich. Dzięki temu nie kończymy na doradztwie — od sprawdzenia dostawcy po transport towaru między Polską a Indiami masz wszystko w jednym miejscu.',
-    'partner.fact1Num': '30+', 'partner.fact1Label': 'Lat działalności',
-    'partner.fact3Num': 'Globalny', 'partner.fact3Label': 'Zasięg, najsilniejszy na wschodzie',
-    'partner.badgeEyebrow': 'We współpracy z',
-    'partner.name': 'Polfrost',
 
     'contact.kicker': 'Rozpocznij rozmowę',
     'contact.titleA': 'Opowiedz nam o swoim ', 'contact.titleEm': 'projekcie', 'contact.titleB': '.',
@@ -321,7 +291,7 @@ window.VALERIS_I18N = {
     'footer.s1': 'Weryfikacja dostawców', 'footer.s2': 'Doradztwo rynku indyjskiego', 'footer.s3': 'Reprezentacja',
     'footer.s4': 'Wsparcie operacyjne', 'footer.s5': 'Wejście na rynek europejski', 'footer.s6': 'Pharma',
     'footer.companyTitle': 'Firma',
-    'footer.c1': 'Dlaczego Valeris', 'footer.c2': 'Jak działamy', 'footer.c3': 'Kontakt',
+    'footer.c2': 'Jak działamy', 'footer.c3': 'Kontakt',
     'footer.contactTitle': 'Kontakt',
     'footer.rights': '© 2026 Valeris Group Private Limited. Wszelkie prawa zastrzeżone.',
 
