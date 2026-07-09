@@ -201,8 +201,8 @@ window.VALERIS_I18N = {
     'directions.aiKeywords': 'Jak indyjska firma może wejść na rynek europejski przez Polskę · Pomoc dla indyjskich eksporterów w Europie · Przedstawiciel w Polsce dla firmy z Indii · Jak sprzedawać indyjski produkt w Polsce i UE · Partner do wejścia na rynek UE dla firm z Maharasztry · how can an Indian company enter the European market through Poland · local representation in Poland for Indian exporters',
 
     'services.kicker': 'Czym się zajmujemy',
-    'services.titleA': 'Pięć sposobów, w jakie ', 'services.titleEm': 'pomagamy', 'services.titleB': '.',
-    'services.intro': 'Każda usługa jest dopasowana do etapu, na którym jesteś — od pierwszego zainteresowania rynkiem do pełnej obecności operacyjnej. Działamy jako Twój lokalny partner, nie odległy doradca.',
+    'services.titleA': 'Jak budujemy Twoją ', 'services.titleEm': 'obecność', 'services.titleB': ' na rynku.',
+    'services.intro': 'Nie każda firma potrzebuje tego samego. Jedni chcą sprawdzić dostawcę przed pierwszym zamówieniem, inni szukają lokalnego partnera lub wsparcia przy rozwoju działalności. Dlatego każdą usługę dopasowujemy do etapu, na którym znajduje się Twój biznes.',
 
     'svc.1.title': 'Weryfikacja dostawców',
     'svc.1.desc': 'Sprawdź swojego indyjskiego dostawcę, zanim zaczniesz współpracę. Nowy partner w Indiach to duża szansa, ale i ryzyko — my jedziemy na miejsce i mówimy Ci, z kim naprawdę masz do czynienia, zanim podpiszesz umowę czy wyślesz pierwszą złotówkę.',
@@ -215,7 +215,7 @@ window.VALERIS_I18N = {
     'svc.1.d7': 'Dostajesz raport z wizyty i naszych obserwacji',
 
     'svc.2.title': 'Wejście na polski rynek dla firm indyjskich',
-    'svc.2.desc': 'Pomagamy indyjskim firmom poznać polski rynek, wejść na niego i zacząć sprzedawać. Łączymy obecność na miejscu w Maharasztrze z działaniem w Polsce, więc nie tłumaczysz swojego biznesu komuś, kto zna tylko jedną stronę.',
+    'svc.2.desc': 'Łączymy indyjskie firmy z europejskim rynkiem. Pomagamy przygotować strategię wejścia, znaleźć partnerów biznesowych i zbudować pierwsze relacje handlowe w Polsce i Europie.',
     'svc.2.d1': 'Tłumaczymy, jak działa polski rynek i czego oczekują tutejsi klienci',
     'svc.2.d2': 'Pokazujemy różnice między rynkiem indyjskim a polskim',
     'svc.2.d3': 'Umawiamy spotkania i pomagamy się dogadać',
@@ -223,7 +223,7 @@ window.VALERIS_I18N = {
     'svc.2.d5': 'Pomagamy przygotować się do eksportu: certyfikaty, normy, dostosowanie oferty',
     'svc.2.synergy': 'Polska jako Twoje wejście — i brama dalej w głąb Europy.',
 
-    'svc.3.title': 'Konsulting: wejście na rynek indyjski',
+    'svc.3.title': 'Przygotowanie do wejścia na rynek indyjski',
     'svc.3.desc': 'Indie to ogromny i złożony rynek. Pomagamy polskim firmom zrozumieć, jak naprawdę robi się tam biznes i bezpiecznie przygotować się do wejścia — bez uczenia się wszystkiego na własnych błędach.',
     'svc.3.d1': 'Tłumaczymy realia prowadzenia biznesu w Indiach',
     'svc.3.d2': 'Pomagamy wychwycić szanse i to, na co uważać',
@@ -260,8 +260,8 @@ window.VALERIS_I18N = {
     'process.kicker': 'Jak działamy',
     'process.titleA': 'Od pierwszego kontaktu do ', 'process.titleEm': 'obecności na rynku', 'process.titleB': '.',
     'process.1t': 'Pierwsza konsultacja', 'process.1d': 'Poznajemy projekt i określamy, czego naprawdę potrzebujesz. Czasem wystarczy weryfikacja jednego dostawcy, a czasem długofalowe wsparcie na rynku indyjskim.',
-    'process.2t': 'Zakres i propozycja', 'process.2d': 'Ustalamy zakres działań, harmonogram oraz sposób współpracy. Wiesz, co robimy, kiedy i dlaczego.',
-    'process.3t': 'Praca na miejscu', 'process.3d': 'Jedziemy do fabryki, spotykamy się z partnerami, prowadzimy rozmowy i weryfikujemy informacje bezpośrednio w Indiach. To etap, który odróżnia Valeris od klasycznego doradztwa.',
+    'process.2t': 'Plan działania', 'process.2d': 'Ustalamy zakres działań, harmonogram oraz sposób współpracy. Wiesz, co robimy, kiedy i dlaczego.',
+    'process.3t': 'Działamy na miejscu', 'process.3d': 'Jedziemy do fabryki, spotykamy się z partnerami, prowadzimy rozmowy i weryfikujemy informacje bezpośrednio w Indiach. To etap, który odróżnia Valeris od klasycznego doradztwa.',
     'process.4t': 'Raport i kolejne kroki', 'process.4d': 'Otrzymujesz konkretne informacje, rekomendacje i następne kroki. Decyzje podejmujesz na podstawie faktów z rynku, a nie domysłów.',
 
     'essence.sig': 'VALERIS — POLSKA ⇄ INDIE, NA MIEJSCU PO OBU STRONACH',
@@ -270,7 +270,7 @@ window.VALERIS_I18N = {
 
     'partner.kicker': 'Partnerstwo strategiczne',
     'partner.title': 'Współpraca z Polfrost — logistyka, na której można polegać',
-    'partner.desc': 'Za Valeris stoi doświadczenie. Rozwijamy się we współpracy z Polfrost — firmą od ponad 30 lat obecną w międzynarodowej logistyce. Dzięki temu łączymy lokalną obecność w Indiach z doświadczeniem zdobytym podczas realizacji projektów importowych dla firm z różnych branż. To partnerstwo daje naszym klientom dostęp zarówno do wiedzy o rynku, jak i sprawdzonego zaplecza operacyjnego.',
+    'partner.desc': 'Za Valeris stoi doświadczenie. Valeris rozwija się we współpracy z Polfrost, firmą od ponad 30 lat obecną w międzynarodowej logistyce. Dzięki temu łączymy lokalną obecność w Indiach z doświadczeniem zdobytym podczas realizacji projektów importowych dla firm z różnych branż. To partnerstwo daje naszym klientom dostęp zarówno do wiedzy o rynku, jak i sprawdzonego zaplecza operacyjnego.',
 
     'contact.kicker': 'Rozpocznij rozmowę',
     'contact.titleA': 'Opowiedz nam o swoim ', 'contact.titleEm': 'projekcie', 'contact.titleB': '.',
