@@ -282,6 +282,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .essence { text-align: center; }
 .essence-quote { font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: clamp(1.55rem, 3vw, 2.5rem); line-height: 1.42; color: var(--title); max-width: 44rem; margin: 0 auto; }
 .essence-sig { display: block; margin-top: 2.1rem; font-size: 0.76rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--hl); }
+.essence-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 3rem; align-items: center; text-align: left; }
+.essence-grid .essence-quote { margin: 0; max-width: none; }
+.essence-lead { font-family: var(--font-display); font-weight: 500; font-size: 1.2rem; line-height: 1.4; color: var(--title); margin-bottom: 0.9rem; }
+.essence-desc { font-size: 0.95rem; line-height: 1.8; color: var(--body); max-width: 32rem; }
 
 /* =================================================================
    PARTNERSHIP (POLFROST) — rail-logistics photography, heavy scrim for
@@ -298,6 +302,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .partner-box { background: var(--canvas); border-radius: 6px; padding: 2.7rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.9rem; box-shadow: 0 26px 55px rgba(7, 25, 23, 0.35); }
 .partner-box img { width: 100%; max-width: 190px; height: auto; display: block; }
 .partner-legal-name { font-size: 0.78rem; color: var(--ink-body); opacity: 0.65; margin-top: 0.4rem; }
+.partner-text .section-intro { margin-top: 1.2rem; }
 
 /* =================================================================
    WHY ITEMS (used by india.html)
@@ -394,6 +399,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .process-steps { grid-template-columns: 1fr 1fr; gap: 2.4rem 1.8rem; }
   .process-steps::before { display: none; }
   .partner-grid { grid-template-columns: 1fr; gap: 2.2rem; }
+  .essence-grid { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
+  .essence-grid .essence-quote { margin: 0 auto; }
+  .essence-support { max-width: 44rem; margin: 0 auto; }
+  .essence-desc { margin: 0 auto; }
   .why-list { grid-template-columns: 1fr 1fr; gap: 2.2rem 2.5rem; }
   .footer-inner { grid-template-columns: 1fr 1fr; gap: 2.2rem; }
   .footer-col { border-left: none; padding-left: 0; }
