@@ -316,6 +316,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    CONTACT
    ================================================================= */
 .contact-inner { max-width: 760px; margin: 0 auto; }
+.contact-people { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-top: 2.6rem; }
+.person-card { background: rgba(255,255,255,0.04); border: 1px solid var(--line-on-navy); border-radius: 6px; padding: 1.6rem 1.5rem; text-align: center; transition: border-color var(--t); }
+.person-card:hover { border-color: rgba(193, 149, 89, 0.4); }
+.person-role { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-on-navy); margin-bottom: 0.4rem; }
+.person-name { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; color: var(--title); margin-bottom: 0.7rem; }
+.person-links { display: flex; flex-direction: column; gap: 0.3rem; }
+.person-links a { font-size: 0.86rem; color: var(--text-on-navy); transition: color var(--t); }
+.person-links a:hover { color: var(--accent); }
 .contact-form { background: rgba(255,255,255,0.04); border: 1px solid var(--line-on-navy); border-radius: 6px; padding: 2.6rem; margin-top: 2.6rem; box-shadow: 0 30px 60px rgba(7, 25, 23, 0.28); }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
 .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
@@ -441,6 +449,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .why-list { grid-template-columns: 1fr; gap: 1.8rem; }
   .ei-card { padding: 2rem 1.7rem; }
   .form-grid { grid-template-columns: 1fr; }
+  .contact-people { grid-template-columns: 1fr; }
   .form-input { font-size: 16px; padding: 0.85rem 1rem; }
   .form-textarea { min-height: 120px; }
   .lang-btn { padding: 0.4rem 0.5rem; }
