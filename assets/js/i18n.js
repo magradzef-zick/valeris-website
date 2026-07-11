@@ -183,11 +183,11 @@ window.VALERIS_I18N = {
     'hero.ctaPrimary': 'Poznaj usługi', 'hero.ctaSecondary': 'Skontaktuj się',
     'hero.stat1num': '2', 'hero.stat1label': 'Rynki, które łączymy',
     'hero.stat2num': '2', 'hero.stat2label': 'Regiony, które znamy od podszewki',
-    'hero.stat3num': '5', 'hero.stat3label': 'Obszary usług',
+    'hero.stat3num': '5', 'hero.stat3label': '5 obszarów usług',
     'hero.scroll': 'Przewiń',
 
     'directions.kicker': 'Dwa kierunki, jeden partner',
-    'directions.titleA': 'Łączymy ', 'directions.titleEm': 'obie strony', 'directions.titleB': '.',
+    'directions.titleA': 'Obecni po ', 'directions.titleEm': 'obu stronach rynku', 'directions.titleB': '.',
     'directions.card1Dir': 'Polska → Indie (Maharasztra)',
     'directions.card1Title': 'Rozwój biznesu w Indiach',
     'directions.card1Desc': 'Działamy jako Twój lokalny partner w Maharasztrze. Weryfikujemy dostawców, reprezentujemy Twoją firmę i wspieramy Cię na każdym etapie rozwoju biznesu w Indiach. Dzięki lokalnej obecności podejmujesz decyzje w oparciu o rzeczywiste informacje, a nie wyłącznie deklaracje partnerów.',
@@ -264,7 +264,7 @@ window.VALERIS_I18N = {
     'process.3t': 'Działamy na miejscu', 'process.3d': 'Jedziemy do fabryki, spotykamy się z partnerami, prowadzimy rozmowy i weryfikujemy informacje bezpośrednio w Indiach. To etap, który odróżnia Valeris od klasycznego doradztwa.',
     'process.4t': 'Raport i kolejne kroki', 'process.4d': 'Otrzymujesz konkretne informacje, rekomendacje i następne kroki. Decyzje podejmujesz na podstawie faktów z rynku, a nie domysłów.',
 
-    'essence.sig': 'VALERIS — POLSKA ⇄ INDIE, NA MIEJSCU PO OBU STRONACH',
+    'essence.sig': 'Obecni po obu stronach rynku.',
     'essence.lead': 'Dobre decyzje zaczynają się od zrozumienia rynku.',
     'essence.desc': 'Dlatego jesteśmy obecni po obu stronach rynku, łącząc wiedzę, lokalną obecność i praktyczne doświadczenie, aby zmniejszyć złożoność prowadzenia biznesu między Europą a Indiami.',
 
