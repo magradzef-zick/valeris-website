@@ -111,6 +111,7 @@ window.VALERIS_I18N = {
     'contact.intro': "Whether you're exploring India for the first time or ready to verify a specific supplier, we'll help you move forward with confidence.",
     'contact.directorRole': 'Director',
     'contact.pmRole': 'Project Manager',
+    'contact.addressLabel': 'Address',
     'form.firstName': 'First name', 'form.lastName': 'Last name',
     'form.company': 'Company', 'form.email': 'Email', 'form.phone': 'Phone',
     'form.interest': "I'm interested in", 'form.message': 'Tell us briefly about your project', 'form.submit': 'Send Message',
@@ -268,7 +269,7 @@ window.VALERIS_I18N = {
 
     'essence.sig': 'Obecni po obu stronach rynku.',
     'essence.lead': 'Dobre decyzje zaczynają się od zrozumienia rynku.',
-    'essence.desc': 'Dlatego jesteśmy obecni po obu stronach rynku, łącząc wiedzę, lokalną obecność i praktyczne doświadczenie, aby zmniejszyć złożoność prowadzenia biznesu między Europą a Indiami.',
+    'essence.desc': 'Jesteśmy obecni po obu stronach rynku, łącząc wiedzę, lokalną obecność i praktyczne doświadczenie, aby zmniejszyć złożoność prowadzenia biznesu między Europą a Indiami.',
 
     'partner.kicker': 'Partnerstwo strategiczne',
     'partner.title': 'Współpraca z Polfrost — logistyka, na której można polegać',
@@ -279,6 +280,7 @@ window.VALERIS_I18N = {
     'contact.intro': 'Niezależnie od tego, czy odkrywasz Indie po raz pierwszy, czy chcesz zweryfikować konkretnego dostawcę — pomożemy Ci ruszyć dalej z pewnością.',
     'contact.directorRole': 'Dyrektor',
     'contact.pmRole': 'Project Manager',
+    'contact.addressLabel': 'Adres',
     'form.firstName': 'Imię', 'form.lastName': 'Nazwisko',
     'form.company': 'Firma', 'form.email': 'E-mail', 'form.phone': 'Telefon',
     'form.interest': 'Interesuje mnie', 'form.message': 'Opowiedz nam krótko o swoim projekcie', 'form.submit': 'Wyślij wiadomość',

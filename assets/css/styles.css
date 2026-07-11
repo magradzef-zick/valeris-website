@@ -324,6 +324,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .person-links { display: flex; flex-direction: column; gap: 0.3rem; }
 .person-links a { font-size: 0.86rem; color: var(--text-on-navy); transition: color var(--t); }
 .person-links a:hover { color: var(--accent); }
+.contact-address { margin-top: 1.6rem; text-align: center; }
+.contact-address-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-on-navy); margin-bottom: 0.3rem; }
+.contact-address-value { font-size: 0.86rem; color: var(--text-on-navy); }
 .contact-form { background: rgba(255,255,255,0.04); border: 1px solid var(--line-on-navy); border-radius: 6px; padding: 2.6rem; margin-top: 2.6rem; box-shadow: 0 30px 60px rgba(7, 25, 23, 0.28); }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
 .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
