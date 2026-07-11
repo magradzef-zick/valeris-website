@@ -230,10 +230,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .ei-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; }
 .ei-card { position: relative; overflow: hidden; isolation: isolate; border: 1px solid var(--line-on-navy); border-radius: 4px; padding: 2.4rem; transition: border-color var(--t); }
 .ei-card::before { content: ''; position: absolute; inset: 0; z-index: -2; background-size: cover; background-position: center; transform: scale(1); transition: transform 0.8s var(--ease-reveal); }
-.ei-card::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(165deg, rgba(7,25,23,0.97) 0%, rgba(7,25,23,0.91) 45%, rgba(7,25,23,0.8) 100%); transition: background var(--t); }
+.ei-card::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(165deg, rgba(7,25,23,0.97) 0%, rgba(7,25,23,0.95) 45%, rgba(7,25,23,0.91) 100%); transition: background var(--t); }
 .ei-card:hover { border-color: rgba(205,166,89,0.4); }
 .ei-card:hover::before { transform: scale(1.04); }
-.ei-card:hover::after { background: linear-gradient(165deg, rgba(7,25,23,0.93) 0%, rgba(7,25,23,0.85) 45%, rgba(7,25,23,0.72) 100%); }
+.ei-card:hover::after { background: linear-gradient(165deg, rgba(7,25,23,0.94) 0%, rgba(7,25,23,0.91) 45%, rgba(7,25,23,0.85) 100%); }
 .ei-card--verify::before { background-image: url('../img/photography/card-supplier-verification-760.jpg'); }
 .ei-card--gateway::before { background-image: url('../img/photography/card-europe-gateway-760.jpg'); }
 @media (min-width: 760px) {
