@@ -4,8 +4,8 @@
    ================================================================= */
 window.VALERIS_I18N = {
   en: {
-    'meta.title': 'Valeris — Market Entry in India (Maharashtra) & Supplier Verification',
-    'meta.description': "Valeris helps Polish companies verify suppliers and enter the market in India's Maharashtra region (Mumbai, Pune), and helps Indian companies enter Europe through Poland. Valeris operates locally, on the ground.",
+    'meta.title': 'Valeris — India Market Entry & Supplier Verification',
+    'meta.description': "Valeris helps Polish and Indian companies enter each other's markets, verifying suppliers and representing clients on the ground in Maharashtra and Poland.",
 
     'nav.services': 'Services', 'nav.how': 'How We Work',
     'nav.contact': 'Contact', 'nav.cta': 'Contact Us',
@@ -139,8 +139,8 @@ window.VALERIS_I18N = {
     'footer.rights': '© 2026 Valeris Group Private Limited. All rights reserved.',
 
     /* ── Pharma subpage ── */
-    'pharma.meta.title': 'Europe Market Entry for Pharmaceutical Companies — Valeris',
-    'pharma.meta.description': 'Valeris helps Indian pharmaceutical companies enter the European market — strategy, partner development, certification and export readiness.',
+    'pharma.meta.title': 'Europe Market Entry for Pharma Companies — Valeris',
+    'pharma.meta.description': 'We help Indian pharmaceutical companies enter the European market — readiness assessment, certification support, partner search and export strategy.',
     'pharma.backLink': '← Back to Valeris',
     'pharma.hero.eyebrow': 'Industry specialisation',
     'pharma.hero.title': 'Europe Market Entry for Pharmaceutical Companies',
