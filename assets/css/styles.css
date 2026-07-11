@@ -317,7 +317,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    ================================================================= */
 .contact-inner { max-width: 760px; margin: 0 auto; }
 .contact-people { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-top: 2.6rem; }
-.person-card { background: rgba(255,255,255,0.04); border: 1px solid var(--line-on-navy); border-radius: 6px; padding: 1.6rem 1.5rem; text-align: center; transition: border-color var(--t); }
+.person-card { background: rgba(255,255,255,0.04); border: 1px solid var(--line-on-navy); border-radius: 6px; padding: 1.6rem 1.5rem; text-align: center; box-shadow: 0 18px 36px rgba(7, 25, 23, 0.22); transition: border-color var(--t); }
 .person-card:hover { border-color: rgba(193, 149, 89, 0.4); }
 .person-role { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-on-navy); margin-bottom: 0.4rem; }
 .person-name { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; color: var(--title); margin-bottom: 0.7rem; }
