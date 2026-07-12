@@ -99,7 +99,7 @@ window.VALERIS_I18N = {
     'process.4t': 'Report and next steps', 'process.4d': "You receive concrete information, recommendations and next steps. Decisions based on market facts, not guesswork.",
 
     'essence.sig': 'Present on both sides of the market.',
-    'essence.lead': 'Good decisions start with understanding the market.',
+    'essence.lead': 'Good decisions begin with understanding the market.',
     'essence.desc': "We're present on both sides of the market, combining knowledge, local presence and hands-on experience. That's what makes doing business between Europe and India simpler.",
 
     'partner.kicker': 'Strategic partnership',
