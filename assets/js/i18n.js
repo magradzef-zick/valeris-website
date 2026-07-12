@@ -13,7 +13,7 @@ window.VALERIS_I18N = {
 
     'hero.eyebrowA': 'Poland ⇄ India', 'hero.eyebrowB': 'On the ground in Maharashtra',
     'hero.line1': "Market access starts with presence.",
-    'hero.sub': "We connect Europe and India through local presence, hands-on support and a genuine understanding of both markets — operating on the ground in Maharashtra to verify suppliers, represent our clients, and help companies grow without setting up their own structure in India.",
+    'hero.sub': "We connect Europe and India through local presence, hands-on support and real market knowledge. On the ground in Maharashtra, we verify suppliers, represent our clients, and help companies grow without setting up their own structure in India.",
     'hero.ctaPrimary': 'Explore Services', 'hero.ctaSecondary': 'Get in Touch',
     'hero.stat1num': '2', 'hero.stat1label': 'Markets we connect',
     'hero.stat2num': '2', 'hero.stat2label': 'Regions we know inside out',
@@ -24,12 +24,12 @@ window.VALERIS_I18N = {
     'directions.titleA': 'Present on ', 'directions.titleEm': 'both sides of the market', 'directions.titleB': '.',
     'directions.card1Dir': 'Poland → India (Maharashtra)',
     'directions.card1Title': 'Growing your business in India',
-    'directions.card1Desc': "We act as your local partner in Maharashtra — verifying suppliers, representing your company, and supporting you at every stage of growing your business in India. With people on the ground, you make decisions based on real information, not partner claims alone.",
+    'directions.card1Desc': "We're your local partner in Maharashtra — verifying suppliers, representing your company, and supporting every stage of your growth in India. With people on the ground, you make decisions based on real information, not partner claims alone.",
     'directions.card1Tag1': 'Supplier Verification', 'directions.card1Tag2': 'Market Advisory',
     'directions.card1Tag3': 'Local Representation', 'directions.card1Tag4': 'Operational Support',
     'directions.card2Dir': 'India (Maharashtra) → Poland',
     'directions.card2Title': 'Growing your business in Europe',
-    'directions.card2Desc': "We help Indian companies establish a presence in the European market, combining local knowledge of Poland and Europe with experience gained in India to make market entry simpler and more predictable.",
+    'directions.card2Desc': "We help Indian companies enter the European market, combining local knowledge of Poland and Europe with experience gained in India to make the process simpler and more predictable.",
     'directions.card2Tag1': 'Market Entry', 'directions.card2Tag2': 'Business Partner Sourcing',
     'directions.card2Tag3': 'Export Readiness', 'directions.card2Tag4': 'Sales Development',
     'directions.aiKeywords': 'How can an Indian company enter the European market through Poland · Help for Indian exporters in Europe · Local representation in Poland for an Indian company · How to sell an Indian product in Poland and the EU · Partner for EU market entry for companies from Maharashtra · how can an Indian company enter the European market through Poland · local representation in Poland for Indian exporters',
@@ -49,7 +49,7 @@ window.VALERIS_I18N = {
     'svc.1.d7': 'A written report with our findings',
 
     'svc.2.title': 'Poland Market Entry for Indian Companies',
-    'svc.2.desc': "We connect Indian companies with the European market — helping you build an entry strategy, find business partners, and establish your first trade relationships in Poland and across Europe.",
+    'svc.2.desc': "We connect Indian companies with the European market — helping you build an entry strategy, find business partners, and start your first trade relationships in Poland and across Europe.",
     'svc.2.d1': 'Explaining how the Polish market works and what local customers expect',
     'svc.2.d2': 'Mapping the differences between the Indian and Polish markets',
     'svc.2.d3': 'Arranging meetings and helping you communicate clearly',
@@ -58,7 +58,7 @@ window.VALERIS_I18N = {
     'svc.2.synergy': 'Poland as your entry point — and a gateway into the wider European market.',
 
     'svc.3.title': 'India Market Entry Preparation',
-    'svc.3.desc': "India is a vast, complex market. We help Polish companies understand how business is really done there and prepare properly before entering — without learning everything the hard way.",
+    'svc.3.desc': "India is a vast, complex market. We help Polish companies understand how business really works there and prepare properly before entering it — without learning everything the hard way.",
     'svc.3.d1': 'Explaining what doing business in India is really like',
     'svc.3.d2': 'Flagging genuine opportunities and the risks worth watching',
     'svc.3.d3': 'Getting you ready to start operating',
@@ -67,7 +67,7 @@ window.VALERIS_I18N = {
     'svc.3.synergy': "We don't offer legal or accounting services ourselves, but we'll connect you with the right specialists and guide you through the process.",
 
     'svc.4.title': 'Representation in India',
-    'svc.4.desc': "Not every company needs to set up a legal entity in India right away. We represent you on the ground, take part in meetings, build relationships, and support your growth — without you having to build your own team in India.",
+    'svc.4.desc': "Not every company needs to set up a legal entity in India right away. We represent you on the ground, take part in meetings, build relationships, and support your growth — without you needing to set up your own team in India.",
     'svc.4.d1': 'Representation at trade fairs, conferences and business meetings',
     'svc.4.d2': 'Meetings with potential partners on your behalf',
     'svc.4.d3': 'Ongoing market intelligence and industry monitoring',
@@ -95,12 +95,12 @@ window.VALERIS_I18N = {
     'process.titleA': 'From first contact to ', 'process.titleEm': 'market presence', 'process.titleB': '.',
     'process.1t': 'Initial consultation', 'process.1d': "We get to know your project and work out what you actually need — sometimes that's verifying a single supplier, sometimes it's ongoing support in the Indian market.",
     'process.2t': 'Action plan', 'process.2d': "We agree the scope of work, timeline and how we'll collaborate, so you know exactly what we're doing, when, and why.",
-    'process.3t': 'On the ground', 'process.3d': "We visit the factory, meet with partners, hold conversations and verify information directly in India. This is the stage that sets Valeris apart from conventional advisory.",
+    'process.3t': 'On the ground', 'process.3d': "We visit the factory, meet with partners, and verify information directly in India — the stage that sets Valeris apart from conventional advisory.",
     'process.4t': 'Report and next steps', 'process.4d': "You receive concrete information, recommendations and next steps — decisions based on market facts, not guesswork.",
 
     'essence.sig': 'Present on both sides of the market.',
     'essence.lead': 'Good decisions start with understanding the market.',
-    'essence.desc': "We're present on both sides of the market, combining knowledge, local presence and hands-on experience to make doing business between Europe and India less complicated.",
+    'essence.desc': "We're present on both sides of the market, combining knowledge, local presence and hands-on experience — so doing business between Europe and India is simpler.",
 
     'partner.kicker': 'Strategic partnership',
     'partner.title': 'Working with Polfrost — logistics you can rely on',
@@ -130,7 +130,7 @@ window.VALERIS_I18N = {
     'form.errorConfig': "This form isn't connected yet. Please email us directly.",
     'form.sending': 'Sending…',
 
-    'footer.desc': 'Your trusted partner for business between Poland and India. Local presence, real market access.',
+    'footer.desc': 'Your partner for business between Poland and India. Local presence, real market access.',
     'footer.servicesTitle': 'Services',
     'footer.s1': 'Supplier Verification', 'footer.s2': 'India Market Consulting', 'footer.s3': 'Representation',
     'footer.s4': 'Operational Support', 'footer.s5': 'Europe Market Entry', 'footer.s6': 'Pharma',
@@ -145,7 +145,7 @@ window.VALERIS_I18N = {
     'pharma.backLink': '← Back to Valeris',
     'pharma.hero.eyebrow': 'Industry specialisation',
     'pharma.hero.title': 'Europe Market Entry for Pharmaceutical Companies',
-    'pharma.hero.desc': 'Valeris helps Indian pharmaceutical companies enter the European market through strategic advisory, partner development, and structured preparation for certification and export — understanding the European pharma landscape, introducing the right partners, and preparing you to work with European distributors and manufacturers.',
+    'pharma.hero.desc': 'Valeris helps Indian pharmaceutical companies enter the European market through strategic advisory, partner development, and structured preparation for certification and export. We map the European pharma landscape, introduce the right partners, and get you ready to work with European distributors and manufacturers.',
     'pharma.cta': 'Discuss Your Project',
 
     'pharma.1.title': 'Europe Market Readiness Assessment', 'pharma.1.sub': 'Is your company ready for Europe?',
