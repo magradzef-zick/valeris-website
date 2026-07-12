@@ -49,7 +49,7 @@ window.VALERIS_I18N = {
     'svc.1.d7': 'A written report with our findings',
 
     'svc.2.title': 'Poland Market Entry for Indian Companies',
-    'svc.2.desc': "We connect Indian companies with the European market — helping you build an entry strategy, find business partners, and start your first trade relationships in Poland and across Europe.",
+    'svc.2.desc': "We connect Indian companies with the European market, helping you build an entry strategy, find business partners, and start your first trade relationships in Poland and across Europe.",
     'svc.2.d1': 'Explaining how the Polish market works and what local customers expect',
     'svc.2.d2': 'Mapping the differences between the Indian and Polish markets',
     'svc.2.d3': 'Arranging meetings and helping you communicate clearly',
@@ -58,7 +58,7 @@ window.VALERIS_I18N = {
     'svc.2.synergy': 'Poland as your entry point — and a gateway into the wider European market.',
 
     'svc.3.title': 'India Market Entry Preparation',
-    'svc.3.desc': "India is a vast, complex market. We help Polish companies understand how business really works there and prepare properly before entering it — without learning everything the hard way.",
+    'svc.3.desc': "India is a vast, complex market. We help Polish companies understand how business really works there and prepare properly before entering it, without learning everything the hard way.",
     'svc.3.d1': 'Explaining what doing business in India is really like',
     'svc.3.d2': 'Flagging genuine opportunities and the risks worth watching',
     'svc.3.d3': 'Getting you ready to start operating',
@@ -67,16 +67,16 @@ window.VALERIS_I18N = {
     'svc.3.synergy': "We don't offer legal or accounting services ourselves, but we'll connect you with the right specialists and guide you through the process.",
 
     'svc.4.title': 'Representation in India',
-    'svc.4.desc': "Not every company needs to set up a legal entity in India right away. We represent you on the ground, take part in meetings, build relationships, and support your growth — without you needing to set up your own team in India.",
+    'svc.4.desc': "Not every company needs to set up a legal entity in India right away. We represent you on the ground, take part in meetings, build relationships, and support your growth, without you needing to set up your own team in India.",
     'svc.4.d1': 'Representation at trade fairs, conferences and business meetings',
     'svc.4.d2': 'Meetings with potential partners on your behalf',
     'svc.4.d3': 'Ongoing market intelligence and industry monitoring',
     'svc.4.d4': 'Relationship-building with manufacturers, distributors and suppliers',
     'svc.4.d5': 'Organising your business visits to India',
-    'svc.4.synergy': 'A permanent presence on the ground — without the cost of setting up a company in India.',
+    'svc.4.synergy': 'A permanent presence in Maharashtra — without the cost of setting up a company in India.',
 
     'svc.5.title': 'Operational Support',
-    'svc.5.desc': "Once your project is underway, we support it on the ground — organising meetings, solving problems as they come up, and coordinating with local partners, so you don't need to be in India for every decision.",
+    'svc.5.desc': "Once your project is underway, we stay close to it: organising meetings, solving problems as they come up, and coordinating with local partners, so you don't need to be in India for every decision.",
     'svc.5.d1': 'Finding the right partners and suppliers',
     'svc.5.d2': 'Supporting communication and negotiation with local companies',
     'svc.5.d3': 'Sourcing production and warehouse space',
@@ -93,14 +93,14 @@ window.VALERIS_I18N = {
 
     'process.kicker': 'How it works',
     'process.titleA': 'From first contact to ', 'process.titleEm': 'market presence', 'process.titleB': '.',
-    'process.1t': 'Initial consultation', 'process.1d': "We get to know your project and work out what you actually need — sometimes that's verifying a single supplier, sometimes it's ongoing support in the Indian market.",
+    'process.1t': 'Initial consultation', 'process.1d': "We get to know your project and work out what you actually need: sometimes that's verifying a single supplier, sometimes it's ongoing support in the Indian market.",
     'process.2t': 'Action plan', 'process.2d': "We agree the scope of work, timeline and how we'll collaborate, so you know exactly what we're doing, when, and why.",
     'process.3t': 'On the ground', 'process.3d': "We visit the factory, meet with partners, and verify information directly in India — the stage that sets Valeris apart from conventional advisory.",
-    'process.4t': 'Report and next steps', 'process.4d': "You receive concrete information, recommendations and next steps — decisions based on market facts, not guesswork.",
+    'process.4t': 'Report and next steps', 'process.4d': "You receive concrete information, recommendations and next steps. Decisions based on market facts, not guesswork.",
 
     'essence.sig': 'Present on both sides of the market.',
     'essence.lead': 'Good decisions start with understanding the market.',
-    'essence.desc': "We're present on both sides of the market, combining knowledge, local presence and hands-on experience — so doing business between Europe and India is simpler.",
+    'essence.desc': "We're present on both sides of the market, combining knowledge, local presence and hands-on experience. That's what makes doing business between Europe and India simpler.",
 
     'partner.kicker': 'Strategic partnership',
     'partner.title': 'Working with Polfrost — logistics you can rely on',
