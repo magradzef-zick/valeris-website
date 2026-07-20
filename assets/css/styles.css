@@ -133,10 +133,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .hero { position: relative; isolation: isolate; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--header-h) + 4rem) 0 6.7rem; overflow: hidden; }
 
 /* Hero photography */
-.hero-photo { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: 72% center; background-image: url('../img/photography/hero-market-gate-1100.jpg'); transform: scale(1); animation: heroPhotoZoom 22s var(--ease) infinite alternate; will-change: transform; }
+.hero-photo { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: 72% center; background-image: url('../img/photography/pharma-hero-street-1100.jpg'); transform: scale(1); animation: heroPhotoZoom 22s var(--ease) infinite alternate; will-change: transform; }
 @keyframes heroPhotoZoom { from { transform: scale(1); } to { transform: scale(1.045); } }
 @media (min-width: 900px) {
-  .hero-photo { background-image: url('../img/photography/hero-market-gate-2400.jpg'); }
+  .hero-photo { background-image: url('../img/photography/pharma-hero-street-2400.jpg'); }
 }
 .hero::before {
   content: ''; position: absolute; inset: 0; z-index: 1;

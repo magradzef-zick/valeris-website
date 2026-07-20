@@ -17,7 +17,7 @@ window.VALERIS_I18N = {
     'hero.ctaPrimary': 'Explore Services', 'hero.ctaSecondary': 'Get in Touch',
     'hero.stat1num': '2', 'hero.stat1label': 'Markets we connect',
     'hero.stat2num': '2', 'hero.stat2label': 'Regions we know inside out',
-    'hero.stat3num': '5', 'hero.stat3label': '5 service areas',
+    'hero.stat3num': '5', 'hero.stat3label': 'Service areas we cover',
     'hero.scroll': 'Scroll',
 
     'directions.kicker': 'Two directions, one partner',
@@ -98,7 +98,7 @@ window.VALERIS_I18N = {
     'process.3t': 'On the ground', 'process.3d': "We visit the factory, meet with partners, and verify information directly in India — the stage that sets Valeris apart from conventional advisory.",
     'process.4t': 'Report and next steps', 'process.4d': "You receive concrete information, recommendations and next steps. Decisions based on market facts, not guesswork.",
 
-    'essence.sig': 'Present on both sides of the market.',
+    'essence.sig': 'Local teams in Poland and India.',
     'essence.lead': 'Good decisions begin with understanding the market.',
     'essence.desc': "We're present on both sides of the market, combining knowledge, local presence and hands-on experience. That's what makes doing business between Europe and India simpler.",
 
@@ -186,7 +186,7 @@ window.VALERIS_I18N = {
     'hero.ctaPrimary': 'Poznaj usługi', 'hero.ctaSecondary': 'Skontaktuj się',
     'hero.stat1num': '2', 'hero.stat1label': 'Rynki, które łączymy',
     'hero.stat2num': '2', 'hero.stat2label': 'Regiony, które znamy od podszewki',
-    'hero.stat3num': '5', 'hero.stat3label': '5 obszarów usług',
+    'hero.stat3num': '5', 'hero.stat3label': 'Obszary usług, które oferujemy',
     'hero.scroll': 'Przewiń',
 
     'directions.kicker': 'Dwa kierunki, jeden partner',
@@ -267,7 +267,7 @@ window.VALERIS_I18N = {
     'process.3t': 'Działamy na miejscu', 'process.3d': 'Jedziemy do fabryki, spotykamy się z partnerami, prowadzimy rozmowy i weryfikujemy informacje bezpośrednio w Indiach. To etap, który odróżnia Valeris od klasycznego doradztwa.',
     'process.4t': 'Raport i kolejne kroki', 'process.4d': 'Otrzymujesz konkretne informacje, rekomendacje i następne kroki. Decyzje podejmujesz na podstawie faktów z rynku, a nie domysłów.',
 
-    'essence.sig': 'Obecni po obu stronach rynku.',
+    'essence.sig': 'Lokalne zespoły w Polsce i Indiach.',
     'essence.lead': 'Dobre decyzje zaczynają się od zrozumienia rynku.',
     'essence.desc': 'Jesteśmy obecni po obu stronach rynku, łącząc wiedzę, lokalną obecność i praktyczne doświadczenie, aby zmniejszyć złożoność prowadzenia biznesu między Europą a Indiami.',
 
