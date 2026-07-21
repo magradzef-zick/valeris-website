@@ -186,7 +186,7 @@ window.VALERIS_I18N = {
     'hero.ctaPrimary': 'Poznaj usługi', 'hero.ctaSecondary': 'Skontaktuj się',
     'hero.stat1num': '2', 'hero.stat1label': 'Rynki, które łączymy',
     'hero.stat2num': '2', 'hero.stat2label': 'Regiony, które znamy od podszewki',
-    'hero.stat3num': '5', 'hero.stat3label': 'Obszary usług, które oferujemy',
+    'hero.stat3num': '5', 'hero.stat3label': 'Obszarów usług',
     'hero.scroll': 'Przewiń',
 
     'directions.kicker': 'Dwa kierunki, jeden partner',
@@ -269,7 +269,7 @@ window.VALERIS_I18N = {
 
     'essence.sig': 'Lokalne zespoły w Polsce i Indiach.',
     'essence.lead': 'Dobre decyzje zaczynają się od zrozumienia rynku.',
-    'essence.desc': 'Jesteśmy obecni po obu stronach rynku, łącząc wiedzę, lokalną obecność i praktyczne doświadczenie, aby zmniejszyć złożoność prowadzenia biznesu między Europą a Indiami.',
+    'essence.desc': 'Działamy w Europie i w Indiach jednocześnie, łącząc wiedzę, lokalną obecność i praktyczne doświadczenie, aby zmniejszyć złożoność prowadzenia biznesu między tymi rynkami.',
 
     'partner.kicker': 'Partnerstwo strategiczne',
     'partner.title': 'Współpraca z Polfrost — logistyka, na której można polegać',
