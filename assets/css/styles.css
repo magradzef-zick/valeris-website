@@ -161,7 +161,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    ROUTE itself reads as a glowing light-tube -- the primary visual, per the
    brief -- rather than a thin hairline. Same reveal-draw timing as .motif-arc
    so they appear together. */
-.motif-arc-glow { stroke: url(#arcGlowGradient); stroke-width: 14; fill: none; filter: blur(13px); stroke-dasharray: 1; stroke-dashoffset: 1; animation: arcDraw 1.8s var(--ease-reveal) 0.3s both; }
+.motif-arc-bloom { stroke: url(#arcGlowGradient); stroke-width: 40; fill: none; opacity: 0.5; filter: blur(30px); stroke-dasharray: 1; stroke-dashoffset: 1; animation: arcDraw 1.8s var(--ease-reveal) 0.3s both; }
+.motif-arc-glow { stroke: url(#arcGlowGradient); stroke-width: 16; fill: none; filter: blur(15px); stroke-dasharray: 1; stroke-dashoffset: 1; animation: arcDraw 1.8s var(--ease-reveal) 0.3s both; }
 /* The route's continuous motion — a soft travelling light, not a literal vehicle.
    Same pathLength+dash technique as .motif-arc's reveal draw, reused here for a
    short bright segment that loops along the route. Direction is reversed
@@ -201,6 +202,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    soft glow, so they're the two things the eye actually lands on. */
 .worldmap-country { fill: #14322C; stroke: rgba(201, 212, 229, 0.07); stroke-width: 0.6; }
 .worldmap-highlight { fill: #3F8F52; opacity: 0.75; stroke: rgba(241, 216, 168, 0.5); stroke-width: 0.8; filter: drop-shadow(0 0 10px rgba(63, 143, 82, 0.55)); }
+/* Subtle city lights -- kept deliberately faint and small (per the brief's
+   "do not overdo them") -- a soft blur so they read as glow, not dots, and a
+   slow shared pulse for a touch of life without any per-city choreography. */
+.motif-citylights { opacity: 0.55; }
+.city-light { filter: blur(1px) drop-shadow(0 0 2px rgba(241, 216, 168, 0.6)); animation: cityTwinkle 6s ease-in-out infinite; }
+.city-light:nth-of-type(3n) { animation-duration: 7.5s; animation-delay: -2s; }
+.city-light:nth-of-type(3n+1) { animation-duration: 5s; animation-delay: -4s; }
 /* Very few, very subtle — per the brief's "avoid anything busy." */
 .motif-particles { opacity: 0.5; }
 .motif-particle { animation: particleFloat 9s ease-in-out infinite; transform-origin: center; }
@@ -451,6 +459,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 @keyframes arcDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes nodeIn { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
 @keyframes nodePulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.5); opacity: 0.15; } }
+@keyframes cityTwinkle { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
 /* Reversed direction (1 -> 0 via negative offset) so the travelling light moves node 2 -> node 1, India -> Poland. */
 @keyframes flowTravel { from { stroke-dashoffset: 1; } to { stroke-dashoffset: -1; } }
 @keyframes sheenDrift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }

@@ -144,13 +144,15 @@
         <!-- Real world map country paths (Poland, India, and every other country),
              MIT-licensed data from simplemaps.com via github.com/sirLisko/world-map-country-shapes
              (fetched 2026-07, attribution appreciated though not required by MIT).
-             Whole map, unrotated, nothing cropped -- but confined to the right
-             ~62% of the hero (per "positioned on the right side of the hero
-             section"), not stretched full-width. Fitting the entire 2000x1001
-             dataset into that narrower region (scale=900/2000=0.45) shows all
-             of it, comfortably clear of the text column, letterboxed
-             vertically within the region. -->
-        <g class="motif-worldmap" transform="translate(680 224.8) scale(0.45)">
+             Full hero width per the reference: fit by width (scale=1440/2000=0.72),
+             unrotated, nothing cropped, letterboxed vertically. Poland/India sit
+             at their real, unshifted position under this exact transform -- no
+             independent repositioning, per the brief. The one real risk this
+             creates (India's marker sitting close to the right edge at unusually
+             tall/narrow aspect ratios, e.g. tablet-landscape 1024x768) is handled
+             per-breakpoint in CSS (see the aspect-ratio media query in
+             styles.css), not by faking the geography. -->
+        <g class="motif-worldmap" transform="translate(0 89.64) scale(0.72)">
           <path class="worldmap-country" d="M985.4 301.7l.1-.2.1-.2v-.1l-.2-.1-.7-.2-.3-.1-.2.1-.2.2-.1.3.1.1v.4l.1.2h.4l.3-.1.5-.3h.1z"/>
           <path class="worldmap-country" d="M1283.9 408.6l-1.3-2.2-3 3.9-3.7 4.1-3.3 4.3-3.3-.2-4.6-.2-4.2 1-.3-1.7-1 .3.4 1.5 2.6 6.4 16.8 3.2 1-1.3-.1-2.6 1.4-2.6-.3-2.6 2.4-1.3-1.1-.8.1-4.2h2.8l-1.3-5z"/>
           <path class="worldmap-country" d="M1369.9 333.8h-5.4l-3.8-.5-2.5 2.9-2.1.7-1.5 1.3-2.6-2.1-1-5.4-1.6-.3v-2l-3.2-1.5-1.7 2.3.2 2.6-.6.9-3.2-.1-.9 3-2.1-1.3-3.3 2.1-1.8-.8-4.3-1.4h-2.9l-1.6-.2-2.9-1.7-.3 2.3-4.1 1.2.1 5.2-2.5 2-4 .9-.4 3-3.9.8-5.9-2.4-.5 8-.5 4.7 2.5.9-1.6 3.5 2.7 5.1 1.1 4 4.3 1.1 1.1 4-3.9 5.8 9.6 3.2 5.3-.9 3.3.8.9-1.4 3.8.5 6.6-2.6-.8-5.4 2.3-3.6h4l.2-1.7 4-.9 2.1.6 1.7-1.8-1.1-3.8 1.5-3.8 3-1.6-3-4.2 5.1.2.9-2.3-.8-2.5 2-2.7-1.4-3.2-1.9-2.8 2.4-2.8 5.3-1.3 5.8-.8 2.4-1.2 2.8-.7-1.4-1.9z"/>
@@ -362,12 +364,62 @@
           <path class="worldmap-country" d="M1148.2 713.7l6.2-7.2 1.6-4.6.9-.6.8-3.7-.8-1.9.5-4.7 1.3-4.4.3-8.1-2.8-2-2.6-.5-1.1-1.6-2.6-1.3-4.6.1-.3-2.4-4.2.9-3.3 2.5-.7 2.2-2 .5-5.1 5.3-3.2 4.1-1.9.1-1.7-.7-6.2-.7 1.9 5.1 1.1 1.1 1.6 3.7 6 7 2.3.7-.1 2.2 1.5 4.1 4.2.9 3.4 2.9 2.2.1 2.6 1.1 1.9-.8 2.9.6z"/>
           <path id="worldmapPoland" class="worldmap-highlight" d="M1069.4 228.3l-4.6-.1-.5-1.4-4.8-1.1-5.7 2.1-7.1 2.8-3.1 1.7 1.4 3.1-1.2 1.6 2 2.2 1.4 3.3-.1 2.1 2.3 3.9 2.4 1.9 3.7.6-.1 1.7 2.7 1.2.6-1.5 3.4.6.7 2 3.6.3 2.6 3.1.3.4 1.9-.9 2.7 2.2 2.8-1.3 2.4.6 3.4-.8 4.9 2.3 1.1.4-1.6-2.8 3.8-5.1 2.3-.7.3-1.8-3.1-5.3-.5-2.7-1.9-2.9 2.7-1.2-.3-2.4-1.7-2.3-.6-2.7-1.4-1.9-2.5-.6-8.7.1-5.9-.7z"/>
           <path id="worldmapIndia" class="worldmap-highlight" d="M1414.1 380.1l-8.5-4.4-6.2-4-3.2-7 4.1.9-.6-3.3-3-3.3-.8-5.2-7.6-7.5-3.7 5.4-5.7 1-8.5-1.6-1.9 2.8 3.2 5.6 2.9 4.3 5 3.1-3.7 3.7 1 4.5-3.9 6.3-2.1 6.5-4.5 6.7-6.4-.5-4.9 6.6 4 2.9 1.3 4.9 3.5 3.2 1.8 5.5h-12l-3.2 4.2 7.1 5.4 1.9 2.5-2.4 2.3 8 7.7 4 .8 7.6-3.8 1.7 5.9.8 7.8 2.5 8.1 3.6 12.3 5.8 8.8 1.3 3.9 2 8 3.4 6.1 2.2 3 2.5 6.4 3.1 8.9 5.5 6 2.2-1.8 1.7-4.4 5-1.8-1.8-2.1 2.2-4.8 2.9-.3-.7-10.8 1.9-6.1-.7-5.3-1.9-8.2 1.2-4.9 2.5-.3 4.8-2.3 2.6-1.6-.3-2.9 5-4.2 3.7-4 5.3-7.5 7.4-4.2 2.4-3.8-.9-4.8 6.6-1.3 3.7.1.5-2.4-1.6-5.2-2.6-4.8.4-3.8-3.7-1.7.8-2.3 3.1-2.4-4.6-3.4 1.2-4.3 4.8 2.7 2.7.4 1.2 4.4 5.4.9 5-.1 3.4 1.1-1.6 5.3-2.4.4-1.1 3.6 3.5 3.3.2-4 1.5-.1 4.5 10.1 2.4-1.5-.9-2.7.9-2.1-.9-6.6 4.6 1.4 1.5-5.2-.3-3.1 2.1-5.4-.9-3.6 6.1-4.4 4.1 1.1-1.3-3.9 1.6-1.2-.9-2.4-6.1-.9 1.2-2.7-3.5-3.9-3.2 2.6-4.9-1.5-5.3 4-3.9 4.8-4.2.8 2.7 2 .4 3.9-4.4.2-4.7-.4-3.2 1-5.5-2.5-.3-1.2-1.5-5.1-3 1.4.1 2.7 1.5 4.1-.1 2.5-4.6.1-6.8-1.5-4.3-.6-3.8-3.2-7.6-.9-7.7-3.5-5.8-3.1-5.7-2.5.9-5.9 2.8-2.9z"/>
+          <!-- Subtle city lights: real capitals/major hubs, positioned via a
+               standard equirectangular projection (lon/lat -> x/y), not exact
+               pixel-matched to this specific dataset's own projection -- a
+               ~2-3% placement variance is fine for ambient atmosphere, unlike
+               the country shapes and Poland/India markers above, which use
+               the dataset's real, exact path geometry throughout. Weighted
+               toward Europe/Middle East/Asia to match the reference's density,
+               sparse elsewhere for a "whole world is lit" feel without being
+               busy. -->
+          <g class="motif-citylights" fill="#F1D8A8">
+            <circle class="city-light" cx="1116.7" cy="210.0" r="1.4"/>
+            <circle class="city-light" cx="999.3" cy="214.0" r="1.4"/>
+            <circle class="city-light" cx="1013.1" cy="228.8" r="1.4"/>
+            <circle class="city-light" cx="1074.4" cy="208.4" r="1.4"/>
+            <circle class="city-light" cx="1069.4" cy="267.5" r="1.4"/>
+            <circle class="city-light" cx="979.4" cy="275.7" r="1.4"/>
+            <circle class="city-light" cx="1161.0" cy="272.4" r="1.4"/>
+            <circle class="city-light" cx="1209.0" cy="190.5" r="1.4"/>
+            <circle class="city-light" cx="1169.6" cy="219.9" r="1.4"/>
+            <circle class="city-light" cx="1173.6" cy="333.4" r="1.4"/>
+            <circle class="city-light" cx="1307.1" cy="360.4" r="1.4"/>
+            <circle class="city-light" cx="1259.3" cy="363.1" r="1.4"/>
+            <circle class="city-light" cx="1285.5" cy="302.0" r="1.4"/>
+            <circle class="city-light" cx="1404.9" cy="394.4" r="1.4"/>
+            <circle class="city-light" cx="1428.9" cy="341.4" r="1.4"/>
+            <circle class="city-light" cx="1431.1" cy="428.4" r="1.4"/>
+            <circle class="city-light" cx="1490.9" cy="375.0" r="1.4"/>
+            <circle class="city-light" cx="1372.2" cy="362.3" r="1.4"/>
+            <circle class="city-light" cx="1646.7" cy="278.6" r="1.4"/>
+            <circle class="city-light" cx="1674.8" cy="326.8" r="1.4"/>
+            <circle class="city-light" cx="1775.8" cy="302.1" r="1.4"/>
+            <circle class="city-light" cx="1705.4" cy="291.6" r="1.4"/>
+            <circle class="city-light" cx="1558.3" cy="424.0" r="1.4"/>
+            <circle class="city-light" cx="1576.8" cy="493.0" r="1.4"/>
+            <circle class="city-light" cx="1593.6" cy="535.0" r="1.4"/>
+            <circle class="city-light" cx="1840.1" cy="688.9" r="1.4"/>
+            <circle class="city-light" cx="1018.8" cy="464.2" r="1.4"/>
+            <circle class="city-light" cx="1204.6" cy="507.7" r="1.4"/>
+            <circle class="city-light" cx="588.8" cy="274.1" r="1.4"/>
+            <circle class="city-light" cx="343.1" cy="311.1" r="1.4"/>
+            <circle class="city-light" cx="449.3" cy="392.4" r="1.4"/>
+            <circle class="city-light" cx="740.9" cy="631.5" r="1.4"/>
+            <circle class="city-light" cx="675.7" cy="692.9" r="1.4"/>
+            <circle class="city-light" cx="559.0" cy="257.8" r="1.4"/>
+          </g>
                 </g>
-        <path class="motif-arc-glow" pathLength="1" d="M 1160.8 334.4 Q 1250 290 1322.6 420.1"/>
-        <path id="motifArcPath" class="motif-arc" pathLength="1" d="M 1160.8 334.4 Q 1250 290 1322.6 420.1"/>
-        <path class="motif-flow" pathLength="1" d="M 1160.8 334.4 Q 1250 290 1322.6 420.1"/>
+        <!-- Three-layer glow (wide ultra-soft bloom, medium halo, crisp core)
+             for the "soft, cinematic, premium" light-trail the brief asks for
+             -- a single glow layer reads as a thick line; layering a much
+             wider, fainter one behind it is what actually sells "bloom." -->
+        <path class="motif-arc-bloom" pathLength="1" d="M 769.3 265 Q 900 210 1028.2 402"/>
+        <path class="motif-arc-glow" pathLength="1" d="M 769.3 265 Q 900 210 1028.2 402"/>
+        <path id="motifArcPath" class="motif-arc" pathLength="1" d="M 769.3 265 Q 900 210 1028.2 402"/>
+        <path class="motif-flow" pathLength="1" d="M 769.3 265 Q 900 210 1028.2 402"/>
         <!-- Poland: white over red, 1:2 split (Polish flag proportions). -->
-        <g class="flag-marker flag-poland" transform="translate(1160.8 334.4)">
+        <g class="flag-marker flag-poland" transform="translate(769.3 265)">
           <g class="flag-drift">
             <circle class="flag-glow" r="24"/>
             <g clip-path="url(#flagClipPoland)">
@@ -379,7 +431,7 @@
         </g>
         <!-- India: saffron/white/green, Ashoka Chakra (24 spokes, computed, not
              hand-approximated -- this is exact geometry, unlike a coastline). -->
-        <g class="flag-marker flag-india" transform="translate(1322.6 420.1)">
+        <g class="flag-marker flag-india" transform="translate(1028.2 402)">
           <g class="flag-drift">
             <circle class="flag-glow" r="24"/>
             <g clip-path="url(#flagClipIndia)">
@@ -401,30 +453,25 @@
              produce a depart-travel-arrive-pause-return rhythm rather than a
              mechanical ping-pong, using this site's own --ease curve. -->
         <g class="motif-plane">
-          <path d="M 36 0 L 14.4 -2.2 L -3.6 -32.4 L -10.8 -8.6 L -21.6 -3.6 L -27.4 -14.4 L -32.4 -5.8 L -36 0 L -32.4 5.8 L -27.4 14.4 L -21.6 3.6 L -10.8 8.6 L -3.6 32.4 L 14.4 2.2 Z">
-            <!-- Travels 0.16 -> 1 -> 0.16 rather than the full 0 -> 1 -> 0,
-                 i.e. it never quite reaches the Poland end of the arc. The
-                 first ~16% of this curve (near Poland) sits close enough to
-                 the title at a few common laptop widths (~1024-1366px) that
-                 the plane transiting through it -- not just pausing there --
-                 registers as visual competition; the glowing route line
-                 itself still reaches the Poland node and tells that half of
-                 the story, so the plane doesn't need to touch it exactly.
-                 Only pauses at India, not at the 0.16 end, so it passes
-                 through the safer zone quickly rather than lingering. -->
+          <path d="M 35 0 L 15 -3 L -5 -34 L -14 -6 L -22 -3 L -28 -13 L -33 -5 L -38 0 L -33 5 L -28 13 L -22 3 L -14 6 L -5 34 L 15 3 Z">
+            <!-- Full route, Poland -> India, pause, India -> Poland, no pause
+                 on the return (arrive-and-linger only at India) -- text
+                 legibility no longer depends on restricting how much of the
+                 route the plane covers (that's the text-shadow's job now),
+                 so it flies the whole thing, matching the reference. -->
             <animateMotion dur="16s" repeatCount="indefinite" rotate="auto"
                             calcMode="spline"
                             keyTimes="0;0.4;0.5;1"
-                            keyPoints="0.3;1;1;0.3"
+                            keyPoints="0;1;1;0"
                             keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1">
               <mpath href="#motifArcPath" xlink:href="#motifArcPath"/>
             </animateMotion>
           </path>
         </g>
         <g class="motif-particles" fill="#C19559">
-          <circle class="motif-particle" cx="1220" cy="260" r="2"/>
-          <circle class="motif-particle" cx="1300" cy="360" r="1.6"/>
-          <circle class="motif-particle" cx="1240" cy="470" r="2.2"/>
+          <circle class="motif-particle" cx="850" cy="210" r="2"/>
+          <circle class="motif-particle" cx="950" cy="320" r="1.6"/>
+          <circle class="motif-particle" cx="880" cy="440" r="2.2"/>
         </g>
       </svg>
 
