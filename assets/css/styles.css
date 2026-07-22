@@ -157,6 +157,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .hero-motif { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 .motif-arc { stroke: var(--gold); stroke-width: 1.5; fill: none; opacity: 0.55; filter: drop-shadow(0 0 6px rgba(205, 166, 89, 0.35)); stroke-dasharray: 1; stroke-dashoffset: 1; animation: arcDraw 1.8s var(--ease-reveal) 0.3s both; }
+/* A wide, heavily blurred duplicate of the arc behind the crisp line, so the
+   ROUTE itself reads as a glowing light-tube -- the primary visual, per the
+   brief -- rather than a thin hairline. Same reveal-draw timing as .motif-arc
+   so they appear together. */
+.motif-arc-glow { stroke: var(--gold); stroke-width: 12; fill: none; opacity: 0.4; filter: blur(13px); stroke-dasharray: 1; stroke-dashoffset: 1; animation: arcDraw 1.8s var(--ease-reveal) 0.3s both; }
 /* The route's continuous motion — a soft travelling light, not a literal vehicle.
    Same pathLength+dash technique as .motif-arc's reveal draw, reused here for a
    short bright segment that loops along the route. Direction is reversed
@@ -165,27 +170,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    by default so the reduced-motion fallback (which freezes all animation) still
    shows a visible highlight on the arc rather than nothing. */
 .motif-flow { stroke: url(#motifFlowGradient); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-dasharray: 0.16 1; stroke-dashoffset: 0.6; filter: drop-shadow(0 0 8px rgba(241, 216, 168, 0.55)); animation: flowTravel 7s linear 2.2s infinite; }
-/* The hero illustration itself -- large, dimensional, deliberately NOT a flat
-   icon. Volume comes from layered shapes + gradients rather than any actual
-   3D rendering: a duotone body gradient (bright "canopy" top fading through
-   bronze to a deep shadowed underside) reads as a curved surface; the wing
-   sits in a darker, more muted gradient so it recedes behind the body. Three
-   more layers push it from "shaded icon" to "atmospheric concept art":
-   .plane-echo (a larger, heavily blurred duplicate behind everything, for
-   scale/depth-of-field), .plane-glow (a big soft bloom, screen-blended so it
-   brightens the scene rather than sitting as a flat disc), and .plane-trail
-   (a vapor streak fading out behind the tail). Every shape gets a touch of
-   blur so edges feel airbrushed rather than a crisp vector cutout --
-   "background artwork," per the brief, not a UI icon. */
-.motif-plane { opacity: 0.97; }
-.plane-drift { animation: planeDrift 18s var(--ease) infinite alternate; transform-origin: center; }
-.plane-echo { fill: url(#planeBodyGradient); opacity: 0.16; filter: blur(20px); }
-.plane-glow { fill: url(#planeGlowGradient); mix-blend-mode: screen; opacity: 0.85; filter: blur(6px); }
-.plane-trail { fill: url(#planeTrailGradient); opacity: 0.55; filter: blur(4px); }
-.plane-shadow { fill: #04100e; opacity: 0.26; filter: blur(17px); }
-.plane-wing { fill: url(#planeWingGradient); opacity: 0.88; filter: blur(0.6px); }
-.plane-body { fill: url(#planeBodyGradient); filter: blur(0.7px) drop-shadow(0 16px 34px rgba(7, 25, 23, 0.38)); }
-.plane-highlight { fill: url(#planeHighlightGradient); filter: blur(2.4px); mix-blend-mode: screen; }
+/* The plane: small and secondary to the route, per the brief -- one flat
+   polygon (straight edges, not curves) with a real pair of swept wings, the
+   actual feature that makes a silhouette read as "airplane" rather than an
+   abstract blob. Gradient + a soft glow give it a touch of premium light
+   without any of the previous layering (echo/bloom/vapor trail) that made it
+   oversized and unrecognizable. */
+.motif-plane path { fill: url(#planeBodyGradient); filter: drop-shadow(0 0 5px rgba(241, 216, 168, 0.55)) drop-shadow(0 3px 5px rgba(7, 25, 23, 0.35)); }
 .node-glow { fill: var(--gold); opacity: 0.4; filter: blur(9px); }
 .node-dot { fill: var(--gold); }
 .motif-node { animation: nodeIn 1s var(--ease) both; }
@@ -448,10 +439,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 @keyframes flowTravel { from { stroke-dashoffset: 1; } to { stroke-dashoffset: -1; } }
 @keyframes sheenDrift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
 @keyframes particleFloat { 0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.35; } 50% { transform: translate3d(-6px, -10px, 0); opacity: 0.85; } }
-/* Slow ambient float + a couple degrees of tilt -- "slow and refined," never a
-   full traverse. Applied to .plane-drift (an inner <g>), not .motif-plane
-   itself, so it can't overwrite that element's base translate/rotate attribute. */
-@keyframes planeDrift { from { transform: translate3d(-12px, -8px, 0) rotate(-1.4deg) scale(1); } to { transform: translate3d(12px, 9px, 0) rotate(1.6deg) scale(1.02); } }
 @keyframes scrollPulse { 0% { top: -50%; } 60%, 100% { top: 100%; } }
 [data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity var(--t-reveal), transform var(--t-reveal); }
 [data-reveal].is-visible { opacity: 1; transform: none; }
@@ -542,6 +529,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
   .hero-inner > *, .scroll-cue { opacity: 1 !important; transform: none !important; }
   .motif-arc { stroke-dashoffset: 0; }
+  .motif-arc-glow { stroke-dashoffset: 0; }
+  /* SMIL's <animateMotion> (the plane's flight path) isn't a CSS animation,
+     so the blanket "animation: none" above has no effect on it — hide the
+     element outright instead of leaving it stuck mid-flight. */
+  .motif-plane { display: none; }
   [data-reveal] { opacity: 1; transform: none; }
   body { animation: none; opacity: 1; }
   body.is-leaving { opacity: 1; }
