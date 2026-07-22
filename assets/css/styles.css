@@ -161,7 +161,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    ROUTE itself reads as a glowing light-tube -- the primary visual, per the
    brief -- rather than a thin hairline. Same reveal-draw timing as .motif-arc
    so they appear together. */
-.motif-arc-glow { stroke: var(--gold); stroke-width: 12; fill: none; opacity: 0.4; filter: blur(13px); stroke-dasharray: 1; stroke-dashoffset: 1; animation: arcDraw 1.8s var(--ease-reveal) 0.3s both; }
+.motif-arc-glow { stroke: url(#arcGlowGradient); stroke-width: 14; fill: none; filter: blur(13px); stroke-dasharray: 1; stroke-dashoffset: 1; animation: arcDraw 1.8s var(--ease-reveal) 0.3s both; }
 /* The route's continuous motion — a soft travelling light, not a literal vehicle.
    Same pathLength+dash technique as .motif-arc's reveal draw, reused here for a
    short bright segment that loops along the route. Direction is reversed
@@ -177,13 +177,30 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    without any of the previous layering (echo/bloom/vapor trail) that made it
    oversized and unrecognizable. */
 .motif-plane path { fill: url(#planeBodyGradient); filter: drop-shadow(0 0 5px rgba(241, 216, 168, 0.55)) drop-shadow(0 3px 5px rgba(7, 25, 23, 0.35)); }
-.node-glow { fill: var(--gold); opacity: 0.4; filter: blur(9px); }
-.node-dot { fill: var(--gold); }
-.motif-node { animation: nodeIn 1s var(--ease) both; }
-.motif-node:first-of-type { animation-delay: 0.5s; }
-.motif-node:last-of-type { animation-delay: 2.4s; }
-.motif-node .node-glow { transform-origin: center; animation: nodePulse 4.5s var(--ease) infinite; }
-.motif-grid { animation: gridDrift 26s ease-in-out infinite alternate; transform-origin: center; }
+/* Flag markers: a clipped circle carrying the actual flag colors (computed
+   rects, not free-hand geometry -- flag stripe proportions are exact, unlike
+   a coastline), a soft halo behind it, and a thin ring on top. India's
+   Ashoka Chakra is 24 spokes at exact 15° increments (trigonometry, not an
+   approximation) plus a rim circle. */
+/* Animation lives on the inner .flag-drift, not .flag-marker itself -- the
+   outer element carries the static translate(...) POSITIONING attribute,
+   and CSS animating "transform" on that same element would replace (not
+   compose with) it once active, same issue already fixed once for the
+   plane (see .plane-drift). */
+.flag-drift { animation: nodeIn 1s var(--ease) both; }
+.flag-poland .flag-drift { animation-delay: 0.5s; }
+.flag-india .flag-drift { animation-delay: 2.4s; }
+.flag-glow { fill: var(--gold); opacity: 0.35; filter: blur(9px); transform-origin: center; animation: nodePulse 4.5s var(--ease) infinite; }
+.flag-ring { fill: none; stroke: rgba(241, 216, 168, 0.55); stroke-width: 1; }
+.chakra { stroke: #0B2270; stroke-width: 0.8; fill: none; }
+.chakra-ring { fill: none; stroke: #0B2270; stroke-width: 0.8; }
+/* The real world map: deliberately barely-there (per the brief's "low
+   contrast so it does not overpower the content") -- a faint fill just a
+   shade lighter than the page background, with a hairline stroke for
+   definition. Poland and India get the brand's accent green instead, with a
+   soft glow, so they're the two things the eye actually lands on. */
+.worldmap-country { fill: #14322C; stroke: rgba(201, 212, 229, 0.07); stroke-width: 0.6; }
+.worldmap-highlight { fill: #3F8F52; opacity: 0.75; stroke: rgba(241, 216, 168, 0.5); stroke-width: 0.8; filter: drop-shadow(0 0 10px rgba(63, 143, 82, 0.55)); }
 /* Very few, very subtle — per the brief's "avoid anything busy." */
 .motif-particles { opacity: 0.5; }
 .motif-particle { animation: particleFloat 9s ease-in-out infinite; transform-origin: center; }
@@ -434,7 +451,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 @keyframes arcDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes nodeIn { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
 @keyframes nodePulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.5); opacity: 0.15; } }
-@keyframes gridDrift { from { transform: translate3d(-14px, 8px, 0) scale(1.01); } to { transform: translate3d(14px, -8px, 0) scale(1.03); } }
 /* Reversed direction (1 -> 0 via negative offset) so the travelling light moves node 2 -> node 1, India -> Poland. */
 @keyframes flowTravel { from { stroke-dashoffset: 1; } to { stroke-dashoffset: -1; } }
 @keyframes sheenDrift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
