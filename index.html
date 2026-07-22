@@ -418,6 +418,21 @@
         <path class="motif-arc-glow" pathLength="1" d="M 769.3 265 Q 900 210 1028.2 402"/>
         <path id="motifArcPath" class="motif-arc" pathLength="1" d="M 769.3 265 Q 900 210 1028.2 402"/>
         <path class="motif-flow" pathLength="1" d="M 769.3 265 Q 900 210 1028.2 402"/>
+        <!-- Invisible guide for the plane ONLY -- not rendered, not the route
+             (that stays untouched above). Traces the same outbound curve to
+             India, then a small U-turn loop (radius 22, a semicircle -- which
+             has the convenient property of reversing the tangent by exactly
+             180° over the turn, whichever way you trace it), then a return
+             curve back to Poland. Because the plane always moves FORWARD
+             along this one continuous path (never backward along it),
+             rotate="auto" stays correct for the entire cycle -- no separate
+             rotation animation, no risk from compositing two SMIL animations
+             on the same element. This is what actually fixes "flies
+             backward, tail-first" on the return leg: that bug was rotate
+             ="auto" following the path's fixed geometric tangent while the
+             old single arc was being traversed with decreasing keyPoints. -->
+        <path id="planeMotionPath" fill="none" stroke="none"
+              d="M 769.3 265 Q 900 210 1028.2 402 C 1042.09 422.79 1067.04 406.14 1053.15 385.34 Q 975 269 769.3 265"/>
         <!-- Poland: white over red, 1:2 split (Polish flag proportions). -->
         <g class="flag-marker flag-poland" transform="translate(769.3 265)">
           <g class="flag-drift">
@@ -444,27 +459,29 @@
             <circle class="flag-ring" r="22"/>
           </g>
         </g>
-        <!-- Nose-to-tail outline built as straight edges (not curves) tracing
-             the standard "flight icon" topology: nose tip -> big swept main
-             wing (the primary recognizability cue) -> fuselage taper -> small
-             swept tail wing -> tail tip, mirrored top/bottom. Small on purpose
-             -- secondary to the route, per the brief. rotate="auto" keeps the
-             nose pointed the direction of travel; the keyTimes/keySplines
-             produce a depart-travel-arrive-pause-return rhythm rather than a
-             mechanical ping-pong, using this site's own --ease curve. -->
+        <!-- Smooth, rounded silhouette (cubic beziers throughout, no straight
+             edges) -- a small commercial-jet top view: rounded nose, swept
+             main wings with rounded tips, tapered fuselage, smaller swept
+             tail wings, rounded tail. Smaller than the previous polygonal
+             version (54 units nose-to-tail vs. 73). Kept as one flat path so
+             the existing gold gradient/glow (unchanged) still reads clearly. -->
         <g class="motif-plane">
-          <path d="M 35 0 L 15 -3 L -5 -34 L -14 -6 L -22 -3 L -28 -13 L -33 -5 L -38 0 L -33 5 L -28 13 L -22 3 L -14 6 L -5 34 L 15 3 Z">
-            <!-- Full route, Poland -> India, pause, India -> Poland, no pause
-                 on the return (arrive-and-linger only at India) -- text
-                 legibility no longer depends on restricting how much of the
-                 route the plane covers (that's the text-shadow's job now),
-                 so it flies the whole thing, matching the reference. -->
+          <path d="M 26 0 C 20 -6 10 -18 2 -22 C -2 -14 -6 -8 -8 -5 C -11 -5 -14 -4 -16 -3 C -18 -4 -19 -8 -20 -11 C -22 -7 -26 -3 -28 0 C -26 3 -22 7 -20 11 C -19 8 -18 4 -16 3 C -14 4 -11 5 -8 5 C -6 8 -2 14 2 22 C 10 18 20 6 26 0 Z">
+            <!-- Flies the guide path above once per direction, per its own
+                 keyTimes: 0->0.4 out to India (40% of duration), 0.4->0.5
+                 pause there (arrived, holding at the exact point where the
+                 U-turn begins), 0.5->1 continue forward through the turn
+                 and the return curve, arriving back at Poland. keyPoints
+                 0->0.455->0.455->1 mirrors that in path-fraction terms (the
+                 outbound curve is ~45.5% of the guide path's total length --
+                 the turn+return make up the rest). rotate="auto" is correct
+                 throughout because motion is always forward along the path. -->
             <animateMotion dur="16s" repeatCount="indefinite" rotate="auto"
                             calcMode="spline"
                             keyTimes="0;0.4;0.5;1"
-                            keyPoints="0;1;1;0"
+                            keyPoints="0;0.4607;0.4607;1"
                             keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1">
-              <mpath href="#motifArcPath" xlink:href="#motifArcPath"/>
+              <mpath href="#planeMotionPath" xlink:href="#planeMotionPath"/>
             </animateMotion>
           </path>
         </g>
