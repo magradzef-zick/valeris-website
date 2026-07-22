@@ -106,11 +106,84 @@
   <main id="main">
     <!-- ─────────────────────────  HERO  ───────────────────────── -->
     <section id="hero" class="hero">
-      <!-- Photography slot: empty until client supplies real India imagery (city / port / factory).
-           To activate, set a background-image here (inline style or via assets/css/styles.css) —
-           no other markup or layout changes required. See .hero-photo / .hero::before in styles.css. -->
-      <div class="hero-photo" aria-hidden="true"></div>
+      <!-- No photography: a premium animated route motif in the brand's own gold/green
+           palette replaces it entirely — see .hero::before (ambient gradient) and
+           .hero-motif in styles.css. Two nodes = Poland (upper) and India (lower);
+           .motif-flow is a small, continuously travelling light along the thin
+           arc between them — the literal "journey in progress" cue, kept
+           deliberately understated. .motif-plane is the hero illustration
+           itself: one large, dimensional jet form anchored in the same
+           background zone, oriented along that same Poland→India diagonal,
+           built from layered gradient shapes (not a flat icon) for volume.
+           It doesn't travel the route -- at this size, physically crossing
+           the frame would fight the "never compete with the text" requirement
+           no matter where it was positioned; a slow ambient drift carries its
+           motion instead, while the small comet above keeps the literal
+           travelling motion. -->
       <svg class="hero-motif" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" role="presentation">
+        <defs>
+          <linearGradient id="motifFlowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#C19559" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#F1D8A8" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#C19559" stop-opacity="0"/>
+          </linearGradient>
+          <!-- Light reads as coming from above the aircraft's own canopy line,
+               not from an absolute screen direction -- standard convention for
+               shading a tilted/banking object, and simpler than compensating
+               the gradient angle for the group's own rotation below. -->
+          <linearGradient id="planeBodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#FFF4DC"/>
+            <stop offset="38%" stop-color="#E8C384"/>
+            <stop offset="68%" stop-color="#B07F3F"/>
+            <stop offset="100%" stop-color="#5A4116"/>
+          </linearGradient>
+          <linearGradient id="planeWingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#B98A4E"/>
+            <stop offset="100%" stop-color="#5C431A" stop-opacity="0.5"/>
+          </linearGradient>
+          <linearGradient id="planeHighlightGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#FFFAF0" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#FFFAF0" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#FFFAF0" stop-opacity="0"/>
+          </linearGradient>
+          <!-- The atmosphere/glow bloom: much larger than the body itself,
+               centered near the nose (the vivid, text-safe side), so the
+               "wow" concentrates away from the text column. Screen-blended
+               (see CSS) so it brightens the scene behind it additively
+               rather than sitting as a flat opaque disc. -->
+          <radialGradient id="planeGlowGradient" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FFF4DC" stop-opacity="0.95"/>
+            <stop offset="40%" stop-color="#E8C384" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#C19559" stop-opacity="0"/>
+          </radialGradient>
+          <!-- A soft vapor/light trail extending back past the tail --
+               within its own bounding box, x1=100% is the near/attached end
+               (closer to the tail, slightly opaque), x2=0% is the far end
+               (fully transparent), so it reads as fading into the distance. -->
+          <linearGradient id="planeTrailGradient" x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#F1D8A8" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#F1D8A8" stop-opacity="0"/>
+          </linearGradient>
+          <!-- Fades the plane's tail to transparent, nose fully vivid --
+               applied along the shape's OWN local nose(x=190,opaque)/tail
+               (x=-195,transparent) axis via objectBoundingBox, so it holds
+               regardless of the group's rotation. The tail is always the
+               end that reaches furthest toward the text column at any
+               angle; this is what actually keeps the illustration from
+               "competing," rather than chasing exact pixel positions per
+               breakpoint (the title can wrap wide enough at some common
+               widths, e.g. ~1280-1366px, that pure positioning can't
+               reliably clear it). -->
+          <linearGradient id="planeFadeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#fff" stop-opacity="0.15"/>
+            <stop offset="75%" stop-color="#fff" stop-opacity="0.92"/>
+            <stop offset="100%" stop-color="#fff" stop-opacity="1"/>
+          </linearGradient>
+          <mask id="planeFadeMask" maskContentUnits="objectBoundingBox">
+            <rect x="0" y="0" width="1" height="1" fill="url(#planeFadeGradient)"/>
+          </mask>
+        </defs>
         <g class="motif-grid" stroke="#C9D4E5" stroke-width="1" fill="none" opacity="0.08">
           <ellipse cx="720" cy="450" rx="640" ry="380"/>
           <ellipse cx="720" cy="450" rx="460" ry="270"/>
@@ -118,10 +191,50 @@
           <line x1="80" y1="450" x2="1360" y2="450"/>
           <line x1="720" y1="60" x2="720" y2="840"/>
         </g>
-        <path class="motif-arc" pathLength="1" d="M 300 300 Q 760 120 1140 560"/>
-        <g class="motif-node"><circle class="node-glow" cx="300" cy="300" r="20"/><circle class="node-dot" cx="300" cy="300" r="4"/></g>
-        <g class="motif-node"><circle class="node-glow" cx="1140" cy="560" r="20"/><circle class="node-dot" cx="1140" cy="560" r="4"/></g>
+        <path class="motif-arc" pathLength="1" d="M 1060 240 Q 1320 130 1390 610"/>
+        <path class="motif-flow" pathLength="1" d="M 1060 240 Q 1320 130 1390 610"/>
+        <g class="motif-node"><circle class="node-glow" cx="1060" cy="240" r="20"/><circle class="node-dot" cx="1060" cy="240" r="4"/></g>
+        <g class="motif-node"><circle class="node-glow" cx="1390" cy="610" r="20"/><circle class="node-dot" cx="1390" cy="610" r="4"/></g>
+        <!-- Anchored via the outer <g>'s transform (position + 48° tilt matching
+             the arc's own Poland->India angle); the inner <g class="plane-drift">
+             carries only the CSS drift animation, kept separate so the CSS
+             "transform" property (which replaces, not composes with, the
+             attribute below once animated) can't wipe out this base placement. -->
+        <g class="motif-plane" transform="translate(1300 340) rotate(34) scale(0.85)" mask="url(#planeFadeMask)">
+          <g class="plane-drift">
+            <!-- Depth-of-field "echo": a larger, heavily blurred duplicate of the
+                 body sitting behind everything, purely to sell scale/atmosphere --
+                 same technique concept art uses for a soft aura around a hero object. -->
+            <path class="plane-echo" transform="scale(1.16)" d="M 200 0 C 160 -26 70 -40 -160 -28 C -200 -26 -215 -12 -215 0 C -215 12 -200 26 -160 28 C 70 40 160 26 200 0 Z"/>
+            <!-- The bloom -- bigger than the fuselage, centered near the nose
+                 (the vivid, text-safe end). This is the single biggest lever for
+                 "atmospheric," not just "shaded." -->
+            <ellipse class="plane-glow" cx="70" cy="-6" rx="195" ry="155"/>
+            <!-- Vapor trail fading out behind the tail. -->
+            <path class="plane-trail" d="M -215 -11 C -270 -15 -330 -8 -350 0 C -330 8 -270 15 -215 11 Z"/>
+            <path class="plane-shadow" transform="translate(18 34)" d="M 200 0 C 160 -26 70 -40 -160 -28 C -200 -26 -215 -12 -215 0 C -215 12 -200 26 -160 28 C 70 40 160 26 200 0 Z"/>
+            <path class="plane-wing" d="M 24 17 L -62 108 L -100 101 L -28 11 Z"/>
+            <!-- Body silhouette pushed further nose-heavy (wider bulge closer to
+                 the nose, longer thin taper to the tail) to exaggerate a
+                 foreshortened, "coming toward camera" read -- a standard 2D
+                 stand-in for real perspective. -->
+            <path class="plane-body" d="M 200 0 C 160 -26 70 -40 -160 -28 C -200 -26 -215 -12 -215 0 C -215 12 -200 26 -160 28 C 70 40 160 26 200 0 Z"/>
+            <path class="plane-highlight" d="M 160 -16 C 118 -25 32 -34 -125 -30 C -90 -27 22 -20 160 -16 Z"/>
+          </g>
+        </g>
+        <g class="motif-particles" fill="#C19559">
+          <circle class="motif-particle" cx="1230" cy="180" r="2"/>
+          <circle class="motif-particle" cx="1370" cy="320" r="1.6"/>
+          <circle class="motif-particle" cx="1300" cy="470" r="2.2"/>
+        </g>
       </svg>
+
+      <!-- Sits above the motif, below the text: guarantees the text column
+           stays legible against whatever the motif is doing behind it
+           (the plane, nodes, particles) without needing to predict exactly
+           where those elements sit at a given viewport width or moment in
+           the loop — see .hero-scrim in styles.css. -->
+      <div class="hero-scrim" aria-hidden="true"></div>
 
       <span class="hero-vline" aria-hidden="true"></span>
 

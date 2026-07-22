@@ -132,21 +132,60 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    ================================================================= */
 .hero { position: relative; isolation: isolate; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--header-h) + 4rem) 0 6.7rem; overflow: hidden; }
 
-/* Hero photography */
-.hero-photo { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: 72% center; background-image: url('../img/photography/pharma-hero-street-1100.jpg'); transform: scale(1); animation: heroPhotoZoom 22s var(--ease) infinite alternate; will-change: transform; }
-@keyframes heroPhotoZoom { from { transform: scale(1); } to { transform: scale(1.045); } }
-@media (min-width: 900px) {
-  .hero-photo { background-image: url('../img/photography/pharma-hero-street-2400.jpg'); }
-}
+/* Hero background — premium ambient gradient (no photography). Brighter,
+   more luminous than the old photo-scrim treatment on purpose (this is the
+   "bright/premium" read the client asked for), but still built on the same
+   dark navy field every hero text color in this file assumes — inverting
+   to a literal light background would require re-theming the header and
+   every --*-on-navy token, which is a far bigger change than "replace the
+   photo." .hero-sheen is a very slow drifting highlight band for a touch
+   of life; everything here is killed by the prefers-reduced-motion rule
+   at the bottom of this file, same as the rest of the hero. */
 .hero::before {
-  content: ''; position: absolute; inset: 0; z-index: 1;
+  content: ''; position: absolute; inset: 0; z-index: 0;
   background:
-    linear-gradient(100deg, var(--navy-deep) 0%, rgba(7,25,23,0.93) 30%, rgba(7,25,23,0.62) 52%, rgba(7,25,23,0.32) 72%, rgba(7,25,23,0.16) 100%),
-    radial-gradient(1100px 620px at 78% 16%, var(--hero-glow-strong), transparent 62%),
-    radial-gradient(900px 500px at 8% 92%, var(--hero-glow-soft), transparent 60%);
+    radial-gradient(1200px 700px at 82% 12%, rgba(205, 166, 89, 0.30), transparent 60%),
+    radial-gradient(1000px 620px at 6% 88%, rgba(47, 92, 63, 0.32), transparent 58%),
+    radial-gradient(1500px 900px at 50% 105%, rgba(193, 149, 89, 0.12), transparent 65%),
+    linear-gradient(155deg, var(--navy-deep) 0%, var(--navy) 55%, var(--navy-mid) 100%);
 }
-.hero-motif { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.hero::after {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgba(241, 216, 168, 0.05) 48%, transparent 66%);
+  background-size: 260% 260%; background-position: 0% 50%;
+  animation: sheenDrift 34s ease-in-out infinite alternate;
+}
+.hero-motif { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 .motif-arc { stroke: var(--gold); stroke-width: 1.5; fill: none; opacity: 0.55; filter: drop-shadow(0 0 6px rgba(205, 166, 89, 0.35)); stroke-dasharray: 1; stroke-dashoffset: 1; animation: arcDraw 1.8s var(--ease-reveal) 0.3s both; }
+/* The route's continuous motion — a soft travelling light, not a literal vehicle.
+   Same pathLength+dash technique as .motif-arc's reveal draw, reused here for a
+   short bright segment that loops along the route. Direction is reversed
+   relative to .motif-arc's draw-in (1 -> 2) so the light travels India -> Poland,
+   node 2 to node 1, per the brief. stroke-dashoffset is set to a mid-loop value
+   by default so the reduced-motion fallback (which freezes all animation) still
+   shows a visible highlight on the arc rather than nothing. */
+.motif-flow { stroke: url(#motifFlowGradient); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-dasharray: 0.16 1; stroke-dashoffset: 0.6; filter: drop-shadow(0 0 8px rgba(241, 216, 168, 0.55)); animation: flowTravel 7s linear 2.2s infinite; }
+/* The hero illustration itself -- large, dimensional, deliberately NOT a flat
+   icon. Volume comes from layered shapes + gradients rather than any actual
+   3D rendering: a duotone body gradient (bright "canopy" top fading through
+   bronze to a deep shadowed underside) reads as a curved surface; the wing
+   sits in a darker, more muted gradient so it recedes behind the body. Three
+   more layers push it from "shaded icon" to "atmospheric concept art":
+   .plane-echo (a larger, heavily blurred duplicate behind everything, for
+   scale/depth-of-field), .plane-glow (a big soft bloom, screen-blended so it
+   brightens the scene rather than sitting as a flat disc), and .plane-trail
+   (a vapor streak fading out behind the tail). Every shape gets a touch of
+   blur so edges feel airbrushed rather than a crisp vector cutout --
+   "background artwork," per the brief, not a UI icon. */
+.motif-plane { opacity: 0.97; }
+.plane-drift { animation: planeDrift 18s var(--ease) infinite alternate; transform-origin: center; }
+.plane-echo { fill: url(#planeBodyGradient); opacity: 0.16; filter: blur(20px); }
+.plane-glow { fill: url(#planeGlowGradient); mix-blend-mode: screen; opacity: 0.85; filter: blur(6px); }
+.plane-trail { fill: url(#planeTrailGradient); opacity: 0.55; filter: blur(4px); }
+.plane-shadow { fill: #04100e; opacity: 0.26; filter: blur(17px); }
+.plane-wing { fill: url(#planeWingGradient); opacity: 0.88; filter: blur(0.6px); }
+.plane-body { fill: url(#planeBodyGradient); filter: blur(0.7px) drop-shadow(0 16px 34px rgba(7, 25, 23, 0.38)); }
+.plane-highlight { fill: url(#planeHighlightGradient); filter: blur(2.4px); mix-blend-mode: screen; }
 .node-glow { fill: var(--gold); opacity: 0.4; filter: blur(9px); }
 .node-dot { fill: var(--gold); }
 .motif-node { animation: nodeIn 1s var(--ease) both; }
@@ -154,8 +193,25 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .motif-node:last-of-type { animation-delay: 2.4s; }
 .motif-node .node-glow { transform-origin: center; animation: nodePulse 4.5s var(--ease) infinite; }
 .motif-grid { animation: gridDrift 26s ease-in-out infinite alternate; transform-origin: center; }
-.hero-vline { position: absolute; left: 0; top: 12%; bottom: 12%; width: 2px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); opacity: 0.4; z-index: 2; }
+/* Very few, very subtle — per the brief's "avoid anything busy." */
+.motif-particles { opacity: 0.5; }
+.motif-particle { animation: particleFloat 9s ease-in-out infinite; transform-origin: center; }
+.motif-particle:nth-of-type(2) { animation-delay: -3s; animation-duration: 11s; }
+.motif-particle:nth-of-type(3) { animation-delay: -6s; animation-duration: 8s; }
+/* A light compositional vignette weighting the left/text side of the hero
+   slightly darker -- NOT the thing guaranteeing legibility (that's the
+   text-shadow on the hero text elements above, which holds regardless of
+   viewport width or exactly where the motif's plane/particles are). Kept
+   deliberately light so the background reads bright, per the brief. */
+.hero-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(100deg, rgba(7,25,23,0.42) 0%, rgba(7,25,23,0.28) 34%, rgba(7,25,23,0.12) 54%, transparent 72%); }
+.hero-vline { position: absolute; left: 0; top: 12%; bottom: 12%; width: 2px; background: linear-gradient(to bottom, transparent, var(--gold), transparent); opacity: 0.4; z-index: 3; }
 .hero-inner { position: relative; z-index: 3; }
+/* Guarantees legibility against whatever is happening in the background
+   (motif glow, plane, particles) independent of exact position or viewport
+   width -- a tight shadow for edge definition plus a soft wide one for a
+   general contrast halo, rather than relying solely on .hero-scrim, which
+   can't stay strong everywhere without undoing the brighter background. */
+.eyebrow, .hero-title, .hero-brand-sig, .hero-sub { text-shadow: 0 1px 3px rgba(7, 25, 23, 0.55), 0 6px 26px rgba(7, 25, 23, 0.5); }
 .eyebrow { display: inline-flex; align-items: center; font-size: 0.76rem; letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 1.9rem; color: var(--platinum); text-wrap: balance; }
 .eyebrow::before { content: ''; display: inline-block; width: 34px; height: 1px; margin-right: 0.9rem; background: linear-gradient(to right, var(--gold), var(--platinum)); }
 .eyebrow-strong { color: var(--gold); font-weight: 500; }
@@ -388,6 +444,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 @keyframes nodeIn { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
 @keyframes nodePulse { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.5); opacity: 0.15; } }
 @keyframes gridDrift { from { transform: translate3d(-14px, 8px, 0) scale(1.01); } to { transform: translate3d(14px, -8px, 0) scale(1.03); } }
+/* Reversed direction (1 -> 0 via negative offset) so the travelling light moves node 2 -> node 1, India -> Poland. */
+@keyframes flowTravel { from { stroke-dashoffset: 1; } to { stroke-dashoffset: -1; } }
+@keyframes sheenDrift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+@keyframes particleFloat { 0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.35; } 50% { transform: translate3d(-6px, -10px, 0); opacity: 0.85; } }
+/* Slow ambient float + a couple degrees of tilt -- "slow and refined," never a
+   full traverse. Applied to .plane-drift (an inner <g>), not .motif-plane
+   itself, so it can't overwrite that element's base translate/rotate attribute. */
+@keyframes planeDrift { from { transform: translate3d(-12px, -8px, 0) rotate(-1.4deg) scale(1); } to { transform: translate3d(12px, 9px, 0) rotate(1.6deg) scale(1.02); } }
 @keyframes scrollPulse { 0% { top: -50%; } 60%, 100% { top: 100%; } }
 [data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity var(--t-reveal), transform var(--t-reveal); }
 [data-reveal].is-visible { opacity: 1; transform: none; }
@@ -439,9 +503,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .section { padding: 4.5rem 0; }
   .hero { padding: calc(var(--header-h) + 2.5rem) 0 7rem; min-height: 92vh; }
   .hero-vline { display: none; }
+  /* Text spans full width on mobile; the route motif sits further back in
+     the gradient (lower opacity) so it reads as texture, not competition. */
+  .hero-motif { opacity: 0.6; }
   /* Mobile: text spans full width over the photo, so dim it further —
      the left-to-right scrim above is tuned for a wide desktop hero. */
-  .hero-photo, .pharma-hero::before, .india-hero::before { opacity: 0.5; }
+  .pharma-hero::before, .india-hero::before { opacity: 0.5; }
   .hero-title { font-size: clamp(2.3rem, 9vw, 3rem); max-width: 100%; }
   .hero-sub { font-size: 1rem; }
   .hero-cta-row .btn { flex: 1 1 auto; }
