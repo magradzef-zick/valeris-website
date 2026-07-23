@@ -31,7 +31,7 @@ var NOTIFY_EMAIL = ''; // e.g. 'agata@valeris.com.in' — leave empty to disable
 var SESSION_HOURS = 24;   // sliding window: each valid request extends by this many hours
 var HASH_ITERATIONS = 100;  // SHA-256 iterations for password hashing. 2000 = ~2.2s (verified with timing logs); 100 = ~110ms. Security note: PBKDF2 iteration counts in Apps Script are far less meaningful than in server environments because the attack surface is limited to authenticated internal users with no public login endpoint. 100 iterations provides negligible bruteforce risk against a 5-person internal CRM while making login practical.
 var CACHE_TTL = 300;      // seconds to cache Users and Settings reads (5 minutes)
-var SCHEMA_VERSION = '2';
+var SCHEMA_VERSION = '3';
 
 // ============================================================
 // SHEET NAMES
@@ -101,7 +101,21 @@ var COLS = {
     contact_id:               32,
     converted_to_project_id:  33,
     converted_at:             34,
-    converted_by:             35
+    converted_by:             35,
+    // Extended metadata (schema v3) — appended below, never inserted earlier.
+    // utm_term/utm_content complete the UTM set; the rest is best-effort lead
+    // enrichment. Anything the client or the geo lookup couldn't determine is
+    // stored as an empty string rather than blocking lead creation.
+    utm_term:                 36,
+    utm_content:              37,
+    timezone:                 38,
+    ip_address:               39,
+    country:                  40,
+    city:                     41,
+    browser:                  42,
+    operating_system:         43,
+    submission_date:          44,
+    submission_time:          45
   },
 
   USERS: {
@@ -236,7 +250,10 @@ var COLS = {
     color:        4,
     sort_order:   5,
     is_active:    6,
-    description:  7
+    description:  7,
+    // Polish label — only meaningful for category='service_line' (the website's
+    // bilingual "I'm interested in" dropdown). Blank for every other category.
+    label_pl:     8
   },
 
   META: {
@@ -271,6 +288,7 @@ var SERVICES = [
   'Operational Support',
   'Poland Market Entry (Indian company)',
   'Pharma — Europe Market Entry',
+  'Logistics',
   'Other / Not sure yet'
 ];
 var ROLES             = ['Owner', 'Administrator', 'Sales', 'Operations'];
@@ -300,6 +318,13 @@ function doGet(e) {
     var auth = extractGetAuth_(e);
 
     switch (action) {
+      // Unauthenticated (handleGetServices_ never calls requireAuth_) — the
+      // website's contact-form dropdown calls this directly with no session
+      // of its own, and the service list is already public information (it's
+      // shown on the site itself). Kept inside this try/catch like every
+      // other action so a transient Sheets error still returns clean JSON
+      // instead of an uncaught-exception response.
+      case 'getServices':        return json_(handleGetServices_());
       case 'getLeads':           return json_(handleGetLeads_(auth, e.parameter || {}));
       case 'getLead':            return json_(handleGetLead_(auth, e.parameter || {}));
       case 'getTimeline':        return json_(handleGetTimeline_(auth, e.parameter || {}));
@@ -313,6 +338,7 @@ function doGet(e) {
       case 'getTask':            return json_(handleGetTask_(auth, e.parameter || {}));
       case 'getUsers':           return json_(handleGetUsers_(auth, e.parameter || {}));
       case 'getDashboardStats':  return json_(handleGetDashboardStats_(auth, e.parameter || {}));
+      case 'getSettings':        return json_(handleGetSettings_(auth, e.parameter || {}));
       default:
         return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
     }
@@ -328,16 +354,32 @@ var READ_ACTIONS = [
   'getContacts', 'getContact',
   'getProjects', 'getProject',
   'getTasks', 'getTask',
-  'getUsers', 'getDashboardStats'
+  'getUsers', 'getDashboardStats',
+  'getSettings'
 ];
 
 function doPost(e) {
   var body   = parsePayload_(e);
   var action = body.action || '';
 
-  // No action field = website contact form submission (backward compatible)
+  // No action field = website contact form submission (backward compatible).
+  // Serialised with the same script lock as every other write below — this
+  // was previously the one write path in the whole file that ran without it,
+  // meaning two contact-form submissions arriving within the same instant
+  // could both compute "row N is the next empty row" and race on appendRow,
+  // silently losing one of them. Also wrapped in the same try/catch as every
+  // other action so a transient Sheets error returns clean JSON instead of
+  // an uncaught-exception response.
   if (!action) {
-    return handleWebsiteFormSubmission_(body);
+    var formLock = LockService.getScriptLock();
+    formLock.waitLock(10000);
+    try {
+      return handleWebsiteFormSubmission_(body);
+    } catch (err) {
+      return handleError_(err);
+    } finally {
+      formLock.releaseLock();
+    }
   }
 
   // Unauthenticated actions — no lock needed
@@ -365,6 +407,7 @@ function doPost(e) {
         case 'getTask':           return json_(handleGetTask_(auth, data));
         case 'getUsers':          return json_(handleGetUsers_(auth, data));
         case 'getDashboardStats': return json_(handleGetDashboardStats_(auth, data));
+        case 'getSettings':       return json_(handleGetSettings_(auth, data));
         default:
           return json_({ ok: false, error: 'Unknown action: ' + action, code: ERR.VALIDATION });
       }
@@ -381,6 +424,10 @@ function doPost(e) {
     switch (action) {
       case 'updateLead':      return json_(handleUpdateLead_(auth, data));
       case 'deleteLead':      return json_(handleDeleteLead_(auth, data));
+      case 'createSetting':    return json_(handleCreateSetting_(auth, data));
+      case 'updateSetting':    return json_(handleUpdateSetting_(auth, data));
+      case 'deleteSetting':    return json_(handleDeleteSetting_(auth, data));
+      case 'reorderSettings':  return json_(handleReorderSettings_(auth, data));
       case 'createNote':      return json_(handleCreateNote_(auth, data));
       case 'createCompany':   return json_(handleCreateCompany_(auth, data));
       case 'updateCompany':   return json_(handleUpdateCompany_(auth, data));
@@ -462,6 +509,21 @@ function handleLogin_(data) {
 // WEBSITE CONTACT FORM HANDLER (backward compatible)
 // ============================================================
 
+// Mirrors the client-side checks in assets/js/main.js (nameValid/phoneValid/
+// emailValid). The website is the intended path in, but the Web App URL
+// itself is reachable directly by anyone ("Who has access: Anyone" is
+// required for the contact form to work at all) — client-side validation is
+// a UX nicety for real visitors, not a security boundary, so the same rules
+// must also be enforced here. Any of these three regexes rejecting the
+// request returns a clean VALIDATION error rather than silently storing
+// garbage in the sheet.
+var LEAD_NAME_RE     = /^[\p{L}\p{M}' -]{1,80}$/u;
+var LEAD_HAS_LETTER_RE = /\p{L}/u; // rejects "-" / "'" alone, same as the client
+var LEAD_PHONE_RE    = /^[0-9+\-() ]{1,30}$/;
+var LEAD_EMAIL_RE    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function leadNameValid_(v) { return LEAD_NAME_RE.test(v) && LEAD_HAS_LETTER_RE.test(v); }
+
 function handleWebsiteFormSubmission_(d) {
   // Honeypot: silent discard
   if (d.website) {
@@ -472,15 +534,26 @@ function handleWebsiteFormSubmission_(d) {
   var firstName = sanitize_(d.first_name);
   var lastName  = sanitize_(d.last_name);
   var fullName  = sanitize_(d.name) || (firstName + ' ' + lastName).trim();
-  var message   = sanitize_(d.message);
+  var message   = sanitize_(d.message).slice(0, 4000);
 
   if (!firstName || !lastName || !email || !message) {
     return json_({ ok: false, error: 'Missing required fields', code: ERR.VALIDATION });
+  }
+  if (!leadNameValid_(firstName) || !leadNameValid_(lastName)) {
+    return json_({ ok: false, error: 'First and last name can only contain letters, spaces, apostrophes and hyphens', code: ERR.VALIDATION });
+  }
+  if (!LEAD_EMAIL_RE.test(email)) {
+    return json_({ ok: false, error: 'Invalid email address', code: ERR.VALIDATION });
+  }
+  var phoneRaw = sanitize_(d.phone);
+  if (phoneRaw && !LEAD_PHONE_RE.test(phoneRaw)) {
+    return json_({ ok: false, error: 'Invalid phone number', code: ERR.VALIDATION });
   }
 
   var sh  = getOrCreateSheet_(SHEET.LEADS);
   var now = new Date();
   var leadId = makeId_('VAL', now);
+  var tz = Session.getScriptTimeZone();
 
   // Build the row using COLS positions so column order is always explicit
   var row = buildRow_(COLS.LEADS, {
@@ -495,9 +568,9 @@ function handleWebsiteFormSubmission_(d) {
     first_name:        firstName,
     last_name:         lastName,
     full_name:         fullName,
-    company_name:      sanitize_(d.company),
+    company_name:      sanitize_(d.company).slice(0, 150),
     email:             email,
-    phone:             sanitize_(d.phone),
+    phone:             phoneRaw,
     interest:          normalizeInterest_(d.interest),
     message:           message,
     language:          sanitize_(d.language),
@@ -511,7 +584,22 @@ function handleWebsiteFormSubmission_(d) {
     client_timestamp:  sanitize_(d.timestamp),
     notes:             '',
     created_by:        'website',
-    updated_by:        'website'
+    updated_by:        'website',
+    // Extended metadata (schema v3) — every value is best-effort from the
+    // client (or, for submission_date/time, computed here from `now`, the
+    // same server clock already used for received/updated_at). A field the
+    // client couldn't determine arrives as '' and is stored as '' — it never
+    // blocks lead creation.
+    utm_term:          sanitize_(d.utm_term),
+    utm_content:       sanitize_(d.utm_content),
+    timezone:          sanitize_(d.timezone),
+    ip_address:        sanitize_(d.ip_address),
+    country:           sanitize_(d.country),
+    city:              sanitize_(d.city),
+    browser:           sanitize_(d.browser),
+    operating_system:  sanitize_(d.operating_system),
+    submission_date:   Utilities.formatDate(now, tz, 'yyyy-MM-dd'),
+    submission_time:   Utilities.formatDate(now, tz, 'HH:mm:ss')
   });
 
   sh.appendRow(row);
@@ -1557,6 +1645,12 @@ function setupLeadsSheet_(ss) {
   headers[COLS.LEADS.utm_source - 1]        = 'UTM Source';
   headers[COLS.LEADS.utm_medium - 1]        = 'UTM Medium';
   headers[COLS.LEADS.utm_campaign - 1]      = 'UTM Campaign';
+  headers[COLS.LEADS.utm_term - 1]          = 'UTM Term';
+  headers[COLS.LEADS.utm_content - 1]       = 'UTM Content';
+  headers[COLS.LEADS.ip_address - 1]        = 'IP Address';
+  headers[COLS.LEADS.operating_system - 1]  = 'Operating System';
+  headers[COLS.LEADS.submission_date - 1]   = 'Submission Date';
+  headers[COLS.LEADS.submission_time - 1]   = 'Submission Time';
 
   var sh = ss.getSheetByName(SHEET.LEADS) || ss.insertSheet(SHEET.LEADS);
   ensureHeaders_(sh, headers);
@@ -1599,9 +1693,10 @@ function setupLeadsSheet_(ss) {
 
 function applyLeadsValidation_(sh) {
   var lastRow = Math.max(sh.getMaxRows(), 1000);
+  var serviceKeys = getActiveServices_().map(function(s) { return s.key; });
   sh.getRange(2, COLS.LEADS.status,   lastRow - 1, 1).setDataValidation(listRule_(LEAD_STATUSES));
   sh.getRange(2, COLS.LEADS.priority, lastRow - 1, 1).setDataValidation(listRule_(PRIORITIES));
-  sh.getRange(2, COLS.LEADS.interest, lastRow - 1, 1).setDataValidation(listRule_(SERVICES));
+  sh.getRange(2, COLS.LEADS.interest, lastRow - 1, 1).setDataValidation(listRule_(serviceKeys));
 }
 
 function applyLeadsConditionalFormatting_(sh) {
@@ -1702,10 +1797,16 @@ function setupMetaSheet_(ss) {
 function createDashboard_(ss) {
   var sh = ss.getSheetByName(SHEET.DASHBOARD) || ss.insertSheet(SHEET.DASHBOARD);
 
-  // Don't overwrite an existing dashboard — it may contain live formula results.
-  // Delete the Dashboard sheet manually before re-running setupCrm() to rebuild it.
-  if (sh.getLastRow() > 1) return sh;
-
+  // Always rebuilt from scratch on every setupCrm() run. Every cell on this
+  // sheet is generated (labels + formulas) — there is nothing here for a user
+  // to have hand-edited, so re-writing it is always safe. This is deliberate:
+  // an earlier version of this function skipped rebuilding once the sheet had
+  // any data, which meant formulas written under an older column layout (or a
+  // shorter/longer service list) were frozen in place forever and could show
+  // #ERROR!/#REF! or silently miss newer services — re-running setupCrm() did
+  // not fix it, matching exactly the "dashboard needs manual fixing" symptom.
+  // Rebuilding every time means the dashboard is always correct for the
+  // CURRENT schema and the current service list with no manual steps ever.
   sh.clear();
 
   // Title
@@ -1750,16 +1851,25 @@ function createDashboard_(ss) {
   sh.getRange(11, 1, 1, 2).setFontWeight('bold').setFontColor('#F1E4D1').setBackground('#071917');
   sh.getRange(12, 1, LEAD_STATUSES.length, 2).setValues(
     LEAD_STATUSES.map(function(s) {
-      return [s, '=COUNTIF(Leads!C2:C,"' + s + '")'];
+      return [s, '=COUNTIF(Leads!C2:C,"' + escapeFormulaString_(s) + '")'];
     })
   );
 
-  // Interest breakdown
+  // Interest breakdown — driven by the live (CRM-managed) service list, not
+  // the static SERVICES array, so a service added/removed/renamed from the
+  // CRM's "Manage services" screen is reflected here on the next setupCrm()
+  // run with no code change. Matches on the stored key (what Leads.interest
+  // actually contains), displays the human label (what staff read).
+  var services = getActiveServices_();
   sh.getRange(11, 4, 1, 2).setValues([['Interest', 'Count']]);
   sh.getRange(11, 4, 1, 2).setFontWeight('bold').setFontColor('#F1E4D1').setBackground('#071917');
-  sh.getRange(12, 4, SERVICES.length, 2).setValues(
-    SERVICES.map(function(s) {
-      return [s, '=COUNTIF(Leads!O2:O,"' + s + '")'];
+  // Clear a generous range first: the service list can shrink between runs,
+  // and stale rows below a shorter new list would otherwise keep showing old,
+  // frozen counts forever.
+  sh.getRange(12, 4, 40, 2).clearContent();
+  sh.getRange(12, 4, services.length, 2).setValues(
+    services.map(function(s) {
+      return [s.label || s.key, '=COUNTIF(Leads!O2:O,"' + escapeFormulaString_(s.key) + '")'];
     })
   );
 
@@ -1929,6 +2039,11 @@ function listRule_(values) {
     .requireValueInList(values, true)
     .setAllowInvalid(true)
     .build();
+}
+
+/** Escape a value for safe embedding inside a "..."-quoted formula string literal. */
+function escapeFormulaString_(s) {
+  return String(s == null ? '' : s).replace(/"/g, '""');
 }
 
 // ============================================================
@@ -2542,6 +2657,254 @@ function handleGetDashboardStats_(auth, params) {
 }
 
 // ============================================================
+// M5 — SETTINGS / SERVICES HANDLERS
+// ============================================================
+// Generic key/value lookup rows (Settings sheet). The CRM's "Manage services"
+// screen only edits category='service_line' rows — the only category this
+// project exposes an admin UI for — but the read/write actions themselves are
+// generic so any category can be queried the same way if ever needed.
+//
+// "Delete" is a soft toggle (is_active=false), not a row removal — consistent
+// with the soft-delete convention used everywhere else in this file (Leads,
+// Companies, Contacts, Projects, Tasks, Notes). This also means a service that
+// is later deleted doesn't retroactively corrupt historical leads that already
+// recorded it as their interest — the text stays, it's just no longer offered.
+
+/**
+ * Cached the same way getAllUsers_() is (CacheService, CACHE_TTL) — unlike
+ * every other "get all rows" helper in this file, this one is on the hot path
+ * for the public, unauthenticated getServices action, which the marketing
+ * website calls on every single page load. Without caching, every visitor's
+ * page load would cost a fresh Sheets read; every write action below calls
+ * invalidateCache_('settings') so an admin's change is reflected immediately
+ * rather than waiting out the TTL.
+ */
+function getAllSettings_() {
+  var cached = getCached_('settings');
+  if (cached) return cached;
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.SETTINGS);
+  if (!sh || sh.getLastRow() < 2) return [];
+
+  var numCols = Object.keys(COLS.SETTINGS).length;
+  var rows = sh.getRange(2, 1, sh.getLastRow() - 1, numCols).getValues();
+  var settings = rows
+    .map(function(row, idx) {
+      var obj = rowToObject_(COLS.SETTINGS, row);
+      obj._rowNum = idx + 2;
+      return obj;
+    })
+    .filter(function(s) { return s.category !== ''; });
+
+  setCached_('settings', settings);
+  return settings;
+}
+
+/**
+ * Active service_line rows, sorted by sort_order. Falls back to the static
+ * SERVICE_SEED_ list if the Settings sheet doesn't exist yet or has no
+ * service_line rows (e.g. setupCrm() has never been run) — the website
+ * dropdown and the Sheets/Dashboard validation must never end up empty.
+ */
+function getActiveServices_() {
+  var rows = getAllSettings_().filter(function(s) {
+    return s.category === 'service_line' && s.is_active !== false && s.is_active !== 'false';
+  });
+
+  if (!rows.length) {
+    return SERVICE_SEED_.map(function(svc, i) {
+      return { key: svc.key, label: svc.label, label_pl: svc.label_pl, sort_order: i + 1 };
+    });
+  }
+
+  return rows
+    .map(function(s) {
+      return { key: s.key, label: s.label, label_pl: s.label_pl, sort_order: Number(s.sort_order) || 0 };
+    })
+    .sort(function(a, b) { return a.sort_order - b.sort_order; });
+}
+
+/**
+ * GET getServices — PUBLIC, unauthenticated (see doGet). The website's
+ * contact-form dropdown fetches this on page load; it carries no sensitive
+ * data (the service list is already visible on the public site itself).
+ */
+function handleGetServices_() {
+  return { ok: true, data: { services: getActiveServices_() } };
+}
+
+/**
+ * GET getSettings — authenticated. Powers the CRM's "Manage services" screen.
+ * Optional params.category filters to one category (e.g. 'service_line').
+ */
+function handleGetSettings_(auth, params) {
+  requireAuth_(auth);
+  var category = String(params.category || '').trim();
+  var rows = getAllSettings_();
+  if (category) rows = rows.filter(function(s) { return s.category === category; });
+  rows.sort(function(a, b) { return (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0); });
+
+  var safe = rows.map(function(s) {
+    return {
+      category:    s.category,
+      key:         s.key,
+      label:       s.label,
+      label_pl:    s.label_pl,
+      color:       s.color,
+      sort_order:  s.sort_order,
+      is_active:   s.is_active,
+      description: s.description
+    };
+  });
+  return { ok: true, data: { settings: safe } };
+}
+
+function handleCreateSetting_(auth, data) {
+  requireRole_(auth, ['Owner', 'Administrator']);
+
+  var category = sanitize_(data.category || '');
+  var label    = sanitize_(data.label || '');
+  if (!category || !label) throw new Error(ERR.VALIDATION);
+
+  var sh = getOrCreateSheet_(SHEET.SETTINGS);
+  var existing = getAllSettings_().filter(function(s) { return s.category === category; });
+
+  var maxOrder = 0;
+  existing.forEach(function(s) { var n = Number(s.sort_order) || 0; if (n > maxOrder) maxOrder = n; });
+
+  // key defaults to the label itself — every pre-seeded row in this sheet
+  // (every LEAD_STATUSES/SERVICES/etc entry) already uses key === label, and
+  // for service_line specifically this keeps Leads.interest a human-readable
+  // phrase in the raw sheet rather than an opaque ID, exactly as it's always
+  // been. The key stays fixed even if the label is edited later (a rename
+  // must not retroactively change what past leads recorded), so on a
+  // collision (this label text is already a key in this category) an opaque
+  // suffix is appended purely to keep keys unique, not as the normal case.
+  var existingKeys = {};
+  existing.forEach(function(s) { existingKeys[s.key] = true; });
+  var key = label;
+  if (existingKeys[key]) key = label + ' (' + makeId_('STG', new Date()).slice(-6) + ')';
+
+  var row = buildRow_(COLS.SETTINGS, {
+    category:    category,
+    key:         key,
+    label:       label,
+    color:       sanitize_(data.color || ''),
+    sort_order:  maxOrder + 1,
+    is_active:   true,
+    description: sanitize_(data.description || ''),
+    label_pl:    sanitize_(data.label_pl || '')
+  });
+  sh.appendRow(row);
+  invalidateCache_('settings');
+
+  return { ok: true, data: { category: category, key: key } };
+}
+
+function handleUpdateSetting_(auth, data) {
+  requireRole_(auth, ['Owner', 'Administrator']);
+
+  var category = String(data.category || '').trim();
+  var key       = String(data.key || '').trim();
+  if (!category || !key) throw new Error(ERR.VALIDATION);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.SETTINGS);
+  if (!sh) throw new Error(ERR.NOT_FOUND);
+
+  var match = getAllSettings_().filter(function(s) { return s.category === category && s.key === key; })[0];
+  if (!match) throw new Error(ERR.NOT_FOUND);
+
+  var WRITABLE = { label: true, label_pl: true, color: true, description: true, is_active: true };
+  var fields  = data.fields || {};
+  var updates = {};
+
+  Object.keys(fields).forEach(function(k) {
+    if (!WRITABLE[k] || COLS.SETTINGS[k] === undefined) return;
+    if (k === 'is_active') {
+      updates[k] = (fields[k] === true || fields[k] === 'true');
+    } else {
+      var val = fields[k];
+      updates[k] = (val !== null && val !== undefined) ? sanitize_(String(val)) : '';
+    }
+  });
+
+  if (Object.keys(updates).length) {
+    batchWriteRow_(sh, match._rowNum, COLS.SETTINGS, updates);
+    invalidateCache_('settings');
+  }
+  return { ok: true };
+}
+
+function handleDeleteSetting_(auth, data) {
+  requireRole_(auth, ['Owner', 'Administrator']);
+
+  var category = String(data.category || '').trim();
+  var key       = String(data.key || '').trim();
+  if (!category || !key) throw new Error(ERR.VALIDATION);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.SETTINGS);
+  if (!sh) throw new Error(ERR.NOT_FOUND);
+
+  var match = getAllSettings_().filter(function(s) { return s.category === category && s.key === key; })[0];
+  if (!match) throw new Error(ERR.NOT_FOUND);
+
+  batchWriteRow_(sh, match._rowNum, COLS.SETTINGS, { is_active: false });
+  invalidateCache_('settings');
+  return { ok: true };
+}
+
+/**
+ * POST reorderSettings — data: { category, orderedKeys: [key1, key2, ...] }.
+ * Rewrites sort_order to 1..N in the given order for every row in that
+ * category whose key appears in orderedKeys. Rows not mentioned keep their
+ * existing sort_order (defensive — a stale client shouldn't be able to lose
+ * rows it doesn't know about).
+ */
+function handleReorderSettings_(auth, data) {
+  requireRole_(auth, ['Owner', 'Administrator']);
+
+  var category = String(data.category || '').trim();
+  var orderedKeys = data.orderedKeys;
+  if (!category || !Array.isArray(orderedKeys) || !orderedKeys.length) throw new Error(ERR.VALIDATION);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET.SETTINGS);
+  if (!sh) throw new Error(ERR.NOT_FOUND);
+
+  var all = getAllSettings_().filter(function(s) { return s.category === category; });
+  var rowNumByKey = {};
+  all.forEach(function(s) { rowNumByKey[s.key] = s._rowNum; });
+
+  // Single read + single write for the whole sort_order column, rather than
+  // one getRange/setValues round-trip per row (the previous version, via
+  // batchWriteRow_ in a loop, cost 2 Sheets API calls per reordered row —
+  // unnecessary quota use for what a single column read/write can do).
+  // Category rows aren't guaranteed contiguous (a service created later is
+  // appended at the end of the whole sheet, not spliced into its category's
+  // original block), so the full column — not just this category's rows —
+  // is read and written back in one shot.
+  var sortOrderCol = COLS.SETTINGS.sort_order;
+  var lastRow = sh.getLastRow();
+  if (lastRow < 2) return { ok: true };
+
+  var range = sh.getRange(2, sortOrderCol, lastRow - 1, 1);
+  var values = range.getValues();
+
+  orderedKeys.forEach(function(key, idx) {
+    var rowNum = rowNumByKey[String(key)];
+    if (rowNum) values[rowNum - 2][0] = idx + 1; // rowNum is 1-indexed sheet row; values[] is 0-indexed from row 2
+  });
+
+  range.setValues(values);
+  invalidateCache_('settings');
+
+  return { ok: true };
+}
+
+// ============================================================
 // PROJECT & TASK LOOKUP HELPERS
 // ============================================================
 
@@ -2621,7 +2984,8 @@ function setupProjectsSheet_(ss) {
   sh.getRange(2, COLS.PROJECTS.status,          lastRow - 1, 1).setDataValidation(listRule_(PROJECT_STATUSES));
   sh.getRange(2, COLS.PROJECTS.phase,           lastRow - 1, 1).setDataValidation(listRule_(PROJECT_PHASES));
   sh.getRange(2, COLS.PROJECTS.priority,        lastRow - 1, 1).setDataValidation(listRule_(PRIORITIES));
-  sh.getRange(2, COLS.PROJECTS.service_line,    lastRow - 1, 1).setDataValidation(listRule_(SERVICES));
+  sh.getRange(2, COLS.PROJECTS.service_line,    lastRow - 1, 1)
+    .setDataValidation(listRule_(getActiveServices_().map(function(s) { return s.key; })));
   sh.getRange(2, COLS.PROJECTS.trade_direction, lastRow - 1, 1).setDataValidation(listRule_(TRADE_DIRECTIONS));
 
   sh.getRange(2, COLS.PROJECTS.start_date,      lastRow - 1, 1).setNumberFormat('yyyy-mm-dd');
@@ -2707,8 +3071,25 @@ function setupActivitiesSheet_(ss) {
   return sh;
 }
 
+// Seed data for the service_line category — the website's "I'm interested in"
+// dropdown, managed from the CRM (see M5 — SETTINGS/SERVICES HANDLERS).
+// key: stable identifier, also the value stored in Leads.interest and used by
+//      the Sheets dropdown validation + Dashboard breakdown (never shown to
+//      website visitors as-is). label/label_pl: what visitors actually see.
+var SERVICE_SEED_ = [
+  { key: 'Supplier Verification',                label: 'Supplier Verification',                label_pl: 'Weryfikacja dostawców' },
+  { key: 'India Market Entry Consulting',         label: 'India Market Entry Consulting',         label_pl: 'Doradztwo wejścia na rynek indyjski' },
+  { key: 'Representation in India',               label: 'Representation in India',               label_pl: 'Reprezentacja w Indiach' },
+  { key: 'Operational Support',                   label: 'Operational Support',                   label_pl: 'Wsparcie operacyjne' },
+  { key: 'Poland Market Entry (Indian company)',  label: 'Poland Market Entry (Indian company)',  label_pl: 'Wejście na rynek polski (firma indyjska)' },
+  { key: 'Pharma — Europe Market Entry',          label: 'Pharma — Europe Market Entry',          label_pl: 'Pharma — wejście na rynek europejski' },
+  { key: 'Logistics',                             label: "I'm interested in logistics",           label_pl: 'Interesuje mnie logistyka' },
+  { key: 'Other / Not sure yet',                  label: 'Other / Not sure yet',                  label_pl: 'Inne / jeszcze nie wiem' }
+];
+
 function setupSettingsSheet_(ss) {
   var headers = buildHeadersFromCols_(COLS.SETTINGS);
+  headers[COLS.SETTINGS.label_pl - 1] = 'Label (Polish)';
   var sh = setupSheet_(ss, SHEET.SETTINGS, headers);
 
   // Only seed if the sheet is empty (don't overwrite user changes)
@@ -2717,26 +3098,27 @@ function setupSettingsSheet_(ss) {
     var rows = [];
 
     LEAD_STATUSES.forEach(function(s) {
-      rows.push(['lead_status', s, s, '', ++sortOrder, true, '']);
+      rows.push(['lead_status', s, s, '', ++sortOrder, true, '', '']);
     });
     PROJECT_STATUSES.forEach(function(s) {
-      rows.push(['project_status', s, s, '', ++sortOrder, true, '']);
+      rows.push(['project_status', s, s, '', ++sortOrder, true, '', '']);
     });
     PROJECT_PHASES.forEach(function(s) {
-      rows.push(['project_phase', s, s, '', ++sortOrder, true, '']);
+      rows.push(['project_phase', s, s, '', ++sortOrder, true, '', '']);
     });
     TASK_STATUSES.forEach(function(s) {
-      rows.push(['task_status', s, s, '', ++sortOrder, true, '']);
+      rows.push(['task_status', s, s, '', ++sortOrder, true, '', '']);
     });
-    SERVICES.forEach(function(s) {
-      rows.push(['service_line', s, s, '', ++sortOrder, true, '']);
+    SERVICE_SEED_.forEach(function(svc) {
+      rows.push(['service_line', svc.key, svc.label, '', ++sortOrder, true, '', svc.label_pl]);
     });
     TRADE_DIRECTIONS.forEach(function(s) {
-      rows.push(['trade_direction', s, s, '', ++sortOrder, true, '']);
+      rows.push(['trade_direction', s, s, '', ++sortOrder, true, '', '']);
     });
 
     if (rows.length) {
       sh.getRange(2, 1, rows.length, Object.keys(COLS.SETTINGS).length).setValues(rows);
+      invalidateCache_('settings'); // re-running setupCrm() on a live system must not serve a stale cache
     }
   }
 

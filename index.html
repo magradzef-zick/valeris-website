@@ -790,15 +790,17 @@
           <div class="form-grid">
             <div class="form-field">
               <label for="cf-first-name" class="form-label" data-i18n="form.firstName">First name</label>
-              <input id="cf-first-name" name="first_name" type="text" class="form-input" required autocomplete="given-name" />
+              <input id="cf-first-name" name="first_name" type="text" class="form-input" required autocomplete="given-name"
+                     pattern="[\p{L}\p{M}' \-]+" maxlength="80" title="Letters, spaces, apostrophes and hyphens only" />
             </div>
             <div class="form-field">
               <label for="cf-last-name" class="form-label" data-i18n="form.lastName">Last name</label>
-              <input id="cf-last-name" name="last_name" type="text" class="form-input" required autocomplete="family-name" />
+              <input id="cf-last-name" name="last_name" type="text" class="form-input" required autocomplete="family-name"
+                     pattern="[\p{L}\p{M}' \-]+" maxlength="80" title="Letters, spaces, apostrophes and hyphens only" />
             </div>
             <div class="form-field">
               <label for="cf-company" class="form-label" data-i18n="form.company">Company</label>
-              <input id="cf-company" name="company" type="text" class="form-input" autocomplete="organization" />
+              <input id="cf-company" name="company" type="text" class="form-input" autocomplete="organization" maxlength="150" />
             </div>
             <div class="form-field">
               <label for="cf-email" class="form-label" data-i18n="form.email">Email</label>
@@ -806,24 +808,26 @@
             </div>
             <div class="form-field">
               <label for="cf-phone" class="form-label" data-i18n="form.phone">Phone</label>
-              <input id="cf-phone" name="phone" type="tel" class="form-input" autocomplete="tel" />
+              <input id="cf-phone" name="phone" type="tel" class="form-input" autocomplete="tel"
+                     pattern="[0-9+\(\)\- ]+" maxlength="30" title="Digits, spaces, +, - and parentheses only" />
             </div>
             <div class="form-field form-field--full">
               <label for="cf-interest" class="form-label" data-i18n="form.interest">I'm interested in</label>
               <select id="cf-interest" name="interest" class="form-input form-select">
                 <option value="" data-i18n="form.optDefault">Select a service…</option>
-                <option data-i18n="form.opt1">Supplier Verification</option>
-                <option data-i18n="form.opt2">India Market Entry Consulting</option>
-                <option data-i18n="form.opt3">Representation in India</option>
-                <option data-i18n="form.opt4">Operational Support</option>
-                <option data-i18n="form.opt5">Poland Market Entry (Indian company)</option>
-                <option data-i18n="form.opt6">Pharma — Europe Market Entry</option>
-                <option data-i18n="form.opt7">Other / Not sure yet</option>
+                <option value="Supplier Verification" data-i18n="form.opt1">Supplier Verification</option>
+                <option value="India Market Entry Consulting" data-i18n="form.opt2">India Market Entry Consulting</option>
+                <option value="Representation in India" data-i18n="form.opt3">Representation in India</option>
+                <option value="Operational Support" data-i18n="form.opt4">Operational Support</option>
+                <option value="Poland Market Entry (Indian company)" data-i18n="form.opt5">Poland Market Entry (Indian company)</option>
+                <option value="Pharma — Europe Market Entry" data-i18n="form.opt6">Pharma — Europe Market Entry</option>
+                <option value="Logistics" data-i18n="form.opt8">I'm interested in logistics</option>
+                <option value="Other / Not sure yet" data-i18n="form.opt7">Other / Not sure yet</option>
               </select>
             </div>
             <div class="form-field form-field--full">
               <label for="cf-message" class="form-label" data-i18n="form.message">Tell us briefly about your project</label>
-              <textarea id="cf-message" name="message" class="form-input form-textarea" rows="4" required
+              <textarea id="cf-message" name="message" class="form-input form-textarea" rows="4" required maxlength="4000"
                         data-i18n-attr="placeholder" data-i18n="form.messagePlaceholder"
                         placeholder="We are considering a supplier in Gujarat and want to verify them before a large order…"></textarea>
             </div>

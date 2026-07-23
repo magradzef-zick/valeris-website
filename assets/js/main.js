@@ -52,6 +52,11 @@
       b.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+    /* Re-render the CRM-driven interest options (built from data-label-en/pl
+       attributes, not data-i18n keys — see loadServices() below) for the new
+       language. A no-op until loadServices() has actually replaced the
+       static list, and a no-op again if it never does (fetch failed). */
+    if (typeof refreshServiceOptionLabels === 'function') { refreshServiceOptionLabels(lang); }
   }
   window.__valerisT = function (key) { var l = document.documentElement.lang || 'en'; return (DICT[l] || DICT.en)[key] || (DICT.en[key] || key); };
 
@@ -205,21 +210,138 @@
   /* ---------- contact form ---------- */
   var form = document.getElementById('contactForm');
   var statusEl = document.getElementById('formStatus');
+  var interestSelect = document.getElementById('cf-interest');
+
+  /* ---------- CRM-driven "I'm interested in" options ----------
+     The dropdown ships with a static, hardcoded list (see index.html) so the
+     form always works even if this fetch fails, is slow, or Apps Script is
+     down — that static list is the graceful-degradation fallback, not dead
+     markup. When the CRM's live, admin-managed service list loads, it
+     replaces the static <option>s (values are stable keys the CRM controls,
+     same idea as the pre-existing options — see index.html's own value=
+     attributes). Adding/renaming/removing/reordering a service from the CRM
+     needs no website code change and no deploy, per the brief. */
+  function refreshServiceOptionLabels(lang) {
+    if (!interestSelect || !interestSelect.hasAttribute('data-crm-driven')) return;
+    Array.prototype.forEach.call(interestSelect.options, function (opt) {
+      if (opt.value === '') return; // "Select a service…" placeholder stays on data-i18n
+      var label = lang === 'pl' ? opt.getAttribute('data-label-pl') : opt.getAttribute('data-label-en');
+      if (label) opt.textContent = label;
+    });
+  }
+
+  function loadServices() {
+    if (!interestSelect || !CRM_ENDPOINT) return;
+    var sep = CRM_ENDPOINT.indexOf('?') === -1 ? '?' : '&';
+    var timeout = new Promise(function (resolve) { setTimeout(function () { resolve(null); }, 4000); });
+    var lookup = fetch(CRM_ENDPOINT + sep + 'action=getServices', { cache: 'no-store' })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .catch(function () { return null; });
+
+    Promise.race([lookup, timeout]).then(function (json) {
+      var services = (json && json.ok && json.data && Array.isArray(json.data.services)) ? json.data.services : null;
+      if (!services || !services.length) return; // fetch failed/empty/timed out — keep the static list
+
+      var lang = document.documentElement.lang === 'pl' ? 'pl' : 'en';
+      var previousValue = interestSelect.value;
+      var placeholder = interestSelect.querySelector('option[value=""]');
+
+      while (interestSelect.firstChild) { interestSelect.removeChild(interestSelect.firstChild); }
+      if (placeholder) interestSelect.appendChild(placeholder);
+      services.forEach(function (svc) {
+        if (!svc || !svc.key) return;
+        var opt = document.createElement('option');
+        opt.value = svc.key;
+        opt.setAttribute('data-label-en', svc.label || svc.key);
+        opt.setAttribute('data-label-pl', svc.label_pl || svc.label || svc.key);
+        opt.textContent = lang === 'pl' ? (svc.label_pl || svc.label || svc.key) : (svc.label || svc.key);
+        interestSelect.appendChild(opt);
+      });
+      interestSelect.setAttribute('data-crm-driven', 'true');
+
+      if (previousValue) {
+        var stillExists = Array.prototype.some.call(interestSelect.options, function (o) { return o.value === previousValue; });
+        if (stillExists) interestSelect.value = previousValue;
+      }
+    });
+  }
 
   function setStatus(msg, cls) { if (!statusEl) return; statusEl.textContent = msg; statusEl.className = 'form-status' + (cls ? ' ' + cls : ''); }
   function emailValid(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 
+  /* Letters (any script — this business serves both Polish and Indian contacts,
+     so Devanagari etc. must be accepted, not just Latin/accented-Latin), spaces,
+     apostrophes and hyphens only. \p{M} covers combining diacritics entered as
+     separate code points. Requires at least one actual letter (rejects "-" or "'"
+     alone). Mirrors the HTML pattern= on the inputs (used only for the native
+     :user-invalid style hook — this function is the actual authority). */
+  var NAME_RE = /^[\p{L}\p{M}' -]+$/u;
+  var HAS_LETTER_RE = /\p{L}/u;
+  function nameValid(v) { return NAME_RE.test(v) && HAS_LETTER_RE.test(v); }
+
+  /* Digits, +, -, spaces and parentheses only — no letters. */
+  var PHONE_RE = /^[0-9+\-() ]+$/;
+  function phoneValid(v) { return PHONE_RE.test(v); }
+
+  function detectBrowser_(ua) {
+    if (/Edg\//.test(ua)) return 'Edge';
+    if (/OPR\//.test(ua) || /Opera/.test(ua)) return 'Opera';
+    if (/CriOS\//.test(ua)) return 'Chrome (iOS)';
+    if (/FxiOS\//.test(ua)) return 'Firefox (iOS)';
+    if (/Firefox\//.test(ua)) return 'Firefox';
+    if (/Chrome\//.test(ua)) return 'Chrome';
+    if (/Safari\//.test(ua) && /Version\//.test(ua)) return 'Safari';
+    return 'Other';
+  }
+
+  function detectOS_(ua) {
+    if (/Windows NT/.test(ua)) return 'Windows';
+    if (/iPhone|iPad|iPod/.test(ua)) return 'iOS';
+    if (/Android/.test(ua)) return 'Android';
+    if (/Mac OS X/.test(ua)) return 'macOS';
+    if (/Linux/.test(ua)) return 'Linux';
+    return 'Other';
+  }
+
   function collectMeta() {
     var p;
     try { p = new URLSearchParams(location.search); } catch (e) { p = { get: function () { return ''; } }; }
+    var tz = '';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+    var ua = navigator.userAgent || '';
     return {
       utm_source: p.get('utm_source') || '', utm_medium: p.get('utm_medium') || '', utm_campaign: p.get('utm_campaign') || '',
+      utm_term: p.get('utm_term') || '', utm_content: p.get('utm_content') || '',
       referrer: document.referrer || '', page_url: location.href,
       timestamp: new Date().toISOString(),
+      timezone: tz,
       language: document.documentElement.lang || 'en',
-      device: /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
-      user_agent: navigator.userAgent
+      device: /Mobi|Android|iPhone|iPad|iPod/i.test(ua) ? 'mobile' : 'desktop',
+      browser: detectBrowser_(ua),
+      operating_system: detectOS_(ua),
+      user_agent: ua
     };
+  }
+
+  /* Best-effort, non-blocking IP/geo lookup so leads carry IP address, country
+     and city. Apps Script web apps have no way to see the caller's IP server-
+     side at all (a hard platform limitation — there is no equivalent of a
+     REMOTE_ADDR in the request object), so a client-side lookup is the only
+     way to capture it at all. Key-free, HTTPS, no account needed. Any failure
+     (network down, ad-blocker, CORS, timeout) resolves to empty strings rather
+     than blocking or meaningfully delaying the actual lead submission. */
+  function fetchGeoInfo() {
+    var empty = { ip_address: '', country: '', city: '' };
+    if (typeof fetch !== 'function') return Promise.resolve(empty);
+    var timeout = new Promise(function (resolve) { setTimeout(function () { resolve(empty); }, 2500); });
+    var lookup = fetch('https://ipwho.is/', { cache: 'no-store' })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (j) {
+        if (!j || j.success === false) return empty;
+        return { ip_address: j.ip || '', country: j.country || '', city: j.city || '' };
+      })
+      .catch(function () { return empty; });
+    return Promise.race([lookup, timeout]);
   }
 
   if (form) {
@@ -230,15 +352,20 @@
       var lastName = form.last_name ? form.last_name.value.trim() : '';
       var name = (firstName + ' ' + lastName).trim();
       var email = form.email.value.trim(), message = form.message.value.trim();
+      var phone = form.phone ? form.phone.value.trim() : '';
       var honeypot = form.website ? form.website.value.trim() : '';
 
       if (honeypot) return;
       if (!firstName || !lastName || !email || !message) { setStatus(T('form.errorRequired'), 'is-error'); return; }
+      if (!nameValid(firstName) || !nameValid(lastName)) { setStatus(T('form.errorName'), 'is-error'); return; }
       if (!emailValid(email)) { setStatus(T('form.errorEmail'), 'is-error'); return; }
+      if (phone && !phoneValid(phone)) { setStatus(T('form.errorPhone'), 'is-error'); return; }
 
+      /* Captured synchronously (before the async geo lookup below) so a field
+         edited while "Sending…" is showing can't change what gets submitted. */
       var data = {
         first_name: firstName, last_name: lastName, name: name, company: form.company.value.trim(), email: email,
-        phone: form.phone.value.trim(), interest: form.interest.value, message: message
+        phone: phone, interest: form.interest.value, message: message
       };
       var meta = collectMeta();
       for (var k in meta) { if (Object.prototype.hasOwnProperty.call(meta, k)) data[k] = meta[k]; }
@@ -258,15 +385,21 @@
         }
       }
 
-      if (CRM_ENDPOINT) {
-        fetch(CRM_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
-          .then(function () { done(true); })
-          .catch(function () { done(false); });
-      } else {
-        /* CRM endpoint not configured — set crmEndpoint in assets/js/config.js at deployment. */
-        if (window.console && console.warn) { console.warn('[Valeris] CRM endpoint not configured in config.js — submission not stored.'); }
-        setTimeout(function () { setStatus(T('form.errorConfig'), 'is-error'); if (btn) btn.disabled = false; }, 300);
-      }
+      fetchGeoInfo().then(function (geo) {
+        data.ip_address = geo.ip_address;
+        data.country = geo.country;
+        data.city = geo.city;
+
+        if (CRM_ENDPOINT) {
+          fetch(CRM_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
+            .then(function () { done(true); })
+            .catch(function () { done(false); });
+        } else {
+          /* CRM endpoint not configured — set crmEndpoint in assets/js/config.js at deployment. */
+          if (window.console && console.warn) { console.warn('[Valeris] CRM endpoint not configured in config.js — submission not stored.'); }
+          setTimeout(function () { setStatus(T('form.errorConfig'), 'is-error'); if (btn) btn.disabled = false; }, 300);
+        }
+      });
     });
   }
 
@@ -276,4 +409,5 @@
   } else {
     applyLang(getInitialLang());
   }
+  loadServices(); /* no-op on pages without #cf-interest (india.html, pharma.html) */
 })();
