@@ -547,6 +547,47 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 /* =================================================================
+   MOBILE HERO — same integrated composition as desktop, reframed
+   =================================================================
+   Desktop's "text over a full-bleed world map" still holds on mobile —
+   the map stays exactly where it's always been: a background layer behind
+   .hero-inner, via the same .hero-motif { position: absolute; inset: 0 }
+   used at every width. Only *what part of that same artwork the camera is
+   pointed at* changes below 768px. On a narrow, tall viewport the default
+   xMidYMid-slice crop centers on the map's geometric middle (x=720 of 1440)
+   rather than the Poland-India corridor (nearer x=860, once Western Europe
+   and the Middle East are included for context) — so India was landing at
+   or past the right edge and the route read as a faint diagonal hair. The
+   fix is a pan+zoom on the existing artwork, not a different layout: the
+   text keeps its exact original position, spacing and structure. */
+@media (max-width: 767px) {
+  /* Reframe onto Europe + the Middle East + India (not just a tight
+     Poland-India corridor -- per the brief, enough surrounding geography
+     stays in frame to read as a real, recognisable map) instead of the
+     default full-width slice centered on the map's geometric middle.
+     transform-box/-origin pinned to the SVG's own coordinate system
+     (matching how the equivalent transform="..." attribute already used
+     elsewhere in this file behaves) so the scale radiates from the
+     region's own center, not the element's paint bounds. Values measured
+     against the real rendered geometry at a representative mobile size,
+     the same way the desktop composition's own coordinates were derived. */
+  .motif-viewport {
+    /* translate() in the CSS transform *property* requires explicit length
+       units (unlike the SVG transform *attribute* used elsewhere in this
+       file, which takes bare numbers as user units) -- px here resolves
+       against the SVG's own user-coordinate system because of transform-box:
+       view-box below. scale() stays unitless -- it always is. */
+    transform: translate(-108px, 59.8px) scale(0.90);
+    transform-box: view-box;
+    transform-origin: 0 0;
+  }
+  /* The route and plane read as much stronger, more legible focal points at
+     this zoom purely because they now occupy far more of the frame than
+     the same-sized route did inside a full-width world map -- no glow,
+     color or stroke width changes needed to make that read as "brighter." */
+}
+
+/* =================================================================
    MOTION-SAFE
    ================================================================= */
 @media (prefers-reduced-motion: reduce) {

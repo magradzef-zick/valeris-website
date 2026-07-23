@@ -141,6 +141,13 @@
           <clipPath id="flagClipPoland"><circle cx="0" cy="0" r="22"/></clipPath>
           <clipPath id="flagClipIndia"><circle cx="0" cy="0" r="22"/></clipPath>
         </defs>
+        <!-- Everything else (map, route, guide path, flags, plane, particles) lives
+             inside this one group so a mobile breakpoint can pan+zoom the whole
+             composition onto just the Poland-India corridor via a plain CSS
+             transform (see .motif-viewport in styles.css) without touching any of
+             the underlying geometry -- desktop gets no transform here at all (the
+             default, unchanged xMidYMid-slice full-width framing described below). -->
+        <g class="motif-viewport">
         <!-- Real world map country paths (Poland, India, and every other country),
              MIT-licensed data from simplemaps.com via github.com/sirLisko/world-map-country-shapes
              (fetched 2026-07, attribution appreciated though not required by MIT).
@@ -491,6 +498,7 @@
           <circle class="motif-particle" cx="850" cy="210" r="2"/>
           <circle class="motif-particle" cx="950" cy="320" r="1.6"/>
           <circle class="motif-particle" cx="880" cy="440" r="2.2"/>
+        </g>
         </g>
       </svg>
 
