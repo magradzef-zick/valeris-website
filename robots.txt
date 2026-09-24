@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.valeris.com.in/sitemap.xml
+Sitemap: https://www.valeris.co.in/sitemap.xml

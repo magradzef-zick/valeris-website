@@ -1,0 +1,8 @@
+{
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/pl/index.html", "destination": "/pl/", "permanent": true },
+    { "source": "/", "has": [{ "type": "query", "key": "lang", "value": "pl" }], "destination": "/pl/", "permanent": true },
+    { "source": "/pharma.html", "has": [{ "type": "query", "key": "lang", "value": "pl" }], "destination": "/pl/pharma.html", "permanent": true }
+  ]
+}

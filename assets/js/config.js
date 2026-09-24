@@ -11,9 +11,8 @@ window.VALERIS_CONFIG = {
      Leave empty until deployment; the form shows a configuration error. */
   crmEndpoint: 'https://script.google.com/macros/s/AKfycbyr6gMGhjb_PrNhESVddEsDSmVvrYZ4vejf-CJ7lBxrj8WmwDIPruwLXGKy4VDL39Rb/exec',
 
-  /* Final production origin (no trailing slash) — used only for reference.
-     TBD: business card uses valeris.com.in, content brief uses valeris.com — confirm final domain before launch. */
-  canonicalBase: 'https://www.valeris.com.in'
+  /* Final production origin (no trailing slash) — used only for reference. */
+  canonicalBase: 'https://www.valeris.co.in'
 };
 
 /* GA4 loader — only runs when a Measurement ID is configured. */

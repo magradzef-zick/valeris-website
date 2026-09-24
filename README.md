@@ -8,13 +8,26 @@ The site has three pages:
 - `india.html` - English-only page for Indian companies entering Poland/Europe
 - `pharma.html` - pharma-focused Europe market-entry page
 
-The project uses plain HTML, CSS, and vanilla JavaScript. There is no framework, package manager, bundler, or build step.
+The project uses plain HTML, CSS, and vanilla JavaScript. There is no framework or package manager.
+
+## Polish pages (`pl/`)
+
+Polish pages are real static HTML so search engines can index them. They are generated from the English pages:
+
+```bash
+node tools/build-pl.mjs
+```
+
+- short strings: `assets/js/i18n.js` (`data-i18n` / `data-i18n-attr`)
+- long content between `<!-- pl:block NAME -->` markers: `i18n/pl/NAME.html`
+
+Re-run the script after any change to an English page, `i18n.js` or `i18n/pl/*`, and commit the `pl/` output. Never edit `pl/*.html` by hand.
 
 ## Features
 
 - responsive three-page static website
 - shared design system in `assets/css/styles.css`
-- bilingual EN/PL content on `index.html` and `pharma.html`
+- bilingual EN/PL: English pages in the root, static Polish pages in `pl/` (generated, see below)
 - English-only `india.html`
 - contact form with Google Sheets CRM integration
 - GA4 support through deployment config
@@ -75,7 +88,7 @@ Deployment-specific values live in `assets/js/config.js`:
 window.VALERIS_CONFIG = {
   ga4Id: '',
   crmEndpoint: '',
-  canonicalBase: 'https://www.valeris.com.in'
+  canonicalBase: 'https://www.valeris.co.in'
 };
 ```
 
@@ -131,8 +144,13 @@ For Apache/cPanel hosting, deploy:
 index.html
 india.html
 pharma.html
+supplier-verification.html
+guide-verify-indian-supplier.html
+privacy.html
+pl/
 robots.txt
 sitemap.xml
+vercel.json
 .htaccess
 assets/
 ```

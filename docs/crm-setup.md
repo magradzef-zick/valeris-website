@@ -76,7 +76,7 @@ Run this once from the Apps Script editor — not callable from the web:
 ```javascript
 function runSeedOwner() {
   var result = seedOwner(
-    'agata@valeris.com.in',
+    'agata@valeris.co.in',
     'your-secure-password',
     'Agata Mielczarek-Korzeniowska'
   );

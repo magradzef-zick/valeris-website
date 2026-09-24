@@ -2,29 +2,77 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://www.valeris.com.in/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.com.in/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.com.in/?lang=pl"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.com.in/"/>
-    <lastmod>2026-07-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <loc>https://www.valeris.co.in/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/"/>
+    <lastmod>2026-09-24</lastmod>
   </url>
   <url>
-    <loc>https://www.valeris.com.in/pharma.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.com.in/pharma.html?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.com.in/pharma.html?lang=pl"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.com.in/pharma.html"/>
-    <lastmod>2026-07-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://www.valeris.co.in/pl/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/"/>
+    <lastmod>2026-09-24</lastmod>
   </url>
   <url>
-    <loc>https://www.valeris.com.in/india.html</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.com.in/india.html"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.com.in/india.html"/>
-    <lastmod>2026-07-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <loc>https://www.valeris.co.in/supplier-verification.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/supplier-verification.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/supplier-verification.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/supplier-verification.html"/>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://www.valeris.co.in/pl/supplier-verification.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/supplier-verification.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/supplier-verification.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/supplier-verification.html"/>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://www.valeris.co.in/guide-verify-indian-supplier.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/guide-verify-indian-supplier.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/guide-verify-indian-supplier.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/guide-verify-indian-supplier.html"/>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://www.valeris.co.in/pl/guide-verify-indian-supplier.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/guide-verify-indian-supplier.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/guide-verify-indian-supplier.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/guide-verify-indian-supplier.html"/>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://www.valeris.co.in/pharma.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/pharma.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/pharma.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/pharma.html"/>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://www.valeris.co.in/pl/pharma.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/pharma.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/pharma.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/pharma.html"/>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://www.valeris.co.in/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/privacy.html"/>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://www.valeris.co.in/pl/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.valeris.co.in/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.valeris.co.in/pl/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.valeris.co.in/privacy.html"/>
+    <lastmod>2026-09-24</lastmod>
+  </url>
+  <url>
+    <loc>https://www.valeris.co.in/india.html</loc>
+    <lastmod>2026-09-24</lastmod>
   </url>
 </urlset>

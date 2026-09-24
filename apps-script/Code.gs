@@ -26,7 +26,7 @@
 // CONFIGURATION
 // ============================================================
 
-var NOTIFY_EMAIL = ''; // e.g. 'agata@valeris.com.in' — leave empty to disable
+var NOTIFY_EMAIL = ''; // e.g. 'agata@valeris.co.in' — leave empty to disable
 
 var SESSION_HOURS = 24;   // sliding window: each valid request extends by this many hours
 var HASH_ITERATIONS = 100;  // SHA-256 iterations for password hashing. 2000 = ~2.2s (verified with timing logs); 100 = ~110ms. Security note: PBKDF2 iteration counts in Apps Script are far less meaningful than in server environments because the attack surface is limited to authenticated internal users with no public login endpoint. 100 iterations provides negligible bruteforce risk against a 5-person internal CRM while making login practical.
@@ -1918,7 +1918,7 @@ function createReadme_(ss) {
  * Create the first Owner user.
  * Run from the Apps Script editor once — not callable via HTTP.
  *
- * Usage: seedOwner('agata@valeris.com.in', 'your-password', 'Agata Mielczarek-Korzeniowska')
+ * Usage: seedOwner('agata@valeris.co.in', 'your-password', 'Agata Mielczarek-Korzeniowska')
  */
 function seedOwner(email, plainPassword, fullName) {
   return seedUser_(email, plainPassword, fullName, 'Owner');

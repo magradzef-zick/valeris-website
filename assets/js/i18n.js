@@ -4,19 +4,19 @@
    ================================================================= */
 window.VALERIS_I18N = {
   en: {
-    'meta.title': 'Valeris — India Market Entry & Supplier Verification',
+    'meta.title': 'Valeris Group — India Market Entry & Supplier Verification',
     'meta.description': "Valeris helps Polish and Indian companies enter each other's markets, verifying suppliers and representing clients on the ground in Maharashtra and Poland.",
 
     'nav.services': 'Services', 'nav.how': 'How We Work',
     'nav.contact': 'Contact', 'nav.cta': 'Contact Us',
     'nav.startPoland': 'For Indian Companies',
 
-    'hero.eyebrowA': 'Poland ⇄ India', 'hero.eyebrowB': 'On the ground in Maharashtra',
+    'hero.eyebrowA': 'India market entry & supplier verification', 'hero.eyebrowB': 'On the ground in Maharashtra',
     'hero.line1': "Market access starts with presence.",
     'hero.sub': "We connect Europe and India through local presence, hands-on support and real market knowledge. On the ground in Maharashtra, we verify suppliers, represent our clients, and help companies grow without setting up their own structure in India.",
     'hero.ctaPrimary': 'Explore Services', 'hero.ctaSecondary': 'Get in Touch',
-    'hero.stat1num': '2', 'hero.stat1label': 'Markets we connect',
-    'hero.stat2num': '2', 'hero.stat2label': 'Regions we know inside out',
+    'hero.stat1num': '2', 'hero.stat1label': 'Local teams: Poland and Maharashtra',
+    'hero.stat2num': '30+', 'hero.stat2label': 'Years of logistics experience with Polfrost',
     'hero.stat3num': '5', 'hero.stat3label': 'Service areas we cover',
     'hero.scroll': 'Scroll',
 
@@ -29,14 +29,16 @@ window.VALERIS_I18N = {
     'directions.card1Tag3': 'Local Representation', 'directions.card1Tag4': 'Operational Support',
     'directions.card2Dir': 'India (Maharashtra) → Poland',
     'directions.card2Title': 'Growing your business in Europe',
-    'directions.card2Desc': "We help Indian companies enter the European market, combining local knowledge of Poland and Europe with experience gained in India to make the process simpler and more predictable.",
+    'directions.card2Desc': "We help Indian companies enter the European market, with Poland as a practical entry point to the EU. We combine our local presence in Poland with experience gained in India to make the process simpler and more predictable.",
     'directions.card2Tag1': 'Market Entry', 'directions.card2Tag2': 'Business Partner Sourcing',
     'directions.card2Tag3': 'Export Readiness', 'directions.card2Tag4': 'Sales Development',
-    'directions.aiKeywords': 'How can an Indian company enter the European market through Poland · Help for Indian exporters in Europe · Local representation in Poland for an Indian company · How to sell an Indian product in Poland and the EU · Partner for EU market entry for companies from Maharashtra · how can an Indian company enter the European market through Poland · local representation in Poland for Indian exporters',
 
     'services.kicker': 'What we do',
     'services.titleA': 'How we build your ', 'services.titleEm': 'presence', 'services.titleB': ' in the market.',
     'services.intro': "No two companies need the same thing. Some want to check a supplier before placing a first order; others are looking for a local partner or support as they grow. That's why we tailor every service to the stage your business is at.",
+
+    'services.pharmaKicker': 'Specialised vertical',
+    'services.pharmaLink': 'Europe market entry for pharmaceutical companies →',
 
     'svc.1.title': 'Supplier Verification',
     'svc.1.desc': "Know your Indian supplier before you commit. A new partner in India is a real opportunity, but also a real risk — we go there in person and tell you exactly who you're dealing with, before you sign a contract or send a first payment.",
@@ -55,12 +57,12 @@ window.VALERIS_I18N = {
     'svc.2.d3': 'Arranging meetings and helping you communicate clearly',
     'svc.2.d4': 'Representing you at trade fairs and meetings in Poland',
     'svc.2.d5': 'Preparing you for export — certification, standards, adapting your offer',
-    'svc.2.synergy': 'Poland as your entry point — and a gateway into the wider European market.',
+    'svc.2.synergy': 'Poland as your practical entry point to the EU single market.',
 
     'svc.3.title': 'India Market Entry Preparation',
     'svc.3.desc': "India is a vast, complex market. We help Polish companies understand how business really works there and prepare properly before entering it, without learning everything the hard way.",
     'svc.3.d1': 'Explaining what doing business in India is really like',
-    'svc.3.d2': 'Flagging genuine opportunities and the risks worth watching',
+    'svc.3.d2': 'Identifying the key commercial and operational risks — and the real opportunities',
     'svc.3.d3': 'Getting you ready to start operating',
     'svc.3.d4': 'Introducing you to local business partners in Maharashtra',
     'svc.3.d5': 'Providing access to vetted lawyers, tax advisors and accountants',
@@ -85,11 +87,6 @@ window.VALERIS_I18N = {
     'svc.5.d6': 'Resolving day-to-day problems as the project progresses',
     'svc.5.synergy': 'Flexible by design — we adapt to your project.',
 
-    'svc.1.aiSentence': 'Valeris verifies Indian suppliers on the ground in the Maharashtra region — factory visit, company check, written report — before a Polish company signs the contract. Phrases: supplier verification India · supplier check Maharashtra · factory audit India · how to check a supplier before importing · supplier verification India Maharashtra · factory audit India for European buyers',
-    'svc.2.aiSentence': 'Valeris helps Indian companies enter the Polish market and Europe — consulting, distributors, representation, export readiness. Phrases: how can an Indian company enter the European market through Poland · local representation in Poland for Indian exporters · Maharashtra exporters Europe · Indian company entering Poland · find distributors in Poland',
-    'svc.3.aiSentence': 'Valeris advises Polish companies entering the Indian market in Maharashtra and connects them with vetted local specialists. Phrases: how to enter the Indian market · India market entry consulting · doing business in India for Polish companies · India market entry consulting Poland',
-    'svc.4.aiSentence': 'Valeris represents Polish companies on the ground in Maharashtra — trade fairs, meetings, contacts — without the need to establish a company in India. Phrases: company representative in India · local representation Maharashtra · trade fair representation in India · local representation India for Polish companies',
-    'svc.5.aiSentence': 'Valeris provides operational support on the ground in India and Poland — partners, facilities, team formation, day-to-day problem resolution — in both directions. Phrases: operational support in India · local partner for a project in India · help running a business India Poland · operational support India Poland',
 
     'process.kicker': 'How it works',
     'process.titleA': 'From first contact to ', 'process.titleEm': 'market presence', 'process.titleB': '.',
@@ -100,7 +97,7 @@ window.VALERIS_I18N = {
 
     'essence.sig': 'Local teams in Poland and India.',
     'essence.lead': 'Good decisions begin with understanding the market.',
-    'essence.desc': "We're present on both sides of the market, combining knowledge, local presence and hands-on experience. That's what makes doing business between Europe and India simpler.",
+    'essence.desc': "We're present on both sides of the market, combining knowledge, local presence and hands-on experience. That's what makes doing business between Poland and India simpler.",
 
     'partner.kicker': 'Strategic partnership',
     'partner.title': 'Working with Polfrost — logistics you can rely on',
@@ -110,7 +107,7 @@ window.VALERIS_I18N = {
     'contact.titleA': 'Tell us about your ', 'contact.titleEm': 'project', 'contact.titleB': '.',
     'contact.intro': "Whether you're exploring India for the first time or ready to verify a specific supplier, we'll help you move forward with confidence.",
     'contact.directorRole': 'Director',
-    'contact.pmRole': 'Project Manager',
+    'contact.pmRole': 'Kierownik projektu',
     'contact.addressLabel': 'Address',
     'form.firstName': 'First name', 'form.lastName': 'Last name',
     'form.company': 'Company', 'form.email': 'Email', 'form.phone': 'Phone',
@@ -120,7 +117,8 @@ window.VALERIS_I18N = {
     'form.opt3': 'Representation in India', 'form.opt4': 'Operational Support',
     'form.opt5': 'Poland Market Entry (Indian company)', 'form.opt6': 'Pharma — Europe Market Entry',
     'form.opt7': 'Other / Not sure yet', 'form.opt8': "I'm interested in logistics",
-    'form.messagePlaceholder': "We're considering a supplier in Gujarat and want to verify them before placing a large order…",
+    'form.privacy': 'How we process your data: Privacy Policy',
+    'form.messagePlaceholder': "We're considering a supplier near Pune and want to verify them before placing a large order…",
     'form.note': 'We typically reply within one business day. Your details are only used to respond to your enquiry.',
     'form.success': "Thank you — your message has been sent. We'll be in touch within one business day.",
     'form.errorRequired': 'Please fill in the required fields.',
@@ -136,12 +134,23 @@ window.VALERIS_I18N = {
     'footer.s1': 'Supplier Verification', 'footer.s2': 'India Market Consulting', 'footer.s3': 'Representation',
     'footer.s4': 'Operational Support', 'footer.s5': 'Europe Market Entry', 'footer.s6': 'Pharma',
     'footer.companyTitle': 'Company',
-    'footer.c2': 'How It Works', 'footer.c3': 'Contact',
+    'footer.c2': 'How It Works', 'footer.c3': 'Contact', 'footer.privacy': 'Privacy Policy', 'footer.guide': 'Supplier Check Guide',
     'footer.contactTitle': 'Contact',
     'footer.rights': '© 2026 Valeris Group Private Limited. All rights reserved.',
+    'footer.tag': 'Poland · India',
+
+    'privacy.meta.title': 'Privacy Policy — Valeris Group',
+    'privacy.meta.description': 'How Valeris Group Private Limited collects and processes personal data submitted through the valeris.co.in website.',
+    'privacy.kicker': 'Legal',
+    'sv.meta.title': 'Supplier Verification in India (Maharashtra) — Valeris Group',
+    'sv.meta.description': 'We verify Indian suppliers on the ground in Maharashtra: registration and reputation checks, a factory visit and a written report before you sign or pay.',
+    'sv.kicker': 'Service · Maharashtra, India', 'sv.h1': 'Supplier Verification in India',
+    'guide.meta.title': 'How to Check an Indian Supplier Before Your First Payment — Valeris Group',
+    'guide.meta.description': 'A practical checklist for importers: MCA register, GST and IEC checks, bank details, certificates, references and a factory visit.',
+    'guide.kicker': 'Guide', 'guide.h1': 'How to check an Indian supplier before your first payment',
 
     /* ── Pharma subpage ── */
-    'pharma.meta.title': 'Europe Market Entry for Pharma Companies — Valeris',
+    'pharma.meta.title': 'Europe Market Entry for Pharma Companies — Valeris Group',
     'pharma.meta.description': 'We help Indian pharmaceutical companies enter the European market — readiness assessment, certification support, partner search and export strategy.',
     'pharma.backLink': '← Back to Valeris',
     'pharma.hero.eyebrow': 'Industry specialisation',
@@ -158,6 +167,7 @@ window.VALERIS_I18N = {
     'pharma.2.desc': "Certification is one of the biggest hurdles for Indian pharmaceutical companies entering Europe. We don't issue certifications ourselves — we help you build a credible path to certification.",
     'pharma.2.l1': 'Understanding European regulatory requirements', 'pharma.2.l2': 'Choosing the right certification body',
     'pharma.2.l3': 'Building a certification roadmap', 'pharma.2.l4': 'Coordinating with certifying bodies',
+    'pharma.2.note': "What we do and what we don't: Valeris handles market analysis, partner search and project coordination. Regulatory work — dossiers, GMP inspections, marketing authorisations — is carried out by licensed regulatory consultants, certification bodies and the competent authorities (EMA or national agencies). We help you choose them and keep the process moving.",
 
     'pharma.3.title': 'Partner Search in Europe', 'pharma.3.sub': 'Finding business partners',
     'pharma.3.l1': 'Identifying distributors in Europe', 'pharma.3.l2': 'Building relationships with importers',
@@ -175,19 +185,19 @@ window.VALERIS_I18N = {
   },
 
   pl: {
-    'meta.title': 'Valeris — wejście na rynek w Indiach (Maharasztra) i weryfikacja dostawców',
+    'meta.title': 'Valeris Group — wejście na rynek w Indiach (Maharasztra) i weryfikacja dostawców',
     'meta.description': 'Valeris pomaga polskim firmom sprawdzać dostawców i wchodzić na rynek w indyjskim regionie Maharasztra (Mumbai, Pune), a firmom indyjskim pomaga wejść do Europy przez Polskę. Valeris działa lokalnie, na miejscu.',
 
     'nav.services': 'Usługi', 'nav.how': 'Jak działamy',
     'nav.contact': 'Kontakt', 'nav.cta': 'Skontaktuj się',
-    'nav.startPoland': 'FOR INDIAN COMPANIES',
+    'nav.startPoland': 'Dla firm z Indii',
 
-    'hero.eyebrowA': 'Polska ⇄ Indie', 'hero.eyebrowB': 'Na miejscu w Maharasztrze',
+    'hero.eyebrowA': 'Wejście na rynek w Indiach i weryfikacja dostawców', 'hero.eyebrowB': 'Na miejscu w Maharasztrze',
     'hero.line1': 'Dostęp do rynku zaczyna się od obecności.',
     'hero.sub': 'Łączymy Europę i Indie dzięki lokalnej obecności, praktycznemu wsparciu i znajomości obu rynków. Działamy na miejscu w Maharasztrze. Weryfikujemy dostawców, reprezentujemy naszych klientów i pomagamy firmom rozwijać się bez konieczności budowania własnej struktury w Indiach.',
     'hero.ctaPrimary': 'Poznaj usługi', 'hero.ctaSecondary': 'Skontaktuj się',
-    'hero.stat1num': '2', 'hero.stat1label': 'Rynki, które łączymy',
-    'hero.stat2num': '2', 'hero.stat2label': 'Regiony, które znamy od podszewki',
+    'hero.stat1num': '2', 'hero.stat1label': 'Lokalne zespoły: Polska i Maharasztra',
+    'hero.stat2num': '30+', 'hero.stat2label': 'Lat doświadczenia logistycznego z Polfrost',
     'hero.stat3num': '5', 'hero.stat3label': 'Obszarów usług',
     'hero.scroll': 'Przewiń',
 
@@ -200,14 +210,16 @@ window.VALERIS_I18N = {
     'directions.card1Tag3': 'Lokalna reprezentacja', 'directions.card1Tag4': 'Wsparcie operacyjne',
     'directions.card2Dir': 'Indie (Maharasztra) → Polska',
     'directions.card2Title': 'Rozwój biznesu w Europie',
-    'directions.card2Desc': 'Wspieramy indyjskie firmy w budowaniu obecności na rynku europejskim. Łączymy lokalną znajomość Polski i Europy z doświadczeniem zdobytym w Indiach, dzięki czemu proces wejścia na nowy rynek staje się prostszy i bardziej przewidywalny.',
+    'directions.card2Desc': 'Wspieramy indyjskie firmy w wejściu na rynek europejski, wykorzystując Polskę jako praktyczny punkt wejścia do UE. Łączymy lokalną obecność w Polsce z doświadczeniem zdobytym w Indiach, dzięki czemu proces wejścia na nowy rynek staje się prostszy i bardziej przewidywalny.',
     'directions.card2Tag1': 'Wejście na rynek', 'directions.card2Tag2': 'Pozyskiwanie partnerów biznesowych',
     'directions.card2Tag3': 'Przygotowanie do eksportu', 'directions.card2Tag4': 'Rozwój sprzedaży',
-    'directions.aiKeywords': 'Jak indyjska firma może wejść na rynek europejski przez Polskę · Pomoc dla indyjskich eksporterów w Europie · Przedstawiciel w Polsce dla firmy z Indii · Jak sprzedawać indyjski produkt w Polsce i UE · Partner do wejścia na rynek UE dla firm z Maharasztry · how can an Indian company enter the European market through Poland · local representation in Poland for Indian exporters',
 
     'services.kicker': 'Czym się zajmujemy',
     'services.titleA': 'Jak budujemy Twoją ', 'services.titleEm': 'obecność', 'services.titleB': ' na rynku.',
     'services.intro': 'Nie każda firma potrzebuje tego samego. Jedni chcą sprawdzić dostawcę przed pierwszym zamówieniem, inni szukają lokalnego partnera lub wsparcia przy rozwoju działalności. Dlatego każdą usługę dopasowujemy do etapu, na którym znajduje się Twój biznes.',
+
+    'services.pharmaKicker': 'Specjalizacja branżowa',
+    'services.pharmaLink': 'Wejście na rynek europejski dla firm farmaceutycznych →',
 
     'svc.1.title': 'Weryfikacja dostawców',
     'svc.1.desc': 'Sprawdź swojego indyjskiego dostawcę, zanim zaczniesz współpracę. Nowy partner w Indiach to duża szansa, ale i ryzyko — my jedziemy na miejsce i mówimy Ci, z kim naprawdę masz do czynienia, zanim podpiszesz umowę czy wyślesz pierwszą złotówkę.',
@@ -226,12 +238,12 @@ window.VALERIS_I18N = {
     'svc.2.d3': 'Umawiamy spotkania i pomagamy się dogadać',
     'svc.2.d4': 'Reprezentujemy Cię na targach i w rozmowach w Polsce',
     'svc.2.d5': 'Pomagamy przygotować się do eksportu: certyfikaty, normy, dostosowanie oferty',
-    'svc.2.synergy': 'Polska jako Twoje wejście — i brama dalej w głąb Europy.',
+    'svc.2.synergy': 'Polska jako praktyczny punkt wejścia na jednolity rynek UE.',
 
     'svc.3.title': 'Przygotowanie do wejścia na rynek indyjski',
     'svc.3.desc': 'Indie to ogromny i złożony rynek. Pomagamy polskim firmom zrozumieć, jak naprawdę robi się tam biznes i bezpiecznie przygotować się do wejścia — bez uczenia się wszystkiego na własnych błędach.',
     'svc.3.d1': 'Tłumaczymy realia prowadzenia biznesu w Indiach',
-    'svc.3.d2': 'Pomagamy wychwycić szanse i to, na co uważać',
+    'svc.3.d2': 'Wskazujemy kluczowe ryzyka handlowe i operacyjne oraz realne szanse',
     'svc.3.d3': 'Przygotowujemy Cię do startu działalności',
     'svc.3.d4': 'Łączymy z lokalnymi partnerami biznesowymi w Maharasztrze',
     'svc.3.d5': 'Współpracujemy ze sprawdzonymi prawnikami, doradcami podatkowymi i księgowymi',
@@ -256,11 +268,6 @@ window.VALERIS_I18N = {
     'svc.5.d6': 'Rozwiązujemy bieżące problemy, które pojawiają się w trakcie projektu',
     'svc.5.synergy': 'Elastycznie — dopasowujemy się do Twojego projektu.',
 
-    'svc.1.aiSentence': 'Valeris weryfikuje indyjskich dostawców na miejscu w regionie Maharasztra — wizyta w fabryce, sprawdzenie firmy, raport — zanim polska firma podpisze umowę. Frazy: weryfikacja dostawcy w Indiach · sprawdzenie dostawcy Maharasztra · audyt fabryki w Indiach · jak sprawdzić dostawcę przed importem · supplier verification India Maharashtra · factory audit India for European buyers',
-    'svc.2.aiSentence': 'Valeris pomaga indyjskim firmom wejść na polski rynek i do Europy — doradztwo, dystrybutorzy, reprezentacja, eksport. Frazy: jak indyjska firma może wejść na rynek europejski przez Polskę · przedstawiciel w Polsce dla firmy z Indii · how can an Indian company enter the European market through Poland · local representation in Poland for Indian exporters · Maharashtra exporters Europe',
-    'svc.3.aiSentence': 'Valeris doradza polskim firmom wchodzącym na rynek indyjski (Maharasztra) i łączy je ze sprawdzonymi lokalnymi specjalistami. Frazy: jak wejść na rynek indyjski · doradztwo wejście na rynek Indie · prowadzenie biznesu w Indiach dla polskich firm · India market entry consulting Poland',
-    'svc.4.aiSentence': 'Valeris reprezentuje polskie firmy na miejscu w Maharasztrze — targi, spotkania, kontakty — bez zakładania spółki w Indiach. Frazy: przedstawiciel firmy w Indiach · lokalna reprezentacja Maharasztra · reprezentacja na targach w Indiach · local representation India for Polish companies',
-    'svc.5.aiSentence': 'Valeris zapewnia wsparcie operacyjne na miejscu w Indiach i w Polsce — partnerzy, magazyny, zespół, bieżące problemy — w obie strony. Frazy: wsparcie operacyjne w Indiach · lokalny partner do projektu w Indiach · pomoc w prowadzeniu biznesu Indie Polska · operational support India Poland',
 
     'process.kicker': 'Jak działamy',
     'process.titleA': 'Od pierwszego kontaktu do ', 'process.titleEm': 'obecności na rynku', 'process.titleB': '.',
@@ -271,7 +278,7 @@ window.VALERIS_I18N = {
 
     'essence.sig': 'Lokalne zespoły w Polsce i Indiach.',
     'essence.lead': 'Dobre decyzje zaczynają się od zrozumienia rynku.',
-    'essence.desc': 'Działamy w Europie i w Indiach jednocześnie, łącząc wiedzę, lokalną obecność i praktyczne doświadczenie, aby zmniejszyć złożoność prowadzenia biznesu między tymi rynkami.',
+    'essence.desc': 'Działamy jednocześnie w Polsce i w Indiach, łącząc wiedzę, lokalną obecność i praktyczne doświadczenie, aby zmniejszyć złożoność prowadzenia biznesu między tymi rynkami.',
 
     'partner.kicker': 'Partnerstwo strategiczne',
     'partner.title': 'Współpraca z Polfrost — logistyka, na której można polegać',
@@ -281,7 +288,7 @@ window.VALERIS_I18N = {
     'contact.titleA': 'Opowiedz nam o swoim ', 'contact.titleEm': 'projekcie', 'contact.titleB': '.',
     'contact.intro': 'Niezależnie od tego, czy odkrywasz Indie po raz pierwszy, czy chcesz zweryfikować konkretnego dostawcę — pomożemy Ci ruszyć dalej z pewnością.',
     'contact.directorRole': 'Dyrektor',
-    'contact.pmRole': 'Project Manager',
+    'contact.pmRole': 'Kierownik projektu',
     'contact.addressLabel': 'Adres',
     'form.firstName': 'Imię', 'form.lastName': 'Nazwisko',
     'form.company': 'Firma', 'form.email': 'E-mail', 'form.phone': 'Telefon',
@@ -291,7 +298,8 @@ window.VALERIS_I18N = {
     'form.opt3': 'Reprezentacja w Indiach', 'form.opt4': 'Wsparcie operacyjne',
     'form.opt5': 'Wejście na rynek polski (firma indyjska)', 'form.opt6': 'Pharma — wejście na rynek europejski',
     'form.opt7': 'Inne / jeszcze nie wiem', 'form.opt8': 'Interesuje mnie logistyka',
-    'form.messagePlaceholder': 'Rozważamy współpracę z dostawcą w Gudżaracie i chcemy go zweryfikować przed dużym zamówieniem…',
+    'form.privacy': 'Jak przetwarzamy Twoje dane: Polityka prywatności',
+    'form.messagePlaceholder': 'Rozważamy współpracę z dostawcą spod Pune i chcemy go zweryfikować przed dużym zamówieniem…',
     'form.note': 'Zwykle odpowiadamy w ciągu jednego dnia roboczego. Twoje dane wykorzystujemy wyłącznie do udzielenia odpowiedzi.',
     'form.success': 'Dziękujemy — wiadomość została wysłana. Odezwiemy się w ciągu jednego dnia roboczego.',
     'form.errorRequired': 'Uzupełnij wymagane pola.',
@@ -307,12 +315,23 @@ window.VALERIS_I18N = {
     'footer.s1': 'Weryfikacja dostawców', 'footer.s2': 'Doradztwo rynku indyjskiego', 'footer.s3': 'Reprezentacja',
     'footer.s4': 'Wsparcie operacyjne', 'footer.s5': 'Wejście na rynek europejski', 'footer.s6': 'Pharma',
     'footer.companyTitle': 'Firma',
-    'footer.c2': 'Jak działamy', 'footer.c3': 'Kontakt',
+    'footer.c2': 'Jak działamy', 'footer.c3': 'Kontakt', 'footer.privacy': 'Polityka prywatności', 'footer.guide': 'Jak sprawdzić dostawcę',
     'footer.contactTitle': 'Kontakt',
     'footer.rights': '© 2026 Valeris Group Private Limited. Wszelkie prawa zastrzeżone.',
+    'footer.tag': 'Polska · Indie',
+
+    'privacy.meta.title': 'Polityka prywatności — Valeris Group',
+    'privacy.meta.description': 'Jak Valeris Group Private Limited zbiera i przetwarza dane osobowe przekazane przez stronę valeris.co.in.',
+    'privacy.kicker': 'Informacje prawne',
+    'sv.meta.title': 'Weryfikacja dostawców w Indiach (Maharasztra) — Valeris Group',
+    'sv.meta.description': 'Weryfikujemy indyjskich dostawców na miejscu w Maharasztrze: dane rejestrowe, reputacja, wizyta w zakładzie i pisemny raport — zanim podpiszesz umowę lub zapłacisz.',
+    'sv.kicker': 'Usługa · Maharasztra, Indie', 'sv.h1': 'Weryfikacja dostawców w Indiach',
+    'guide.meta.title': 'Jak sprawdzić dostawcę z Indii przed pierwszą płatnością — Valeris Group',
+    'guide.meta.description': 'Praktyczna lista kontrolna dla importerów: rejestr MCA, GST i IEC, rachunek bankowy, certyfikaty, referencje i wizyta w zakładzie.',
+    'guide.kicker': 'Poradnik', 'guide.h1': 'Jak sprawdzić dostawcę z Indii przed pierwszą płatnością',
 
     /* ── Podstrona Pharma ── */
-    'pharma.meta.title': 'Wejście na rynek europejski dla firm farmaceutycznych — Valeris',
+    'pharma.meta.title': 'Wejście na rynek europejski dla firm farmaceutycznych — Valeris Group',
     'pharma.meta.description': 'Valeris pomaga indyjskim firmom farmaceutycznym wejść na rynek europejski — strategia, rozwój partnerstw, certyfikacja i gotowość eksportowa.',
     'pharma.backLink': '← Powrót do Valeris',
     'pharma.hero.eyebrow': 'Specjalizacja branżowa',
@@ -329,6 +348,7 @@ window.VALERIS_I18N = {
     'pharma.2.desc': 'Certyfikacja jest jednym z największych wyzwań dla indyjskiej branży farmaceutycznej. Nie certyfikujemy — pomagamy przygotować się do tego procesu.',
     'pharma.2.l1': 'Zrozumienie europejskich wymogów regulacyjnych', 'pharma.2.l2': 'Wybór właściwej firmy certyfikującej',
     'pharma.2.l3': 'Budowa mapy drogowej certyfikacji', 'pharma.2.l4': 'Koordynacja z jednostkami certyfikującymi',
+    'pharma.2.note': 'Co robimy, a czego nie: Valeris odpowiada za analizę rynku, poszukiwanie partnerów i koordynację projektu. Prace regulacyjne — dokumentacja rejestracyjna, inspekcje GMP, pozwolenia na dopuszczenie do obrotu — wykonują licencjonowani doradcy regulacyjni, jednostki certyfikujące i właściwe urzędy (EMA lub agencje krajowe). Pomagamy je wybrać i pilnujemy postępu procesu.',
 
     'pharma.3.title': 'Poszukiwanie partnerów w Europie', 'pharma.3.sub': 'Znajdowanie partnerów biznesowych',
     'pharma.3.l1': 'Identyfikacja dystrybutorów w Europie', 'pharma.3.l2': 'Budowanie relacji z importerami',
